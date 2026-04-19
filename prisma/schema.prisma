@@ -1,0 +1,180 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Products ────────────────────────────────────────────────────────────────
+
+model Product {
+  id                String   @id @default(cuid())
+  slug              String   @unique
+  nameAr            String   @map("name_ar")
+  nameEn            String   @map("name_en")
+  nameDe            String   @map("name_de")
+  shortDescAr       String?  @map("short_desc_ar")
+  shortDescEn       String?  @map("short_desc_en")
+  shortDescDe       String?  @map("short_desc_de")
+  descriptionAr     String?  @map("description_ar") @db.Text
+  descriptionEn     String?  @map("description_en") @db.Text
+  descriptionDe     String?  @map("description_de") @db.Text
+  price             Float
+  compareAtPrice    Float?   @map("compare_at_price")
+  discountPercentage Float?  @map("discount_percentage")
+  availability      Availability @default(AVAILABLE)
+  featured          Boolean  @default(false)
+  images            String[] // Cloudinary URLs
+  colors            String[] // Color hex codes or names
+  sizes             String[] // Size labels
+  seoTitleAr        String?  @map("seo_title_ar")
+  seoTitleEn        String?  @map("seo_title_en")
+  seoTitleDe        String?  @map("seo_title_de")
+  seoDescAr         String?  @map("seo_desc_ar")
+  seoDescEn         String?  @map("seo_desc_en")
+  seoDescDe         String?  @map("seo_desc_de")
+  categoryId        String?  @map("category_id")
+  category          Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  orderItems        OrderItem[]
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@map("products")
+}
+
+enum Availability {
+  AVAILABLE
+  UNAVAILABLE
+}
+
+// ─── Categories ──────────────────────────────────────────────────────────────
+
+model Category {
+  id                String   @id @default(cuid())
+  slug              String   @unique
+  nameAr            String   @map("name_ar")
+  nameEn            String   @map("name_en")
+  nameDe            String   @map("name_de")
+  descriptionAr     String?  @map("description_ar")
+  descriptionEn     String?  @map("description_en")
+  descriptionDe     String?  @map("description_de")
+  image             String?
+  discountPercentage Float?  @map("discount_percentage")
+  seoTitleAr        String?  @map("seo_title_ar")
+  seoTitleEn        String?  @map("seo_title_en")
+  seoTitleDe        String?  @map("seo_title_de")
+  seoDescAr         String?  @map("seo_desc_ar")
+  seoDescEn         String?  @map("seo_desc_en")
+  seoDescDe         String?  @map("seo_desc_de")
+  products          Product[]
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@map("categories")
+}
+
+// ─── Orders ──────────────────────────────────────────────────────────────────
+
+model Order {
+  id              String        @id @default(cuid())
+  orderNumber     String        @unique @map("order_number")
+  customerName    String        @map("customer_name")
+  whatsappNumber  String        @map("whatsapp_number")
+  city            City
+  deliveryType    DeliveryType  @map("delivery_type")
+  address         String?       @db.Text
+  hotelName       String?       @map("hotel_name")
+  guestName       String?       @map("guest_name")
+  roomNumber      String?       @map("room_number")
+  notes           String?       @db.Text
+  paymentMethod   PaymentMethod @map("payment_method")
+  paymentStatus   PaymentStatus @default(UNPAID) @map("payment_status")
+  deliveryStatus  DeliveryStatus @default(NOT_DELIVERED) @map("delivery_status")
+  subtotal        Float
+  shippingCost    Float         @map("shipping_cost")
+  total           Float
+  locale          String        @default("en")
+  items           OrderItem[]
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  orderId     String  @map("order_id")
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String? @map("product_id")
+  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productName String  @map("product_name")
+  price       Float
+  quantity    Int
+  color       String?
+  size        String?
+  image       String?
+
+  @@map("order_items")
+}
+
+enum City {
+  HURGHADA
+  CAIRO
+  ALEXANDRIA
+}
+
+enum DeliveryType {
+  HOME
+  HOTEL
+}
+
+enum PaymentMethod {
+  CASH_ON_DELIVERY
+  VODAFONE_CASH
+  INSTAPAY
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+}
+
+enum DeliveryStatus {
+  NOT_DELIVERED
+  DELIVERED
+}
+
+// ─── Site Settings (key/value store for all admin-editable settings) ─────────
+
+model SiteSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String @db.Text
+
+  @@map("site_settings")
+}
+
+// ─── Homepage Sections ───────────────────────────────────────────────────────
+
+model HomepageSection {
+  id        String @id @default(cuid())
+  sectionKey String @unique @map("section_key")
+  data      String @db.Text // JSON blob for section content
+  sortOrder Int    @default(0) @map("sort_order")
+  visible   Boolean @default(true)
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("homepage_sections")
+}
+model Media {
+  id        String   @id @default(cuid())
+  url       String
+  publicId  String   @map("public_id")
+  filename  String?
+  folder    String   @default("kidorly")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("media")
+}

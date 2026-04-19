@@ -1,0 +1,16 @@
+{
+  "name": "Kidorly",
+  "short_name": "Kidorly",
+  "description": "Premium Kids Products Delivered Across Egypt",
+  "start_url": "/en",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#FF6B6B",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
