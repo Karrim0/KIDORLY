@@ -40,13 +40,15 @@ export function getDiscountedPrice(price: number, discountPercentage: number): n
 }
 
 /** Get translated field based on locale */
-export function getTranslated<T extends Record<string, unknown>>(
+export function getTranslated<T extends object>(
   obj: T,
   field: string,
   locale: Locale
 ): string {
-  const key = `${field}${locale.charAt(0).toUpperCase() + locale.slice(1)}` as keyof T;
-  return (obj[key] as string) || (obj[`${field}En` as keyof T] as string) || "";
+  const record = obj as Record<string, unknown>;
+  const key = `${field}${locale.charAt(0).toUpperCase() + locale.slice(1)}`;
+
+  return (record[key] as string) || (record[`${field}En`] as string) || "";
 }
 
 /** Generate order number: KDR-YYYYMMDD-XXXX */

@@ -29,11 +29,9 @@ export function ProductDetailClient({ product, relatedProducts }: Props) {
   const [selectedSize, setSelectedSize] = useState<string | undefined>(product.sizes[0]);
   const [quantity, setQuantity] = useState(1);
 
-const name = getTranslated(product as unknown as Record<string, unknown>, "name", locale);
-
-const description = getTranslated(product as unknown as Record<string, unknown>, "description", locale);
-
-const shortDesc = getTranslated(product as unknown as Record<string, unknown>, "shortDesc", locale);
+  const name = getTranslated(product, "name", locale);
+  const description = getTranslated(product, "description", locale);
+  const shortDesc = getTranslated(product, "shortDesc", locale);
   const discount = getEffectiveDiscount(product.discountPercentage, product.category?.discountPercentage);
   const finalPrice = discount > 0 ? getDiscountedPrice(product.price, discount) : product.price;
   const isAvailable = product.availability === "AVAILABLE";
@@ -106,7 +104,7 @@ const shortDesc = getTranslated(product as unknown as Record<string, unknown>, "
               href={`/${locale}/category/${product.category.slug}`}
               className="text-sm text-muted-foreground hover:text-primary transition-colors"
             >
-              {getTranslated(product.category as unknown as Record<string, unknown>, "name", locale)}
+              {getTranslated(product.category, "name", locale)}
             </Link>
           )}
           <h1 className="text-3xl font-bold mt-2 mb-4">{name}</h1>
