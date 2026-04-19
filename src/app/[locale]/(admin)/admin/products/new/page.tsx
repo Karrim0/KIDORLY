@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import prisma from "@/lib/prisma";
 import { getTranslations } from "next-intl/server";
 import { ProductForm } from "@/components/admin/product-form";

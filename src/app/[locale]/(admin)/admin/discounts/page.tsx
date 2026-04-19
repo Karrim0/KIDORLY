@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import prisma from "@/lib/prisma";
 import { getSetting, SETTING_KEYS } from "@/lib/settings";
 import { DiscountsClient } from "./discounts-client";
