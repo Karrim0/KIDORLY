@@ -1,6 +1,6 @@
-export const dynamic = "force-dynamic";
-"use client";
 
+"use client";
+export const dynamic = "force-dynamic";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
