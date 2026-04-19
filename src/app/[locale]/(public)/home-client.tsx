@@ -57,7 +57,7 @@ export function HomeClient({ categories, featuredProducts }: HomeClientProps) {
                   {cat.image ? (
                     <Image
                       src={cat.image}
-                      alt={getTranslated(cat as Record<string, unknown>, "name", locale)}
+                      alt={getTranslated(cat as unknown as Record<string, unknown>, "name", locale)}
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
                       sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 200px"
@@ -73,7 +73,7 @@ export function HomeClient({ categories, featuredProducts }: HomeClientProps) {
                   {/* Category name */}
                   <div className="absolute bottom-3 start-3 end-3">
                     <span className="text-white font-semibold text-xs md:text-sm drop-shadow-md line-clamp-2">
-                      {getTranslated(cat as Record<string, unknown>, "name", locale)}
+                      {getTranslated(cat as unknown as Record<string, unknown>, "name", locale)}
                     </span>
                   </div>
                 </Link>
