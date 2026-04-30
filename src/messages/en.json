@@ -372,4 +372,17 @@
     "saveAllSettings": "Save All Settings",
     "selectCategory": "Select category"
   }
+  ,
+"wishlist": {
+  "title": "My Wishlist",
+  "empty": "Your wishlist is empty",
+  "emptyTitle": "No items yet",
+  "emptyDesc": "Start adding your favorite products to find them here anytime",
+  "startShopping": "Start Shopping",
+  "itemCount": "{count} items",
+  "clearAll": "Clear All",
+  "confirmClear": "Are you sure you want to clear all items?",
+  "addToWishlist": "Add to wishlist",
+  "removeFromWishlist": "Remove from wishlist"
+}
 }

@@ -1,5 +1,27 @@
 import type { Locale } from "@/lib/i18n";
 
+// ─── Brand types ─────────────────────────────────────────────────────────────
+
+export interface BrandBasic {
+  id: string;
+  slug: string;
+  nameAr: string;
+  nameEn: string;
+  nameDe: string;
+  logo: string | null;
+}
+
+export interface BrandFull extends BrandBasic {
+  descriptionAr: string | null;
+  descriptionEn: string | null;
+  descriptionDe: string | null;
+  banner: string | null;
+  featured: boolean;
+  _count?: { products: number };
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 // ─── Product types ───────────────────────────────────────────────────────────
 
 export interface ProductWithCategory {
@@ -8,6 +30,8 @@ export interface ProductWithCategory {
   nameAr: string;
   nameEn: string;
   nameDe: string;
+  brandId: string | null;
+  brand: BrandBasic | null;
   shortDescAr: string | null;
   shortDescEn: string | null;
   shortDescDe: string | null;

@@ -16,12 +16,17 @@ import {
   Menu,
   LogOut,
   ChevronLeft,
+  Award,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ToastProvider } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
-export default function AdminShell({ children }: { children: React.ReactNode }) {
+export default function AdminShell({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const t = useTranslations("admin");
   const locale = useLocale();
   const pathname = usePathname();
@@ -34,6 +39,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     { key: "/orders", label: t("orders"), icon: ShoppingBag },
     { key: "/products", label: t("products"), icon: Package },
     { key: "/categories", label: t("categories"), icon: FolderOpen },
+    { key: "/brands", label: t("brands"), icon: Award },
     { key: "/discounts", label: t("discounts"), icon: Percent },
     { key: "/homepage", label: t("homepage"), icon: Home },
     { key: "/media", label: t("media"), icon: ImageIcon },
@@ -72,7 +78,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
               "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors",
               isActive(item.key)
                 ? "bg-primary/10 text-primary"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                : "text-muted-foreground hover:bg-muted hover:text-foreground",
             )}
           >
             <item.icon className="h-4 w-4 shrink-0" />

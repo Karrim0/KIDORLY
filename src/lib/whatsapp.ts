@@ -83,3 +83,14 @@ export function formatDeliveryType(type: string, locale: string = "en"): string 
   };
   return types[type]?.[locale] || type;
 }
+export function buildWhatsAppUrl(phone?: string | null, message?: string): string {
+  if (!phone) return "#";
+
+  const cleanPhone = phone.replace(/[^\d]/g, "");
+
+  if (!cleanPhone) return "#";
+
+  const encodedMessage = message ? encodeURIComponent(message) : "";
+
+  return `https://wa.me/${cleanPhone}${encodedMessage ? `?text=${encodedMessage}` : ""}`;
+}

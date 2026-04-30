@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useWishlist } from "@/hooks/use-wishlist";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, ShoppingBag, Globe, ChevronDown } from "lucide-react";
+import { Menu, X, ShoppingBag, Globe, ChevronDown, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/hooks/use-cart";
@@ -18,6 +19,7 @@ export function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { count, setIsOpen } = useCart();
+  const { count: wishlistCount } = useWishlist();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -34,7 +36,9 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
-    function handleClick() { setLangOpen(false); }
+    function handleClick() {
+      setLangOpen(false);
+    }
     if (langOpen) {
       document.addEventListener("click", handleClick);
       return () => document.removeEventListener("click", handleClick);
@@ -44,6 +48,7 @@ export function Navbar() {
   const navLinks = [
     { href: `/${locale}`, label: t("common.home") },
     { href: `/${locale}/shop`, label: t("common.shop") },
+     { href: `/${locale}/brands`, label: t("common.brands") },
     { href: `/${locale}/offers`, label: t("common.offers") },
     { href: `/${locale}/contact`, label: t("common.contact") },
     { href: `/${locale}/faq`, label: t("common.faq") },
@@ -67,11 +72,10 @@ export function Navbar() {
         "transition-all duration-500 ease-out",
         isTransparent
           ? "bg-transparent border-b border-transparent"
-          : "bg-white/95 backdrop-blur-xl border-b border-border/50 shadow-[0_2px_20px_rgba(0,0,0,0.08)]"
+          : "bg-white/95 backdrop-blur-xl border-b border-border/50 shadow-[0_2px_20px_rgba(0,0,0,0.08)]",
       )}
     >
       <div className="container flex items-center justify-between h-[72px] gap-4">
-
         {/* ── Logo ── */}
         <Link href={`/${locale}`} className="flex items-center shrink-0">
           <Image
@@ -83,7 +87,8 @@ export function Navbar() {
             className={cn(
               "h-10 md:h-11 w-auto object-contain transition-all duration-300",
               /* On transparent: add glow so logo pops on any image */
-              isTransparent && "drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] brightness-110"
+              isTransparent &&
+                "drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)] brightness-110",
             )}
           />
         </Link>
@@ -104,15 +109,19 @@ export function Navbar() {
                       : "text-white/85 hover:text-white hover:bg-white/10"
                     : active
                       ? "text-primary bg-primary/8"
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-100/80"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-100/80",
                 )}
               >
                 {link.label}
                 {active && (
-                  <span className={cn(
-                    "absolute -bottom-0.5 start-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full",
-                    isTransparent ? "bg-white shadow-[0_0_6px_rgba(255,255,255,0.6)]" : "bg-primary"
-                  )} />
+                  <span
+                    className={cn(
+                      "absolute -bottom-0.5 start-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full",
+                      isTransparent
+                        ? "bg-white shadow-[0_0_6px_rgba(255,255,255,0.6)]"
+                        : "bg-primary",
+                    )}
+                  />
                 )}
               </Link>
             );
@@ -121,42 +130,73 @@ export function Navbar() {
 
         {/* ── Right Actions ── */}
         <div className="flex items-center gap-2">
-
           {/* Language */}
           <div className="relative">
             <Button
               variant="ghost"
               size="sm"
-              onClick={(e) => { e.stopPropagation(); setLangOpen(!langOpen); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setLangOpen(!langOpen);
+              }}
               className={cn(
                 "gap-1.5 rounded-xl font-medium transition-colors duration-300",
                 isTransparent
                   ? "text-white/90 hover:text-white hover:bg-white/10"
-                  : "text-gray-600 hover:text-gray-900"
+                  : "text-gray-600 hover:text-gray-900",
               )}
             >
               <Globe className="h-4 w-4" />
-              <span className="hidden sm:inline text-xs">{localeNames[locale]}</span>
-              <ChevronDown className={cn("h-3 w-3 transition-transform duration-200", langOpen && "rotate-180")} />
+              <span className="hidden sm:inline text-xs">
+                {localeNames[locale]}
+              </span>
+              <ChevronDown
+                className={cn(
+                  "h-3 w-3 transition-transform duration-200",
+                  langOpen && "rotate-180",
+                )}
+              />
             </Button>
             {langOpen && (
               <div className="absolute end-0 top-full mt-2 bg-white rounded-xl shadow-xl border p-1.5 min-w-[150px] z-50">
-                {(Object.entries(localeNames) as [Locale, string][]).map(([code, name]) => (
-                  <button
-                    key={code}
-                    onClick={() => switchLocale(code)}
-                    className={cn(
-                      "w-full text-start px-3 py-2 text-sm rounded-lg transition-colors hover:bg-gray-50",
-                      locale === code && "bg-primary/5 text-primary font-semibold"
-                    )}
-                  >
-                    {name}
-                  </button>
-                ))}
+                {(Object.entries(localeNames) as [Locale, string][]).map(
+                  ([code, name]) => (
+                    <button
+                      key={code}
+                      onClick={() => switchLocale(code)}
+                      className={cn(
+                        "w-full text-start px-3 py-2 text-sm rounded-lg transition-colors hover:bg-gray-50",
+                        locale === code &&
+                          "bg-primary/5 text-primary font-semibold",
+                      )}
+                    >
+                      {name}
+                    </button>
+                  ),
+                )}
               </div>
             )}
           </div>
-
+          {/* Wishlist */}
+          <Link href={`/${locale}/wishlist`}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                "relative rounded-xl transition-colors duration-300",
+                isTransparent
+                  ? "text-white/90 hover:text-white hover:bg-white/10"
+                  : "text-gray-600 hover:text-gray-900",
+              )}
+            >
+              <Heart className="h-5 w-5" />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-1 -end-1 h-5 min-w-5 flex items-center justify-center rounded-full text-[10px] font-bold bg-brand-coral text-white border-2 border-white shadow-sm">
+                  {wishlistCount}
+                </span>
+              )}
+            </Button>
+          </Link>
           {/* Cart */}
           <Button
             variant="ghost"
@@ -165,7 +205,7 @@ export function Navbar() {
               "relative rounded-xl transition-colors duration-300",
               isTransparent
                 ? "text-white/90 hover:text-white hover:bg-white/10"
-                : "text-gray-600 hover:text-gray-900"
+                : "text-gray-600 hover:text-gray-900",
             )}
             onClick={() => setIsOpen(true)}
           >
@@ -185,11 +225,15 @@ export function Navbar() {
               "md:hidden rounded-xl transition-colors duration-300",
               isTransparent
                 ? "text-white/90 hover:text-white hover:bg-white/10"
-                : "text-gray-600 hover:text-gray-900"
+                : "text-gray-600 hover:text-gray-900",
             )}
             onClick={() => setMobileOpen(!mobileOpen)}
           >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {mobileOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
           </Button>
         </div>
       </div>
@@ -204,7 +248,7 @@ export function Navbar() {
               onClick={() => setMobileOpen(false)}
               className={cn(
                 "block px-6 py-3.5 text-sm font-medium transition-colors hover:bg-gray-50",
-                pathname === link.href && "bg-primary/5 text-primary"
+                pathname === link.href && "bg-primary/5 text-primary",
               )}
             >
               {link.label}

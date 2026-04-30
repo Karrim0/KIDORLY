@@ -209,6 +209,7 @@
   "admin": {
     "title": "Admin-Panel",
     "dashboard": "Dashboard",
+    "brands": "Brands",
     "orders": "Bestellungen",
     "products": "Produkte",
     "categories": "Kategorien",
@@ -371,5 +372,17 @@
     "defaultSeo": "Standard-SEO",
     "saveAllSettings": "Alle Einstellungen speichern",
     "selectCategory": "Kategorie auswählen"
+  },
+  "wishlist": {
+    "title": "Meine Wunschliste",
+    "empty": "Ihre Wunschliste ist leer",
+    "emptyTitle": "Noch keine Artikel",
+    "emptyDesc": "Fügen Sie Ihre Lieblingsprodukte hinzu, um sie hier jederzeit zu finden",
+    "startShopping": "Einkaufen beginnen",
+    "itemCount": "{count} Artikel",
+    "clearAll": "Alles löschen",
+    "confirmClear": "Möchten Sie wirklich alle Artikel löschen?",
+    "addToWishlist": "Zur Wunschliste",
+    "removeFromWishlist": "Aus Wunschliste entfernen"
   }
 }

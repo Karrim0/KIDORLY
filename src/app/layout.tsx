@@ -3,11 +3,14 @@ import "@/styles/globals.css";
 
 export const metadata: Metadata = {
   title: "Kidorly — Premium Kids Products",
-  description: "Premium kids products delivered across Egypt. Strollers, scooters, hoverboards & more.",
+  description:
+    "Premium kids products delivered across Egypt. Strollers, scooters, hoverboards & more.",
   icons: {
     icon: "/favicon.svg",
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+  ),
   openGraph: {
     type: "website",
     siteName: "Kidorly",
@@ -16,6 +19,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return children;
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
 }

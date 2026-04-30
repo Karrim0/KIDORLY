@@ -18,7 +18,7 @@ export default async function OffersPage() {
       ],
       availability: "AVAILABLE",
     },
-    include: { category: true },
+    include: { category: true, brand: true },
     orderBy: { createdAt: "desc" },
   });
 

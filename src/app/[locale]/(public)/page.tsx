@@ -17,7 +17,7 @@ export default async function HomePage({ params: { locale } }: { params: { local
     prisma.category.findMany({ take: 6, orderBy: { createdAt: "desc" } }),
     prisma.product.findMany({
       where: { featured: true, availability: "AVAILABLE" },
-      include: { category: true },
+      include: { category: true, brand: true },
       take: 8,
       orderBy: { createdAt: "desc" },
     }),

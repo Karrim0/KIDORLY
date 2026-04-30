@@ -21,7 +21,7 @@ export async function generateMetadata({ params: { locale, slug } }: Props): Pro
 export default async function ProductPage({ params: { locale, slug } }: Props) {
   const product = await prisma.product.findUnique({
     where: { slug },
-    include: { category: true },
+    include: { category: true, brand: true },
   });
   if (!product) notFound();
 
@@ -31,7 +31,7 @@ export default async function ProductPage({ params: { locale, slug } }: Props) {
       id: { not: product.id },
       availability: "AVAILABLE",
     },
-    include: { category: true },
+    include: { category: true, brand: true },
     take: 4,
   });
 

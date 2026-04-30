@@ -1,5 +1,6 @@
 {
   "common": {
+     "brands": "البراندات",
     "brandName": "كيدورلي",
     "home": "الرئيسية",
     "shop": "المتجر",
@@ -214,6 +215,23 @@
     "categories": "الفئات",
     "discounts": "الخصومات",
     "homepage": "الصفحة الرئيسية",
+    "brands": "البراندات",
+  "brand": "البراند",
+  "addBrand": "إضافة براند",
+  "editBrand": "تعديل البراند",
+  "createBrand": "إنشاء البراند",
+  "updateBrand": "تحديث البراند",
+  "selectBrand": "اختر براند",
+  "noBrandsYet": "لا توجد براندات بعد",
+  "createFirstBrand": "أنشئ أول براند لك",
+  "confirmDeleteBrand": "هل أنت متأكد من حذف هذا البراند؟",
+  "brandImages": "صور البراند",
+  "brandLogo": "شعار البراند",
+  "brandLogoHint": "يفضل صورة مربعة بخلفية شفافة (PNG)",
+  "brandBanner": "صورة الغلاف",
+  "brandBannerHint": "صورة كبيرة تظهر في صفحة البراند",
+  "featuredBrand": "براند مميز",
+  "productsCount": "منتج",
     "media": "الوسائط",
     "settings": "الإعدادات",
     "viewStore": "عرض المتجر",
@@ -371,5 +389,28 @@
     "defaultSeo": "SEO الافتراضي",
     "saveAllSettings": "حفظ كل الإعدادات",
     "selectCategory": "اختر فئة"
+  },
+ "wishlist": {
+    "title": "قائمة المفضلة",
+    "empty": "قائمة المفضلة فارغة",
+    "emptyTitle": "لم تضف أي منتجات بعد",
+    "emptyDesc": "ابدأ بإضافة منتجاتك المفضلة لتجدها هنا في أي وقت",
+    "startShopping": "ابدأ التسوق",
+    "itemCount": "{count} منتج",
+    "clearAll": "مسح الكل",
+    "confirmClear": "هل أنت متأكد من مسح كل المنتجات؟",
+    "addToWishlist": "أضف للمفضلة",
+    "removeFromWishlist": "إزالة من المفضلة"
   }
+  ,
+"brands": {
+  "title": "كل البراندات",
+  "subtitle": "براندات موثوقة",
+  "description": "تعرّف على أفضل البراندات العالمية لمنتجات الأطفال المتوفرة لدينا",
+  "noBrands": "لا توجد براندات بعد",
+  "noProductsYet": "لا توجد منتجات لهذا البراند بعد",
+  "productsCount": "منتج",
+  "allBrands": "كل البراندات",
+  "allProductsFrom": "كل منتجات {brand}"
+}
 }
