@@ -218,8 +218,7 @@
     "orders": "Orders",
     "products": "Products",
     "categories": "Categories",
-        "brands": "Brands",
-
+    "brands": "Brands",
     "discounts": "Discounts",
     "homepage": "Homepage",
     "media": "Media",
@@ -384,6 +383,23 @@
     "saleEndsAt": "تاريخ انتهاء العرض",
     "saleEndsAtHint": "اتركه فارغاً لو مش عايز تايمر يظهر",
     "timerPreview": "معاينة التايمر"
+    ,
+    "brand": "Brand",
+"addBrand": "Add Brand",
+"editBrand": "Edit Brand",
+"createBrand": "Create Brand",
+"updateBrand": "Update Brand",
+"selectBrand": "Select brand",
+"noBrandsYet": "No brands yet",
+"createFirstBrand": "Create your first brand",
+"confirmDeleteBrand": "Are you sure you want to delete this brand?",
+"brandImages": "Brand Images",
+"brandLogo": "Brand Logo",
+"brandLogoHint": "Recommended square transparent PNG",
+"brandBanner": "Brand Banner",
+"brandBannerHint": "Large image shown on brand page",
+"featuredBrand": "Featured Brand",
+"productsCount": "products"
   },
   "wishlist": {
     "title": "My Wishlist",
