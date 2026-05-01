@@ -109,11 +109,11 @@
     "wasPrice": "Was",
     "selectColor": "Select a color",
     "selectSize": "Select a size",
-      "saleEnds": "العرض ينتهي بعد",
-  "days": "يوم",
-  "hours": "ساعة",
-  "minutes": "دقيقة",
-  "seconds": "ثانية"
+    "saleEnds": "العرض ينتهي بعد",
+    "days": "يوم",
+    "hours": "ساعة",
+    "minutes": "دقيقة",
+    "seconds": "ثانية"
   },
   "checkout": {
     "title": "Checkout",
@@ -218,6 +218,8 @@
     "orders": "Orders",
     "products": "Products",
     "categories": "Categories",
+        "brands": "Brands",
+
     "discounts": "Discounts",
     "homepage": "Homepage",
     "media": "Media",
@@ -377,40 +379,39 @@
     "defaultSeo": "Default SEO",
     "saveAllSettings": "Save All Settings",
     "selectCategory": "Select category",
-     "saleTimer": "تايمر العرض",
-  "saleTimerOptional": "(اختياري)",
-  "saleEndsAt": "تاريخ انتهاء العرض",
-  "saleEndsAtHint": "اتركه فارغاً لو مش عايز تايمر يظهر",
-  "timerPreview": "معاينة التايمر"
+    "saleTimer": "تايمر العرض",
+    "saleTimerOptional": "(اختياري)",
+    "saleEndsAt": "تاريخ انتهاء العرض",
+    "saleEndsAtHint": "اتركه فارغاً لو مش عايز تايمر يظهر",
+    "timerPreview": "معاينة التايمر"
+  },
+  "wishlist": {
+    "title": "My Wishlist",
+    "empty": "Your wishlist is empty",
+    "emptyTitle": "No items yet",
+    "emptyDesc": "Start adding your favorite products to find them here anytime",
+    "startShopping": "Start Shopping",
+    "itemCount": "{count} items",
+    "clearAll": "Clear All",
+    "confirmClear": "Are you sure you want to clear all items?",
+    "addToWishlist": "Add to wishlist",
+    "removeFromWishlist": "Remove from wishlist"
+  },
+  "brands": {
+    "title": "Trusted Brands",
+    "subtitle": "Our Global Partners",
+    "description": "Discover the world's best children's product brands available at Kidorly",
+    "noBrands": "No brands yet",
+    "noProductsYet": "No products for this brand yet",
+    "productsCount": "products",
+    "brandsCount": "brands",
+    "totalProducts": "products",
+    "featuredCount": "featured",
+    "featured": "Featured Brands",
+    "allBrandsTitle": "All Brands",
+    "allBrands": "All Brands",
+    "viewProducts": "View Products",
+    "allProductsFrom": "{brand} Products",
+    "allBrandsLink": "All Brands"
   }
-  ,
-"wishlist": {
-  "title": "My Wishlist",
-  "empty": "Your wishlist is empty",
-  "emptyTitle": "No items yet",
-  "emptyDesc": "Start adding your favorite products to find them here anytime",
-  "startShopping": "Start Shopping",
-  "itemCount": "{count} items",
-  "clearAll": "Clear All",
-  "confirmClear": "Are you sure you want to clear all items?",
-  "addToWishlist": "Add to wishlist",
-  "removeFromWishlist": "Remove from wishlist"
-},
-"brands": {
-  "title": "Trusted Brands",
-  "subtitle": "Our Global Partners",
-  "description": "Discover the world's best children's product brands available at Kidorly",
-  "noBrands": "No brands yet",
-  "noProductsYet": "No products for this brand yet",
-  "productsCount": "products",
-  "brandsCount": "brands",
-  "totalProducts": "products",
-  "featuredCount": "featured",
-  "featured": "Featured Brands",
-  "allBrandsTitle": "All Brands",
-  "allBrands": "All Brands",
-  "viewProducts": "View Products",
-  "allProductsFrom": "{brand} Products",
-  "allBrandsLink": "All Brands"
-}
 }
