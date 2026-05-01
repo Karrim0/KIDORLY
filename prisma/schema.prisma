@@ -24,6 +24,7 @@ model Product {
   price              Float
   compareAtPrice     Float?       @map("compare_at_price")
   discountPercentage Float?       @map("discount_percentage")
+  saleEndsAt  DateTime? @map("sale_ends_at")
   availability       Availability @default(AVAILABLE)
   featured           Boolean      @default(false)
   images             String[]

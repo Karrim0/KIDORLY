@@ -108,7 +108,13 @@
     "discount": "خصم {percentage}%",
     "wasPrice": "كان",
     "selectColor": "اختر لوناً",
-    "selectSize": "اختر مقاساً"
+    "selectSize": "اختر مقاساً",
+      "saleEnds": "العرض ينتهي بعد",
+  "days": "يوم",
+  "hours": "ساعة",
+  "minutes": "دقيقة",
+  "seconds": "ثانية"
+    
   },
   "checkout": {
     "title": "إتمام الطلب",
@@ -388,7 +394,12 @@
     "logoUrl": "رابط الشعار",
     "defaultSeo": "SEO الافتراضي",
     "saveAllSettings": "حفظ كل الإعدادات",
-    "selectCategory": "اختر فئة"
+    "selectCategory": "اختر فئة",
+      "saleTimer": "تايمر العرض",
+  "saleTimerOptional": "(اختياري)",
+  "saleEndsAt": "تاريخ انتهاء العرض",
+  "saleEndsAtHint": "اتركه فارغاً لو مش عايز تايمر يظهر",
+  "timerPreview": "معاينة التايمر"
   },
  "wishlist": {
     "title": "قائمة المفضلة",
@@ -404,13 +415,20 @@
   }
   ,
 "brands": {
-  "title": "كل البراندات",
-  "subtitle": "براندات موثوقة",
-  "description": "تعرّف على أفضل البراندات العالمية لمنتجات الأطفال المتوفرة لدينا",
+  "title": "براندات موثوقة",
+  "subtitle": "شركاؤنا العالميون",
+  "description": "اكتشف أفضل البراندات العالمية لمنتجات الأطفال المتوفرة لدينا",
   "noBrands": "لا توجد براندات بعد",
   "noProductsYet": "لا توجد منتجات لهذا البراند بعد",
   "productsCount": "منتج",
+  "brandsCount": "براند",
+  "totalProducts": "منتج",
+  "featuredCount": "براند مميز",
+  "featured": "براندات مميزة",
+  "allBrandsTitle": "كل البراندات",
   "allBrands": "كل البراندات",
-  "allProductsFrom": "كل منتجات {brand}"
+  "viewProducts": "تصفح المنتجات",
+  "allProductsFrom": "منتجات {brand}",
+  "allBrandsLink": "كل البراندات"
 }
 }

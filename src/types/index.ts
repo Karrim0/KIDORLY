@@ -56,6 +56,7 @@ export interface ProductWithCategory {
   category: CategoryBasic | null;
   createdAt: Date;
   updatedAt: Date;
+  saleEndsAt: Date | null;
 }
 
 export interface CategoryBasic {

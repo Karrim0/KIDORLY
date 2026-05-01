@@ -1,5 +1,6 @@
 {
   "common": {
+    "brands":"Marken",
     "brandName": "Kidorly",
     "home": "Startseite",
     "shop": "Shop",
@@ -107,7 +108,13 @@
     "discount": "{percentage}% RABATT",
     "wasPrice": "Vorher",
     "selectColor": "Farbe auswählen",
-    "selectSize": "Größe auswählen"
+    "selectSize": "Größe auswählen",
+  
+      "saleEnds": "العرض ينتهي بعد",
+  "days": "يوم",
+  "hours": "ساعة",
+  "minutes": "دقيقة",
+  "seconds": "ثانية"
   },
   "checkout": {
     "title": "Kasse",
@@ -371,7 +378,12 @@
     "logoUrl": "Logo-URL",
     "defaultSeo": "Standard-SEO",
     "saveAllSettings": "Alle Einstellungen speichern",
-    "selectCategory": "Kategorie auswählen"
+    "selectCategory": "Kategorie auswählen",
+     "saleTimer": "تايمر العرض",
+  "saleTimerOptional": "(اختياري)",
+  "saleEndsAt": "تاريخ انتهاء العرض",
+  "saleEndsAtHint": "اتركه فارغاً لو مش عايز تايمر يظهر",
+  "timerPreview": "معاينة التايمر"
   },
   "wishlist": {
     "title": "Meine Wunschliste",
@@ -384,5 +396,22 @@
     "confirmClear": "Möchten Sie wirklich alle Artikel löschen?",
     "addToWishlist": "Zur Wunschliste",
     "removeFromWishlist": "Aus Wunschliste entfernen"
-  }
+  },
+  "brands": {
+  "title": "Vertrauenswürdige Marken",
+  "subtitle": "Unsere globalen Partner",
+  "description": "Entdecken Sie die besten Kinderproduktmarken der Welt bei Kidorly",
+  "noBrands": "Noch keine Marken",
+  "noProductsYet": "Noch keine Produkte für diese Marke",
+  "productsCount": "Produkte",
+  "brandsCount": "Marken",
+  "totalProducts": "Produkte",
+  "featuredCount": "empfohlen",
+  "featured": "Empfohlene Marken",
+  "allBrandsTitle": "Alle Marken",
+  "allBrands": "Alle Marken",
+  "viewProducts": "Produkte anzeigen",
+  "allProductsFrom": "{brand} Produkte",
+  "allBrandsLink": "Alle Marken"
+}
 }
