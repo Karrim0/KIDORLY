@@ -111,7 +111,8 @@ export interface OrderWithItems {
   orderNumber: string;
   customerName: string;
   whatsappNumber: string;
-  city: "HURGHADA" | "CAIRO" | "ALEXANDRIA";
+  city: string;
+governorate?: string | null;
   deliveryType: "HOME" | "HOTEL";
   address: string | null;
   hotelName: string | null;
