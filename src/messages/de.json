@@ -158,7 +158,8 @@
 "backToShop": "Zurück zum Shop",
 "governorate": "Gouvernement",
 "selectGovernorate": "Gouvernement auswählen",
-"continueShopping": "Weiter einkaufen"
+"continueShopping": "Weiter einkaufen",
+"emptyCart": "Dein Warenkorb ist leer"
   },
   "orderSuccess": {
     "title": "Bestellung erfolgreich aufgegeben!",

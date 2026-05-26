@@ -158,7 +158,8 @@
 "backToShop": "الرجوع للمتجر",
 "governorate": "المحافظة",
 "selectGovernorate": "اختار المحافظة",
-"continueShopping": "Continue Shopping"
+"continueShopping": "Continue Shopping",
+"emptyCart": "السلة فاضية"
   },
   "orderSuccess": {
     "title": "تم تقديم الطلب بنجاح!",

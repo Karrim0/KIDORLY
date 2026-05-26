@@ -157,7 +157,8 @@
 "backToShop": "Back to shop",
 "governorate": "Governorate",
 "selectGovernorate": "Select governorate",
-"continueShopping": "Continue Shopping"
+"continueShopping": "Continue Shopping",
+"emptyCart": "Your cart is empty"
   },
   "orderSuccess": {
     "title": "Order Placed Successfully!",
