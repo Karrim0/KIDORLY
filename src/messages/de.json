@@ -177,11 +177,16 @@
     "whatsapp": "WhatsApp Chat",
     "email": "E-Mail senden",
     "phone": "Anrufen",
-    "followUs": "Folgen Sie uns"
+    "followUs": "Folgen Sie uns",
+    "whatsappMessage": "Hallo, ich brauche Hilfe mit meiner Bestellung.",
+"noChannels": "Kontaktmöglichkeiten sind derzeit nicht verfügbar."
   },
   "faq": {
     "title": "Häufig gestellte Fragen",
-    "subtitle": "Alles, was Sie über das Bestellen bei Kidorly wissen müssen."
+    "subtitle": "Alles, was Sie über das Bestellen bei Kidorly wissen müssen.",
+    "delivery": "Lieferung",
+"support": "Support",
+"quality": "Qualität"
   },
   "policies": {
     "title": "Richtlinien",
