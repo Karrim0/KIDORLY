@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { ShoppingBag, Zap, Heart } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/hooks/use-cart";
@@ -29,21 +30,33 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
   const t = useTranslations();
   const locale = useLocale() as Locale;
   const router = useRouter();
+
   const { addItem, addItemAndPersist } = useCart();
   const { has, toggle } = useWishlist();
 
   const name = getTranslated(product, "name", locale);
   const shortDesc = getTranslated(product, "shortDesc", locale);
+
   const discount = getEffectiveDiscount(
     product.discountPercentage,
     product.category?.discountPercentage,
     globalDiscount,
   );
+
   const finalPrice =
     discount > 0 ? getDiscountedPrice(product.price, discount) : product.price;
-  const mainImage = product.images[0] || "/placeholder.svg";
+
+  const mainImage = product.images?.[0] || "/placeholder.svg";
   const isAvailable = product.availability === "AVAILABLE";
   const inWishlist = has(product.id);
+
+  const brandName = product.brand
+    ? getTranslated(product.brand, "name", locale)
+    : "";
+
+  const categoryName = product.category
+    ? getTranslated(product.category, "name", locale)
+    : "";
 
   const cartItem = {
     productId: product.id,
@@ -58,60 +71,90 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
   function handleAddToCart(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+
     if (!isAvailable) return;
+
     addItem(cartItem);
   }
 
   function handleBuyNow(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+
     if (!isAvailable) return;
 
-    // Write to localStorage synchronously (backup)
+    /*
+      مهم:
+      مش بنستخدم addItem هنا عشان غالبًا هو اللي بيفتح الكارت.
+      بنستخدم persist بس، وبعدها نروح checkout مباشرة.
+    */
     addItemAndPersist(cartItem);
-    // Update React state
-    addItem(cartItem);
-    // Client-side navigation — preserves React state
     router.push(`/${locale}/checkout`);
   }
 
   function handleToggleWishlist(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+
     toggle(product.id);
   }
 
   return (
-    <div className="group flex flex-col bg-white rounded-2xl overflow-hidden transition-all duration-300 ease-out hover:-translate-y-1.5 shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-card-hover)] active:scale-[0.98]">
-      {/* ── Product Image ─────────────────────────── */}
+    <article
+      className={cn(
+  "group relative flex h-full min-w-0 flex-col overflow-hidden bg-white",
+  "rounded-2xl sm:rounded-3xl",
+  "border border-gray-200/80 md:border-gray-100",
+  "shadow-[0_12px_34px_rgba(15,23,42,0.12)] md:shadow-[0_8px_24px_rgba(15,23,42,0.06)]",
+  "ring-1 ring-black/[0.03] md:ring-0",
+  "transition-all duration-300 ease-out",
+  "md:hover:-translate-y-1 md:hover:border-brand-coral/20 md:hover:shadow-[0_18px_42px_rgba(15,23,42,0.12)]",
+  "active:scale-[0.99]",
+)}
+    >
+      {/* Image */}
       <Link
         href={`/${locale}/product/${product.slug}`}
-        className="relative aspect-square bg-gray-50 overflow-hidden block"
+        className={cn(
+          "relative block overflow-hidden bg-gray-50",
+          "aspect-[1/1.08] sm:aspect-square",
+        )}
+        aria-label={name}
       >
         <Image
           src={mainImage}
           alt={name}
           fill
-          className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+          className={cn(
+            "object-cover",
+            "transition-transform duration-700 ease-out",
+            "group-hover:scale-105",
+          )}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
 
-        {/* Badges (top-left) */}
-        <div className="absolute top-2.5 start-2.5 flex flex-col gap-1.5 z-10">
+<div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-100 md:opacity-0 md:transition-opacity md:duration-300 md:group-hover:opacity-100" />
+        {/* Badges */}
+        <div className="absolute left-2 top-2 z-10 flex max-w-[72%] flex-col items-start gap-1 sm:left-3 sm:top-3 sm:gap-1.5">
           {discount > 0 && (
-            <Badge className="bg-brand-coral text-white border-0 text-[11px] font-bold px-2 py-0.5 shadow-md">
+            <Badge className="border-0 bg-brand-coral px-1.5 py-0.5 text-[9px] font-bold leading-none text-white shadow-md sm:px-2 sm:text-[11px]">
               -{discount}%
             </Badge>
           )}
+
           {product.featured && (
-            <Badge variant="secondary" className="shadow-md text-[11px]">
+            <Badge
+              variant="secondary"
+              className=" bg-[#4ACFC1] px-1.5 py-0.5 text-[9px] font-bold leading-none text-white shadow-md backdrop-blur-sm sm:px-2 sm:text-[11px]"
+            >
               {t("common.featured")}
             </Badge>
           )}
         </div>
 
-        {/* Wishlist Heart (top-right) */}
+        {/* Wishlist */}
         <button
+          type="button"
           onClick={handleToggleWishlist}
           aria-label={
             inWishlist
@@ -119,121 +162,146 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
               : t("wishlist.addToWishlist")
           }
           className={cn(
-            "absolute top-2.5 end-2.5 z-10 h-9 w-9 rounded-full flex items-center justify-center",
-            "bg-white/95 backdrop-blur-sm shadow-md",
-            "transition-all duration-200 hover:scale-110 active:scale-95",
+            "absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full",
+            "bg-white/95 text-gray-600 shadow-md backdrop-blur-sm",
+            "transition-all duration-200 hover:scale-110 hover:text-brand-coral active:scale-95",
+            "sm:right-3 sm:top-3 sm:h-9 sm:w-9 ",
           )}
         >
           <Heart
             className={cn(
               "h-4 w-4 transition-colors duration-200",
-              inWishlist
-                ? "fill-brand-coral text-brand-coral"
-                : "text-gray-500 hover:text-brand-coral",
+              inWishlist && "fill-brand-coral text-brand-coral",
             )}
           />
         </button>
 
         {!isAvailable && (
-          <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px] flex items-center justify-center z-10">
-            <Badge variant="outline" className="text-sm px-3 py-1 bg-white/80">
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/75 backdrop-blur-[2px]">
+            <Badge
+              variant="outline"
+              className="border-gray-200 bg-white/90 px-3 py-1 text-xs font-semibold shadow-sm"
+            >
               {t("common.outOfStock")}
             </Badge>
           </div>
         )}
       </Link>
 
-      {/* ── Product Info ────────────────────────────── */}
-      <div className="flex flex-col flex-1 p-3 md:p-4">
-{/* Brand + Category */}
-<div className="flex items-center gap-1.5 mb-0.5">
-  {product.brand && (
-    <Link
-      href={`/${locale}/brand/${product.brand.slug}`}
-      onClick={(e) => e.stopPropagation()}
-      className="text-[11px] font-bold uppercase tracking-wide text-brand-coral hover:underline"
-    >
-      {getTranslated(product.brand, "name", locale)}
-    </Link>
-  )}
+      {/* Info */}
+      <div className="flex flex-1 flex-col p-2.5 sm:p-4">
+        {/* Brand + Category */}
+        {(brandName || categoryName) && (
+          <div className="mb-1 flex min-h-[16px] items-center gap-1 overflow-hidden sm:mb-1.5 sm:gap-1.5">
+            {product.brand && brandName && (
+              <Link
+                href={`/${locale}/brand/${product.brand.slug}`}
+                onClick={(e) => e.stopPropagation()}
+                className="truncate text-[9px] font-bold uppercase tracking-wide text-brand-coral hover:underline sm:text-[11px]"
+              >
+                {brandName}
+              </Link>
+            )}
 
-  {product.brand && product.category && (
-    <span className="text-[11px] text-muted-foreground">•</span>
-  )}
+            {brandName && categoryName && (
+              <span className="shrink-0 text-[9px] text-muted-foreground sm:text-[10px]">
+                •
+              </span>
+            )}
 
-  {product.category && (
-    <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wide">
-      {getTranslated(product.category, "name", locale)}
-    </span>
-  )}
-</div>
+            {categoryName && (
+              <span className="truncate text-[9px] font-semibold uppercase tracking-wide text-muted-foreground sm:text-[11px]">
+                {categoryName}
+              </span>
+            )}
+          </div>
+        )}
 
-        <Link
-          href={`/${locale}/product/${product.slug}`}
-          className="block mb-1"
-        >
-          <h3 className="font-semibold text-sm line-clamp-2 group-hover:text-primary transition-colors duration-200">
+        {/* Name */}
+        <Link href={`/${locale}/product/${product.slug}`} className="block">
+          <h3
+            className={cn(
+              "line-clamp-2 min-h-[34px] text-[12px] font-bold leading-snug text-gray-900",
+              "transition-colors duration-200 group-hover:text-primary",
+              "sm:min-h-[42px] sm:text-sm md:text-[15px]",
+            )}
+          >
             {name}
           </h3>
         </Link>
 
         {shortDesc && (
-          <p className="text-xs text-muted-foreground line-clamp-1 hidden md:block mb-1">
+          <p className="mt-1 hidden min-h-[18px] text-xs leading-relaxed text-muted-foreground line-clamp-1 md:block">
             {shortDesc}
           </p>
         )}
 
         <div className="flex-1" />
 
-        <div className="flex items-center gap-2 mt-2 mb-3">
+        {/* Price */}
+        <div className="mt-2 flex min-h-[24px] flex-wrap items-baseline gap-x-1.5 gap-y-1 sm:mt-3 sm:gap-x-2">
           <span
             className={cn(
-              "font-bold text-sm md:text-base",
+              "text-[13px] font-extrabold leading-none sm:text-base",
               discount > 0 ? "text-brand-coral" : "text-foreground",
             )}
           >
             {formatPrice(finalPrice, locale)}
           </span>
+
           {discount > 0 && (
-            <span className="text-xs text-muted-foreground line-through">
+            <span className="text-[10px] font-medium leading-none text-muted-foreground line-through sm:text-xs">
               {formatPrice(product.price, locale)}
             </span>
           )}
         </div>
 
-        {isAvailable && (
-          <div className="flex gap-2">
-            <Button
-              size="sm"
-              className="flex-1 text-xs md:text-sm h-9 md:h-10 btn-glow press-effect"
-              onClick={handleBuyNow}
-            >
-              <Zap className="h-3.5 w-3.5 me-1.5" />
-              {t("product.buyNow")}
-            </Button>
+        {/* Actions */}
+        <div className="mt-2.5 sm:mt-3">
+          {isAvailable ? (
+            <div className="grid grid-cols-[1fr_40px] gap-2 sm:grid-cols-[1fr_44px]">
+              <Button
+                size="sm"
+                className={cn(
+                  "h-9 rounded-xl px-2 text-[11px] font-extrabold leading-none sm:h-10 sm:text-sm",
+                  "bg-brand-coral text-white hover:bg-brand-coral/90",
+                  "shadow-md shadow-brand-coral/20 hover:shadow-lg hover:shadow-brand-coral/30",
+                  "press-effect",
+                )}
+                onClick={handleBuyNow}
+              >
+                <Zap className="mr-1 h-3.5 w-3.5 shrink-0 sm:mr-1.5" />
+                <span className="truncate">{t("product.buyNow")}</span>
+              </Button>
+
+              <Button
+                size="sm"
+                variant="outline"
+                className={cn(
+                  "h-9 w-10 rounded-xl p-0 sm:h-10 sm:w-11",
+                  "border-gray-200 bg-white text-gray-700",
+                  "hover:border-brand-coral/40 hover:bg-brand-coral/5 hover:text-brand-coral",
+                  "press-effect",
+                )}
+                onClick={handleAddToCart}
+                title={t("product.addToCart")}
+                aria-label={t("product.addToCart")}
+              >
+                <ShoppingBag className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              </Button>
+            </div>
+          ) : (
             <Button
               size="sm"
               variant="outline"
-              className="h-9 md:h-10 w-9 md:w-10 p-0 shrink-0 press-effect"
-              onClick={handleAddToCart}
-              title={t("product.addToCart")}
+              className="h-9 w-full rounded-xl text-xs font-bold sm:h-10 sm:text-sm"
+              disabled
             >
-              <ShoppingBag className="h-3.5 w-3.5 md:h-4 md:w-4" />
+              {t("common.outOfStock")}
             </Button>
-          </div>
-        )}
-
-        {!isAvailable && (
-          <Button
-            size="sm"
-            variant="outline"
-            className="w-full h-9 md:h-10 text-xs md:text-sm"
-            disabled
-          >
-            {t("common.outOfStock")}
-          </Button>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+    </article>
   );
 }

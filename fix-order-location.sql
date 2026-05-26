@@ -1,0 +1,5 @@
+ALTER TABLE "orders"
+ADD COLUMN IF NOT EXISTS "governorate" TEXT;
+
+ALTER TABLE "orders"
+ALTER COLUMN "city" TYPE TEXT USING "city"::TEXT;

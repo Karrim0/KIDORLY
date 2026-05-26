@@ -113,7 +113,8 @@ model Order {
   orderNumber     String         @unique @map("order_number")
   customerName    String         @map("customer_name")
   whatsappNumber  String         @map("whatsapp_number")
-  city            City
+  city            String
+  governorate     String?
   deliveryType    DeliveryType   @map("delivery_type")
   address         String?        @db.Text
   hotelName       String?        @map("hotel_name")
@@ -150,11 +151,7 @@ model OrderItem {
   @@map("order_items")
 }
 
-enum City {
-  HURGHADA
-  CAIRO
-  ALEXANDRIA
-}
+
 
 enum DeliveryType {
   HOME

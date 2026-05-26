@@ -100,4 +100,6 @@ export const SETTING_KEYS = {
   SEO_DESC_EN: "seo_desc_en",
   SEO_DESC_AR: "seo_desc_ar",
   SEO_DESC_DE: "seo_desc_de",
+  SHIPPING_ALL_EGYPT: "shipping_ALL_EGYPT",
+SHIPPING_DEFAULT: "shipping_DEFAULT",
 } as const;

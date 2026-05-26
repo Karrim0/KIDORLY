@@ -45,57 +45,66 @@
     "clearFilters": "Filter löschen"
   },
   "nav": {
-    "announcement": "Kostenlose Lieferung bei Bestellungen über 2000 EGP in Hurghada! 🎉",
-    "shopAll": "Alle Produkte",
-    "categories": "Kategorien",
-    "offers": "Angebote & Deals",
-    "contact": "Kontakt"
-  },
-  "hero": {
-    "title": "Premium Kinderprodukte, direkt zu Ihnen geliefert",
-    "subtitle": "Kinderwagen, Roller, Hoverboards & mehr — vertrauenswürdige Qualität für Ihre Kleinen in Hurghada, Kairo & Alexandria.",
-    "cta": "Jetzt einkaufen",
-    "secondaryCta": "Angebote ansehen"
-  },
-  "sections": {
-    "featuredCategories": "Nach Kategorie einkaufen",
-    "featuredProducts": "Trendprodukte",
-    "whyChooseUs": "Warum Kidorly?",
-    "deliveryInfo": "Lieferinformationen",
-    "paymentMethods": "Zahlungsmethoden",
-    "trustTitle": "Von Eltern in ganz Ägypten geschätzt",
-    "faqPreview": "Häufige Fragen",
-    "discountBanner": "Sonderangebote",
-    "cityHighlight": "Wir liefern nach"
-  },
-  "whyUs": {
-    "quality": "Premium Qualität",
-    "qualityDesc": "Sorgfältig ausgewählte Produkte von vertrauenswürdigen Marken weltweit.",
-    "delivery": "Schnelle Lieferung",
-    "deliveryDesc": "Schnelle Lieferung nach Hurghada, Kairo & Alexandria.",
-    "support": "WhatsApp Support",
-    "supportDesc": "Direkter persönlicher Support über WhatsApp jederzeit.",
-    "trust": "Sichere Zahlungen",
-    "trustDesc": "Nachnahme, Vodafone Cash oder InstaPay."
-  },
-  "delivery": {
-    "title": "Lieferinformationen",
-    "subtitle": "Wir liefern in Ägyptens wichtigste Städte",
-    "hurghada": "Hurghada",
-    "cairo": "Kairo",
-    "alexandria": "Alexandria",
-    "homeDelivery": "Hauslieferung",
-    "hotelDelivery": "Hotellieferung",
-    "note": "Perfekt für Touristen — wir liefern direkt in Ihr Hotel!"
-  },
-  "payment": {
-    "cash": "Nachnahme",
-    "vodafone": "Vodafone Cash",
-    "instapay": "InstaPay",
-    "cashDesc": "Bezahlen Sie bei Erhalt Ihrer Bestellung",
-    "vodafoneDesc": "Zahlung per Vodafone Cash senden",
-    "instapayDesc": "Überweisung per InstaPay"
-  },
+  "announcement": "Lieferung in ganz Ägypten für ausgewählte Kinderprodukte 🎉",
+  "shopAll": "Alles shoppen",
+  "categories": "Kategorien",
+  "offers": "Angebote",
+  "contact": "Kontakt"
+},
+"hero": {
+  "title": "Premium-Kinderprodukte direkt bis zu deiner Tür",
+  "subtitle": "Kinderwagen, Scooter, Ride-on Toys und mehr — verlässliche Qualität für Familien in ganz Ägypten.",
+  "cta": "Jetzt shoppen",
+  "secondaryCta": "Angebote ansehen"
+},
+"sections": {
+  "featuredCategories": "Nach Kategorie shoppen",
+  "featuredProducts": "Beliebte Produkte",
+  "whyChooseUs": "Warum Kidorly?",
+  "deliveryInfo": "Lieferinformationen",
+  "paymentMethods": "Flexible Zahlungsmethoden",
+  "trustTitle": "Vertraut von Familien in ganz Ägypten",
+  "faqPreview": "Häufige Fragen",
+  "discountBanner": "Sonderangebote",
+  "deliveryAcrossEgypt": "Lieferung in ganz Ägypten"
+},
+"whyUs": {
+  "quality": "Verlässliche Qualität",
+  "qualityDesc": "Sorgfältig ausgewählte Kinderprodukte von zuverlässigen Marken für den täglichen Familienbedarf.",
+  "delivery": "Lieferung in ganz Ägypten",
+  "deliveryDesc": "Wir liefern deine Bestellung in ganz Ägypten und begleiten sie bis zur Zustellung.",
+  "support": "WhatsApp-Support",
+  "supportDesc": "Direkte persönliche Unterstützung vor und nach deiner Bestellung.",
+  "trust": "Flexible Zahlung",
+  "trustDesc": "Wähle die passende Zahlungsmethode: Barzahlung bei Lieferung, Vodafone Cash oder InstaPay."
+},
+"delivery": {
+  "title": "Lieferinformationen",
+  "subtitle": "Wir liefern Kinderprodukte in ganz Ägypten mit einem einfachen und klaren Bestellprozess.",
+  "nationwide": "Ganz Ägypten",
+  "nationwideDesc": "Deine Bestellung kann je nach Standort in ganz Ägypten geliefert werden.",
+  "doorstep": "Lieferung bis zur Tür",
+  "doorstepDesc": "Erhalte deine Bestellung sicher zu Hause oder an deiner Wunschadresse.",
+  "safeHandling": "Sichere Abwicklung",
+  "safeHandlingDesc": "Produkte werden vom Bestellabschluss bis zur Lieferung sorgfältig behandelt.",
+  "note": "Lieferzeit und Versandkosten können je nach Standort variieren."
+},
+"payment": {
+  "subtitle": "Wähle die Zahlungsmethode, die am besten zu dir passt.",
+  "cash": "Barzahlung bei Lieferung",
+  "vodafone": "Vodafone Cash",
+  "instapay": "InstaPay",
+  "cashDesc": "Bezahle sicher, wenn deine Bestellung ankommt.",
+  "vodafoneDesc": "Schnelle und einfache Zahlung per Mobile Wallet.",
+  "instapayDesc": "Einfache Überweisung über InstaPay."
+},
+"footer": {
+  "description": "Premium-Kinderprodukte mit Lieferung in ganz Ägypten. Kinderwagen, Scooter, Ride-on Toys und mehr.",
+  "quickLinks": "Schnellzugriff",
+  "support": "Support",
+  "followUs": "Folge uns",
+  "rights": "Alle Rechte vorbehalten."
+},
   "product": {
     "addToCart": "In den Warenkorb",
     "buyNow": "Jetzt kaufen",
@@ -143,7 +152,13 @@
     "selectPayment": "Zahlungsmethode auswählen",
     "freeShipping": "Kostenlos",
     "required": "Dieses Feld ist erforderlich",
-    "invalidWhatsapp": "Bitte geben Sie eine gültige WhatsApp-Nummer ein"
+    "invalidWhatsapp": "Bitte geben Sie eine gültige WhatsApp-Nummer ein",
+    "subtitle": "Gib deine Daten ein und wir bestätigen deine Bestellung per WhatsApp.",
+"checkoutNote": "Deine Bestelldaten werden per WhatsApp geprüft und bestätigt.",
+"backToShop": "Zurück zum Shop",
+"governorate": "Gouvernement",
+"selectGovernorate": "Gouvernement auswählen",
+"continueShopping": "Weiter einkaufen"
   },
   "orderSuccess": {
     "title": "Bestellung erfolgreich aufgegeben!",
@@ -172,13 +187,6 @@
     "privacy": "Datenschutz",
     "terms": "AGB",
     "shipping": "Versand & Lieferung"
-  },
-  "footer": {
-    "description": "Premium Kinderprodukte mit Lieferung in ganz Ägypten. Kinderwagen, Roller, Hoverboards & mehr.",
-    "quickLinks": "Schnelllinks",
-    "support": "Support",
-    "followUs": "Folgen Sie uns",
-    "rights": "Alle Rechte vorbehalten."
   },
   "notFound": {
     "title": "Seite nicht gefunden",
@@ -211,7 +219,8 @@
     "title": "Angebote & Deals",
     "subtitle": "Sparen Sie bei Premium Kinderprodukten!",
     "noOffers": "Derzeit keine aktiven Angebote",
-    "noOffersSubtitle": "Schauen Sie bald wieder vorbei für tolle Angebote!"
+    "noOffersSubtitle": "Schauen Sie bald wieder vorbei für tolle Angebote!",
+    "shopNow": "Jetzt shoppen"
   },
   "admin": {
     "title": "Admin-Panel",

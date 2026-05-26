@@ -255,3 +255,18 @@ html {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+.page-safe-top {
+  padding-top: 6rem;
+}
+
+@media (min-width: 640px) {
+  .page-safe-top {
+    padding-top: 7rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .page-safe-top {
+    padding-top: 8rem;
+  }
+}

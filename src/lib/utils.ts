@@ -59,10 +59,25 @@ export function generateOrderNumber(): string {
   return `KDR-${dateStr}-${rand}`;
 }
 
+export function normalizeWhatsAppNumber(phone?: string | null): string {
+  if (!phone) return "";
+  return phone.replace(/[^\d]/g, "");
+}
+
 /** Build WhatsApp link with pre-filled message */
-export function buildWhatsAppLink(phone: string, message: string): string {
-  const cleanPhone = phone.replace(/[^0-9]/g, "");
-  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+export function buildWhatsAppLink(
+  phone?: string | null,
+  message = "",
+): string {
+  const cleanPhone = normalizeWhatsAppNumber(phone);
+
+  if (!cleanPhone) return "#";
+
+  const encodedMessage = encodeURIComponent(message);
+
+  return `https://wa.me/${cleanPhone}${
+    encodedMessage ? `?text=${encodedMessage}` : ""
+  }`;
 }
 
 /** Generate a URL-friendly slug */

@@ -83,14 +83,20 @@ export function formatDeliveryType(type: string, locale: string = "en"): string 
   };
   return types[type]?.[locale] || type;
 }
-export function buildWhatsAppUrl(phone?: string | null, message?: string): string {
-  if (!phone) return "#";
+export function normalizeWhatsAppNumber(phone?: string | null): string {
+  if (!phone) return "";
+  return phone.replace(/[^\d]/g, "");
+}
 
-  const cleanPhone = phone.replace(/[^\d]/g, "");
+export function buildWhatsAppUrl(
+  phone?: string | null,
+  message = "",
+): string {
+  const cleanPhone = normalizeWhatsAppNumber(phone);
 
   if (!cleanPhone) return "#";
 
-  const encodedMessage = message ? encodeURIComponent(message) : "";
+  const encodedMessage = encodeURIComponent(message);
 
   return `https://wa.me/${cleanPhone}${encodedMessage ? `?text=${encodedMessage}` : ""}`;
 }

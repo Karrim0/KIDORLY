@@ -45,57 +45,66 @@
     "clearFilters": "Clear Filters"
   },
   "nav": {
-    "announcement": "Free delivery on orders above 2000 EGP in Hurghada! 🎉",
-    "shopAll": "Shop All",
-    "categories": "Categories",
-    "offers": "Offers & Deals",
-    "contact": "Contact Us"
-  },
-  "hero": {
-    "title": "Premium Kids Products, Delivered to Your Door",
-    "subtitle": "Strollers, scooters, hoverboards & more — trusted quality for your little ones in Hurghada, Cairo & Alexandria.",
-    "cta": "Shop Now",
-    "secondaryCta": "View Offers"
-  },
-  "sections": {
-    "featuredCategories": "Shop by Category",
-    "featuredProducts": "Trending Products",
-    "whyChooseUs": "Why Choose Kidorly?",
-    "deliveryInfo": "Delivery Information",
-    "paymentMethods": "Payment Methods",
-    "trustTitle": "Trusted by Parents Across Egypt",
-    "faqPreview": "Common Questions",
-    "discountBanner": "Special Offers",
-    "cityHighlight": "We Deliver To"
-  },
-  "whyUs": {
-    "quality": "Premium Quality",
-    "qualityDesc": "Carefully selected products from trusted brands worldwide.",
-    "delivery": "Fast Delivery",
-    "deliveryDesc": "Quick delivery to Hurghada, Cairo & Alexandria.",
-    "support": "WhatsApp Support",
-    "supportDesc": "Direct personal support through WhatsApp anytime.",
-    "trust": "Secure Payments",
-    "trustDesc": "Cash on delivery, Vodafone Cash, or InstaPay."
-  },
-  "delivery": {
-    "title": "Delivery Information",
-    "subtitle": "We deliver across Egypt's top cities",
-    "hurghada": "Hurghada",
-    "cairo": "Cairo",
-    "alexandria": "Alexandria",
-    "homeDelivery": "Home Delivery",
-    "hotelDelivery": "Hotel Delivery",
-    "note": "Perfect for tourists — we deliver directly to your hotel!"
-  },
-  "payment": {
-    "cash": "Cash on Delivery",
-    "vodafone": "Vodafone Cash",
-    "instapay": "InstaPay",
-    "cashDesc": "Pay when you receive your order",
-    "vodafoneDesc": "Send payment via Vodafone Cash",
-    "instapayDesc": "Transfer via InstaPay"
-  },
+  "announcement": "Delivery available across Egypt on premium kids products 🎉",
+  "shopAll": "Shop All",
+  "categories": "Categories",
+  "offers": "Offers & Deals",
+  "contact": "Contact Us"
+},
+"hero": {
+  "title": "Premium Kids Products, Delivered to Your Door",
+  "subtitle": "Strollers, scooters, ride-on toys & more — trusted quality for families across Egypt.",
+  "cta": "Shop Now",
+  "secondaryCta": "View Offers"
+},
+"sections": {
+  "featuredCategories": "Shop by Category",
+  "featuredProducts": "Trending Products",
+  "whyChooseUs": "Why Choose Kidorly?",
+  "deliveryInfo": "Delivery Information",
+  "paymentMethods": "Flexible Payment Methods",
+  "trustTitle": "Trusted by Parents Across Egypt",
+  "faqPreview": "Common Questions",
+  "discountBanner": "Special Offers",
+  "deliveryAcrossEgypt": "Delivery Across Egypt"
+},
+"whyUs": {
+  "quality": "Trusted Quality",
+  "qualityDesc": "Carefully selected kids products from reliable brands, made for everyday family needs.",
+  "delivery": "Delivery Across Egypt",
+  "deliveryDesc": "We deliver your order across Egypt with simple follow-up until it arrives.",
+  "support": "WhatsApp Support",
+  "supportDesc": "Direct personal support before and after your order.",
+  "trust": "Flexible Payments",
+  "trustDesc": "Choose the payment method that suits you: cash on delivery, Vodafone Cash, or InstaPay."
+},
+"delivery": {
+  "title": "Delivery Information",
+  "subtitle": "We deliver kids essentials across Egypt with a smooth, simple ordering experience.",
+  "nationwide": "All Egypt",
+  "nationwideDesc": "Your order can be delivered across Egypt, wherever you are.",
+  "doorstep": "Doorstep Delivery",
+  "doorstepDesc": "Receive your order safely at your home or preferred address.",
+  "safeHandling": "Safe Handling",
+  "safeHandlingDesc": "Products are handled carefully from confirmation until delivery.",
+  "note": "Delivery time and shipping cost may vary depending on your location."
+},
+"payment": {
+  "subtitle": "Choose the payment method that works best for you.",
+  "cash": "Cash on Delivery",
+  "vodafone": "Vodafone Cash",
+  "instapay": "InstaPay",
+  "cashDesc": "Pay safely when your order arrives.",
+  "vodafoneDesc": "Fast and easy mobile wallet payment.",
+  "instapayDesc": "Simple bank transfer through InstaPay."
+},
+"footer": {
+  "description": "Premium kids products delivered across Egypt. Strollers, scooters, ride-on toys & more.",
+  "quickLinks": "Quick Links",
+  "support": "Support",
+  "followUs": "Follow Us",
+  "rights": "All rights reserved."
+},
   "product": {
     "addToCart": "Add to Cart",
     "buyNow": "Buy Now",
@@ -142,7 +151,13 @@
     "selectPayment": "Select payment method",
     "freeShipping": "Free",
     "required": "This field is required",
-    "invalidWhatsapp": "Please enter a valid WhatsApp number"
+    "invalidWhatsapp": "Please enter a valid WhatsApp number",
+  "subtitle": "Complete your details and we’ll confirm your order through WhatsApp.",
+"checkoutNote": "Your order details will be reviewed and confirmed through WhatsApp.",
+"backToShop": "Back to shop",
+"governorate": "Governorate",
+"selectGovernorate": "Select governorate",
+"continueShopping": "Continue Shopping"
   },
   "orderSuccess": {
     "title": "Order Placed Successfully!",
@@ -172,13 +187,7 @@
     "terms": "Terms & Conditions",
     "shipping": "Shipping & Delivery"
   },
-  "footer": {
-    "description": "Premium kids products delivered across Egypt. Strollers, scooters, hoverboards & more.",
-    "quickLinks": "Quick Links",
-    "support": "Support",
-    "followUs": "Follow Us",
-    "rights": "All rights reserved."
-  },
+  
   "notFound": {
     "title": "Page Not Found",
     "subtitle": "Oops! The page you're looking for doesn't exist.",
@@ -210,7 +219,8 @@
     "title": "Offers & Deals",
     "subtitle": "Save big on premium kids products!",
     "noOffers": "No active offers right now",
-    "noOffersSubtitle": "Check back soon for amazing deals!"
+    "noOffersSubtitle": "Check back soon for amazing deals!",
+    "shopNow": "Shop now"
   },
   "admin": {
     "title": "Admin Panel",
