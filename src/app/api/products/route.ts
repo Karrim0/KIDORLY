@@ -1,8 +1,6 @@
-"use server";
-
+import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
-import { categorySchema, categoryUpdateSchema } from "@/lib/validations";
+import { getSession } from "@/lib/auth";
 
 function parseSaleDate(value: unknown) {
   if (!value) return null;
@@ -41,158 +39,166 @@ function prepareProductPayload(data: Record<string, unknown>) {
   };
 }
 
-async function assertValidCategoryParent(
-  categoryId: string,
-  parentId?: string | null
-) {
-  if (!parentId) return;
+// GET /api/products
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
 
-  if (categoryId === parentId) {
-    throw new Error("Category cannot be its own parent.");
+  const category = searchParams.get("category");
+  const brand = searchParams.get("brand");
+  const collection = searchParams.get("collection");
+  const tag = searchParams.get("tag");
+  const ageGroup = searchParams.get("ageGroup");
+  const featured = searchParams.get("featured");
+  const availableOnly = searchParams.get("available") === "true";
+  const q = searchParams.get("q")?.trim();
+
+  const minPrice = Number(searchParams.get("minPrice") || "");
+  const maxPrice = Number(searchParams.get("maxPrice") || "");
+
+  const sort = searchParams.get("sort") || "newest";
+
+  const orderBy =
+    sort === "price-asc"
+      ? { price: "asc" as const }
+      : sort === "price-desc"
+        ? { price: "desc" as const }
+        : sort === "discount"
+          ? { discountPercentage: "desc" as const }
+          : { createdAt: "desc" as const };
+
+  const where: any = {
+    ...(availableOnly ? { availability: "AVAILABLE" } : {}),
+    ...(featured === "true" ? { featured: true } : {}),
+    ...(category ? { category: { slug: category } } : {}),
+    ...(brand ? { brand: { slug: brand } } : {}),
+    ...(collection
+      ? {
+          collections: {
+            some: {
+              collection: {
+                slug: collection,
+              },
+            },
+          },
+        }
+      : {}),
+    ...(tag
+      ? {
+          tags: {
+            some: {
+              tag: {
+                slug: tag,
+              },
+            },
+          },
+        }
+      : {}),
+    ...(ageGroup
+      ? {
+          ageGroups: {
+            some: {
+              ageGroup: {
+                slug: ageGroup,
+              },
+            },
+          },
+        }
+      : {}),
+    ...(!Number.isNaN(minPrice) || !Number.isNaN(maxPrice)
+      ? {
+          price: {
+            ...(!Number.isNaN(minPrice) ? { gte: minPrice } : {}),
+            ...(!Number.isNaN(maxPrice) ? { lte: maxPrice } : {}),
+          },
+        }
+      : {}),
+    ...(q
+      ? {
+          OR: [
+            { nameEn: { contains: q, mode: "insensitive" } },
+            { nameAr: { contains: q, mode: "insensitive" } },
+            { nameDe: { contains: q, mode: "insensitive" } },
+            { slug: { contains: q, mode: "insensitive" } },
+          ],
+        }
+      : {}),
+  };
+
+  const products = await prisma.product.findMany({
+    where,
+    include: {
+      category: true,
+      brand: true,
+      collections: {
+        include: {
+          collection: true,
+        },
+      },
+      tags: {
+        include: {
+          tag: true,
+        },
+      },
+      ageGroups: {
+        include: {
+          ageGroup: true,
+        },
+      },
+    },
+    orderBy,
+  });
+
+  return NextResponse.json(products);
+}
+
+// POST /api/products
+export async function POST(request: Request) {
+  const session = await getSession();
+
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  let currentParentId: string | null = parentId;
+  try {
+    const body = await request.json();
+    const { productData, collectionIds, tagIds, ageGroupIds } =
+      prepareProductPayload(body);
 
-  for (let depth = 0; depth < 30; depth += 1) {
-    if (!currentParentId) return;
+    const product = await prisma.product.create({
+      data: {
+        ...productData,
 
-    if (currentParentId === categoryId) {
-      throw new Error(
-        "Invalid parent category. This would create a category loop."
-      );
-    }
+        collections: {
+          create: collectionIds.map((collectionId) => ({
+            collection: {
+              connect: { id: collectionId },
+            },
+          })),
+        },
 
-    const parent = await prisma.category.findUnique({
-      where: { id: currentParentId },
-      select: { parentId: true },
+        tags: {
+          create: tagIds.map((tagId) => ({
+            tag: {
+              connect: { id: tagId },
+            },
+          })),
+        },
+
+        ageGroups: {
+          create: ageGroupIds.map((ageGroupId) => ({
+            ageGroup: {
+              connect: { id: ageGroupId },
+            },
+          })),
+        },
+      },
     });
 
-    currentParentId = parent?.parentId ?? null;
+    return NextResponse.json(product, { status: 201 });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error.message || "Failed to create product" },
+      { status: 400 }
+    );
   }
-
-  throw new Error("Category tree is too deep.");
-}
-
-export async function createProduct(data: Record<string, unknown>) {
-  const { productData, collectionIds, tagIds, ageGroupIds } =
-    prepareProductPayload(data);
-
-  const product = await prisma.product.create({
-    data: {
-      ...productData,
-
-      collections: {
-        create: collectionIds.map((collectionId) => ({
-          collection: {
-            connect: { id: collectionId },
-          },
-        })),
-      },
-
-      tags: {
-        create: tagIds.map((tagId) => ({
-          tag: {
-            connect: { id: tagId },
-          },
-        })),
-      },
-
-      ageGroups: {
-        create: ageGroupIds.map((ageGroupId) => ({
-          ageGroup: {
-            connect: { id: ageGroupId },
-          },
-        })),
-      },
-    },
-  });
-
-  revalidatePath("/", "layout");
-  return product;
-}
-
-export async function updateProduct(id: string, data: Record<string, unknown>) {
-  const { productData, collectionIds, tagIds, ageGroupIds } =
-    prepareProductPayload(data);
-
-  const product = await prisma.product.update({
-    where: { id },
-    data: {
-      ...productData,
-
-      collections: {
-        deleteMany: {},
-        create: collectionIds.map((collectionId) => ({
-          collection: {
-            connect: { id: collectionId },
-          },
-        })),
-      },
-
-      tags: {
-        deleteMany: {},
-        create: tagIds.map((tagId) => ({
-          tag: {
-            connect: { id: tagId },
-          },
-        })),
-      },
-
-      ageGroups: {
-        deleteMany: {},
-        create: ageGroupIds.map((ageGroupId) => ({
-          ageGroup: {
-            connect: { id: ageGroupId },
-          },
-        })),
-      },
-    },
-  });
-
-  revalidatePath("/", "layout");
-  return product;
-}
-
-export async function deleteProduct(id: string) {
-  await prisma.product.delete({ where: { id } });
-
-  revalidatePath("/", "layout");
-}
-
-export async function createCategory(data: Record<string, unknown>) {
-  const parsed = categorySchema.parse(data);
-
-  const category = await prisma.category.create({
-    data: parsed,
-  });
-
-  revalidatePath("/", "layout");
-  revalidatePath("/admin/categories", "page");
-
-  return category;
-}
-
-export async function updateCategory(id: string, data: Record<string, unknown>) {
-  const parsed = categoryUpdateSchema.parse(data);
-
-  await assertValidCategoryParent(id, parsed.parentId);
-
-  const category = await prisma.category.update({
-    where: { id },
-    data: parsed,
-  });
-
-  revalidatePath("/", "layout");
-  revalidatePath("/admin/categories", "page");
-
-  return category;
-}
-
-export async function deleteCategory(id: string) {
-  await prisma.category.delete({
-    where: { id },
-  });
-
-  revalidatePath("/", "layout");
-  revalidatePath("/admin/categories", "page");
 }

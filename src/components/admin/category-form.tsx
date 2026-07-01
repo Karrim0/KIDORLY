@@ -4,7 +4,7 @@ import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { Loader2, Save, Sparkles } from "lucide-react";
+import { Check, Link2, Loader2, Save, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,12 +22,16 @@ type AdminCategory = CategoryFull & {
   featured?: boolean;
   sortOrder?: number;
   parentId?: string | null;
+  relatedTo?: CategoryOption[];
 };
 
-type CategoryOption = Pick<
-  AdminCategory,
-  "id" | "nameAr" | "nameEn" | "nameDe" | "parentId"
->;
+type CategoryOption = {
+  id: string;
+  nameAr: string;
+  nameEn: string;
+  nameDe: string;
+  parentId?: string | null;
+};
 
 type CategoryFormProps = {
   category?: AdminCategory | null;
@@ -44,15 +48,19 @@ export function CategoryForm({
 
   const [saving, setSaving] = useState(false);
 
-  function tr(key: string, fallback: string) {
-    try {
-      return t(key);
-    } catch {
-      return fallback;
-    }
+function tr(key: string, fallback: string) {
+  try {
+    return (t as unknown as (key: string) => string)(key);
+  } catch {
+    return fallback;
   }
+}
 
   const availableParents = useMemo(() => {
+    return parentCategories.filter((item) => item.id !== category?.id);
+  }, [parentCategories, category?.id]);
+
+  const relatedOptions = useMemo(() => {
     return parentCategories.filter((item) => item.id !== category?.id);
   }, [parentCategories, category?.id]);
 
@@ -78,6 +86,8 @@ export function CategoryForm({
     visible: category?.visible ?? true,
     featured: category?.featured ?? false,
 
+    relatedCategoryIds: category?.relatedTo?.map((item) => item.id) || [],
+
     seoTitleEn: category?.seoTitleEn || "",
     seoTitleAr: category?.seoTitleAr || "",
     seoTitleDe: category?.seoTitleDe || "",
@@ -87,13 +97,17 @@ export function CategoryForm({
     seoDescDe: category?.seoDescDe || "",
   });
 
-  function setValue(key: string, value: string | boolean) {
+  function setValue<K extends keyof typeof form>(
+    key: K,
+    value: (typeof form)[K],
+  ) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
   function getCategoryName(item: CategoryOption) {
     if (locale === "ar") return item.nameAr || item.nameEn;
     if (locale === "de") return item.nameDe || item.nameEn;
+
     return item.nameEn || item.nameAr;
   }
 
@@ -103,6 +117,25 @@ export function CategoryForm({
 
     setValue("slug", slugify(source));
   }
+
+  function toggleRelatedCategory(id: string) {
+    setForm((prev) => {
+      const exists = prev.relatedCategoryIds.includes(id);
+
+      return {
+        ...prev,
+        relatedCategoryIds: exists
+          ? prev.relatedCategoryIds.filter((item) => item !== id)
+          : [...prev.relatedCategoryIds, id],
+      };
+    });
+  }
+
+  const selectedRelatedCategories = useMemo(() => {
+    return relatedOptions.filter((item) =>
+      form.relatedCategoryIds.includes(item.id),
+    );
+  }, [relatedOptions, form.relatedCategoryIds]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -134,6 +167,10 @@ export function CategoryForm({
 
       visible: form.visible,
       featured: form.featured,
+
+      relatedCategoryIds: form.relatedCategoryIds.filter(
+        (id) => id && id !== category?.id,
+      ),
 
       seoTitleEn: form.seoTitleEn || null,
       seoTitleAr: form.seoTitleAr || null,
@@ -170,10 +207,11 @@ export function CategoryForm({
                 <h2 className="text-lg font-bold">
                   {tr("categoryDetails", "Category details")}
                 </h2>
+
                 <p className="mt-1 text-sm text-muted-foreground">
                   {tr(
                     "categoryDetailsHint",
-                    "Basic category information shown across the website."
+                    "Basic category information shown across the website.",
                   )}
                 </p>
               </div>
@@ -280,10 +318,11 @@ export function CategoryForm({
             <h2 className="text-lg font-bold">
               {tr("categoryMedia", "Category media")}
             </h2>
+
             <p className="mt-1 text-sm text-muted-foreground">
               {tr(
                 "categoryMediaHint",
-                "Use clean square images for carousel cards and wide banners for category pages."
+                "Use clean square images for carousel cards and wide banners for category pages.",
               )}
             </p>
 
@@ -321,11 +360,83 @@ export function CategoryForm({
           </section>
 
           <section className="rounded-2xl border bg-white p-6 shadow-sm">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="flex items-center gap-2 text-lg font-bold">
+                  <Link2 className="h-5 w-5 text-primary" />
+                  {tr("relatedCategories", "Related categories")}
+                </h2>
+
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {tr(
+                    "relatedCategoriesHint",
+                    "Choose categories that should appear as related suggestions on the category page.",
+                  )}
+                </p>
+              </div>
+
+              <span className="w-fit rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
+                {form.relatedCategoryIds.length} {tr("selected", "selected")}
+              </span>
+            </div>
+
+            {relatedOptions.length > 0 ? (
+              <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {relatedOptions.map((item) => {
+                  const selected = form.relatedCategoryIds.includes(item.id);
+
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => toggleRelatedCategory(item.id)}
+                      className={[
+                        "flex items-center justify-between gap-3 rounded-2xl border p-4 text-start transition-all",
+                        selected
+                          ? "border-primary bg-primary/10 text-primary shadow-sm"
+                          : "border-border bg-white text-gray-700 hover:border-primary/40 hover:bg-gray-50",
+                      ].join(" ")}
+                    >
+                      <span className="min-w-0">
+                        <span className="block truncate text-sm font-bold">
+                          {getCategoryName(item)}
+                        </span>
+
+                        <span className="mt-1 block truncate text-xs text-muted-foreground">
+                          {item.parentId
+                            ? tr("subCategory", "Sub category")
+                            : tr("mainCategory", "Main category")}
+                        </span>
+                      </span>
+
+                      <span
+                        className={[
+                          "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-all",
+                          selected
+                            ? "border-primary bg-primary text-white"
+                            : "border-border bg-white text-transparent",
+                        ].join(" ")}
+                      >
+                        <Check className="h-3.5 w-3.5" />
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="mt-5 rounded-2xl border border-dashed bg-gray-50 p-6 text-center text-sm text-muted-foreground">
+                {tr("noRelatedCategoryOptions", "No categories available yet.")}
+              </div>
+            )}
+          </section>
+
+          <section className="rounded-2xl border bg-white p-6 shadow-sm">
             <h2 className="text-lg font-bold">{tr("seo", "SEO")}</h2>
+
             <p className="mt-1 text-sm text-muted-foreground">
               {tr(
                 "seoHint",
-                "Optional metadata for better search visibility."
+                "Optional metadata for better search visibility.",
               )}
             </p>
 
@@ -404,6 +515,7 @@ export function CategoryForm({
                   <Label className="font-semibold">
                     {tr("visible", "Visible")}
                   </Label>
+
                   <p className="mt-1 text-xs text-muted-foreground">
                     {tr("visibleHint", "Show this category to customers.")}
                   </p>
@@ -420,6 +532,7 @@ export function CategoryForm({
                   <Label className="font-semibold">
                     {tr("featured", "Featured")}
                   </Label>
+
                   <p className="mt-1 text-xs text-muted-foreground">
                     {tr("featuredHint", "Show in homepage carousel.")}
                   </p>
@@ -517,13 +630,39 @@ export function CategoryForm({
                   <p className="truncate font-bold">
                     {locale === "ar"
                       ? form.nameAr || form.nameEn || "Category name"
-                      : form.nameEn || form.nameAr || "Category name"}
+                      : locale === "de"
+                        ? form.nameDe || form.nameEn || "Category name"
+                        : form.nameEn || form.nameAr || "Category name"}
                   </p>
+
                   <p className="truncate text-xs text-muted-foreground">
                     /category/{form.slug || "category-slug"}
                   </p>
                 </div>
               </div>
+            </div>
+          </section>
+
+          <section className="rounded-2xl border bg-white p-5 shadow-sm">
+            <h3 className="font-bold">
+              {tr("selectedClassification", "Selected classification")}
+            </h3>
+
+            <div className="mt-4 space-y-2">
+              {selectedRelatedCategories.length > 0 ? (
+                selectedRelatedCategories.map((item) => (
+                  <div
+                    key={item.id}
+                    className="rounded-xl bg-primary/10 px-3 py-2 text-sm font-semibold text-primary"
+                  >
+                    {getCategoryName(item)}
+                  </div>
+                ))
+              ) : (
+                <p className="rounded-xl bg-gray-50 px-3 py-3 text-sm text-muted-foreground">
+                  {tr("noRelatedCategoriesSelected", "No related categories selected.")}
+                </p>
+              )}
             </div>
           </section>
         </aside>
@@ -536,6 +675,7 @@ export function CategoryForm({
           ) : (
             <Save className="me-2 h-4 w-4" />
           )}
+
           {category
             ? tr("updateCategory", "Update category")
             : tr("createCategory", "Create category")}

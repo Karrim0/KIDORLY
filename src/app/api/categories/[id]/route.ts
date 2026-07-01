@@ -7,7 +7,10 @@ interface Params {
   params: { id: string };
 }
 
-async function assertValidCategoryParent(categoryId: string, parentId?: string | null) {
+async function assertValidCategoryParent(
+  categoryId: string,
+  parentId?: string | null,
+) {
   if (!parentId) return;
 
   if (categoryId === parentId) {
@@ -20,13 +23,16 @@ async function assertValidCategoryParent(categoryId: string, parentId?: string |
     if (!currentParentId) return;
 
     if (currentParentId === categoryId) {
-      throw new Error("Invalid parent category. This would create a category loop.");
+      throw new Error(
+        "Invalid parent category. This would create a category loop.",
+      );
     }
 
-    const parent = await prisma.category.findUnique({
-      where: { id: currentParentId },
-      select: { parentId: true },
-    });
+    const parent: { parentId: string | null } | null =
+      await prisma.category.findUnique({
+        where: { id: currentParentId },
+        select: { parentId: true },
+      });
 
     currentParentId = parent?.parentId ?? null;
   }
@@ -72,10 +78,7 @@ export async function GET(_request: Request, { params }: Params) {
           sortOrder: true,
           parentId: true,
         },
-        orderBy: [
-          { sortOrder: "asc" },
-          { createdAt: "desc" },
-        ],
+        orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
       },
       relatedTo: {
         select: {
@@ -132,7 +135,7 @@ export async function PUT(request: Request, { params }: Params) {
   } catch (error: any) {
     return NextResponse.json(
       { error: error.message || "Failed to update category" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 }
@@ -154,7 +157,7 @@ export async function DELETE(_request: Request, { params }: Params) {
   } catch (error: any) {
     return NextResponse.json(
       { error: error.message || "Failed to delete category" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 }

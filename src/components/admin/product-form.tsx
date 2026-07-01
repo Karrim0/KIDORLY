@@ -63,7 +63,7 @@ function toDatetimeLocal(date?: Date | string | null): string {
   const pad = (value: number) => String(value).padStart(2, "0");
 
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(
-    d.getDate()
+    d.getDate(),
   )}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
@@ -90,7 +90,7 @@ export function ProductForm({
 
   function tr(key: string, fallback: string) {
     try {
-      return t(key);
+      return (t as unknown as (key: string) => string)(key);
     } catch {
       return fallback;
     }
@@ -151,7 +151,7 @@ export function ProductForm({
 
   function toggleArrayValue(
     key: "collectionIds" | "tagIds" | "ageGroupIds",
-    id: string
+    id: string,
   ) {
     setForm((prev) => {
       const current = prev[key];
@@ -172,7 +172,7 @@ export function ProductForm({
       | BrandBasic
       | CollectionBasic
       | TagBasic
-      | AgeGroupBasic
+      | AgeGroupBasic,
   ) {
     if (locale === "ar") return item.nameAr || item.nameEn;
     if (locale === "de") return item.nameDe || item.nameEn;
@@ -193,7 +193,7 @@ export function ProductForm({
     return collections.filter((item) =>
       `${item.nameEn} ${item.nameAr} ${item.nameDe} ${item.slug}`
         .toLowerCase()
-        .includes(q)
+        .includes(q),
     );
   }, [collections, classificationSearch]);
 
@@ -204,7 +204,7 @@ export function ProductForm({
     return tags.filter((item) =>
       `${item.nameEn} ${item.nameAr} ${item.nameDe} ${item.slug}`
         .toLowerCase()
-        .includes(q)
+        .includes(q),
     );
   }, [tags, classificationSearch]);
 
@@ -215,7 +215,7 @@ export function ProductForm({
     return ageGroups.filter((item) =>
       `${item.nameEn} ${item.nameAr} ${item.nameDe} ${item.slug}`
         .toLowerCase()
-        .includes(q)
+        .includes(q),
     );
   }, [ageGroups, classificationSearch]);
 
@@ -246,9 +246,7 @@ export function ProductForm({
       descriptionDe: form.descriptionDe || null,
 
       price: Number(form.price) || 0,
-      compareAtPrice: form.compareAtPrice
-        ? Number(form.compareAtPrice)
-        : null,
+      compareAtPrice: form.compareAtPrice ? Number(form.compareAtPrice) : null,
       discountPercentage: form.discountPercentage
         ? Number(form.discountPercentage)
         : null,
@@ -306,7 +304,7 @@ export function ProductForm({
                 <p className="mt-1 text-sm text-muted-foreground">
                   {tr(
                     "productBasicHint",
-                    "Main product names, descriptions, brand, and category."
+                    "Main product names, descriptions, brand, and category.",
                   )}
                 </p>
               </div>
@@ -339,7 +337,9 @@ export function ProductForm({
                   onValueChange={(value) => setValue("brandId", value)}
                 >
                   <SelectTrigger className="mt-1.5">
-                    <SelectValue placeholder={tr("selectBrand", "Select brand")} />
+                    <SelectValue
+                      placeholder={tr("selectBrand", "Select brand")}
+                    />
                   </SelectTrigger>
 
                   <SelectContent>
@@ -491,15 +491,14 @@ export function ProductForm({
                 <p className="mt-1 text-sm text-muted-foreground">
                   {tr(
                     "productClassificationHint",
-                    "Use collections, tags, and age groups for filters, mega menu, search suggestions, and campaigns."
+                    "Use collections, tags, and age groups for filters, mega menu, search suggestions, and campaigns.",
                   )}
                 </p>
               </div>
 
               {selectedClassificationCount > 0 && (
                 <Badge variant="outline">
-                  {selectedClassificationCount}{" "}
-                  {tr("selected", "selected")}
+                  {selectedClassificationCount} {tr("selected", "selected")}
                 </Badge>
               )}
             </div>
@@ -512,7 +511,7 @@ export function ProductForm({
                 onChange={(e) => setClassificationSearch(e.target.value)}
                 placeholder={tr(
                   "searchCollectionsTagsAge",
-                  "Search collections, tags, or age groups..."
+                  "Search collections, tags, or age groups...",
                 )}
                 className="ps-9"
               />
@@ -639,7 +638,10 @@ export function ProductForm({
                   </div>
 
                   <span className="text-xs text-muted-foreground">
-                    {tr("saleTimerOptional", "Optional countdown for this sale")}
+                    {tr(
+                      "saleTimerOptional",
+                      "Optional countdown for this sale",
+                    )}
                   </span>
                 </div>
 
@@ -683,7 +685,7 @@ export function ProductForm({
               <p className="mt-2 text-xs text-muted-foreground">
                 {tr(
                   "uploadHint",
-                  "Upload high-quality product images. First image is used as the cover."
+                  "Upload high-quality product images. First image is used as the cover.",
                 )}
               </p>
 
@@ -800,7 +802,7 @@ export function ProductForm({
                   <p className="mt-1 text-xs text-muted-foreground">
                     {tr(
                       "featuredProductHint",
-                      "Show this product in homepage sections."
+                      "Show this product in homepage sections.",
                     )}
                   </p>
                 </div>
@@ -885,7 +887,12 @@ export function ProductForm({
 
       <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 p-3 shadow-[0_-8px_30px_rgba(15,23,42,0.08)] backdrop-blur md:left-auto md:right-6 md:bottom-6 md:w-auto md:rounded-2xl md:border md:shadow-lg">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:flex-row sm:justify-end">
-          <Button type="submit" size="lg" disabled={saving} className="w-full sm:w-auto">
+          <Button
+            type="submit"
+            size="lg"
+            disabled={saving}
+            className="w-full sm:w-auto"
+          >
             {saving ? (
               <Loader2 className="me-2 h-4 w-4 animate-spin" />
             ) : (
