@@ -17,7 +17,11 @@ async function main() {
       descriptionEn: "Premium strollers for comfort and safety",
       descriptionAr: "عربات أطفال فاخرة للراحة والأمان",
       descriptionDe: "Premium Kinderwagen für Komfort und Sicherheit",
-      image: "https://images.unsplash.com/photo-1566004100477-7b3d6e801e78?w=400",
+      image:
+        "https://images.unsplash.com/photo-1566004100477-7b3d6e801e78?w=400",
+      visible: true,
+      featured: true,
+      sortOrder: 1,
     },
   });
 
@@ -32,7 +36,11 @@ async function main() {
       descriptionEn: "Fun and safe scooters for kids",
       descriptionAr: "سكوترات ممتعة وآمنة للأطفال",
       descriptionDe: "Lustige und sichere Roller für Kinder",
-      image: "https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=400",
+      image:
+        "https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=400",
+      visible: true,
+      featured: true,
+      sortOrder: 2,
     },
   });
 
@@ -47,7 +55,11 @@ async function main() {
       descriptionEn: "Self-balancing hoverboards for adventure seekers",
       descriptionAr: "هوفربورد ذاتي التوازن لمحبي المغامرة",
       descriptionDe: "Selbstbalancierende Hoverboards für Abenteurer",
-      image: "https://images.unsplash.com/photo-1621101668838-a1d8e1d02c42?w=400",
+      image:
+        "https://images.unsplash.com/photo-1621101668838-a1d8e1d02c42?w=400",
+      visible: true,
+      featured: true,
+      sortOrder: 3,
     },
   });
 
@@ -62,7 +74,11 @@ async function main() {
       descriptionEn: "Comfortable bouncers for babies",
       descriptionAr: "كراسي هزازة مريحة للأطفال",
       descriptionDe: "Bequeme Wippen für Babys",
-      image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=400",
+      image:
+        "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=400",
+      visible: true,
+      featured: true,
+      sortOrder: 4,
     },
   });
 
@@ -77,7 +93,11 @@ async function main() {
       descriptionEn: "Electric drift cars for thrill-seeking kids",
       descriptionAr: "سيارات دريفت كهربائية للأطفال",
       descriptionDe: "Elektrische Drift-Autos für Kinder",
-      image: "https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=400",
+      image:
+        "https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=400",
+      visible: true,
+      featured: true,
+      sortOrder: 5,
     },
   });
 
@@ -92,9 +112,276 @@ async function main() {
       descriptionEn: "Summer essentials for kids",
       descriptionAr: "أساسيات الصيف للأطفال",
       descriptionDe: "Sommer-Essentials für Kinder",
-      image: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=400",
+      image:
+        "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=400",
+      visible: true,
+      featured: true,
+      sortOrder: 6,
     },
   });
+
+  // ─── Collections ─────────────────────────────────────────────────────────
+  const collections = [
+    {
+      slug: "best-sellers",
+      nameEn: "Best Sellers",
+      nameAr: "الأكثر مبيعًا",
+      nameDe: "Bestseller",
+      descriptionEn: "Customer favorites and top-performing products",
+      descriptionAr: "المنتجات المفضلة للعملاء والأكثر طلبًا",
+      descriptionDe: "Kundenfavoriten und meistverkaufte Produkte",
+      type: "SYSTEM" as const,
+      featured: true,
+      sortOrder: 1,
+    },
+    {
+      slug: "new-arrivals",
+      nameEn: "New Arrivals",
+      nameAr: "وصل حديثًا",
+      nameDe: "Neuheiten",
+      descriptionEn: "Freshly added kids products",
+      descriptionAr: "أحدث منتجات الأطفال المضافة",
+      descriptionDe: "Neu hinzugefügte Kinderprodukte",
+      type: "SYSTEM" as const,
+      featured: true,
+      sortOrder: 2,
+    },
+    {
+      slug: "ramadan-offers",
+      nameEn: "Ramadan Offers",
+      nameAr: "عروض رمضان",
+      nameDe: "Ramadan-Angebote",
+      descriptionEn: "Seasonal picks and Ramadan gift ideas",
+      descriptionAr: "اختيارات موسمية وهدايا مناسبة لرمضان",
+      descriptionDe: "Saisonale Auswahl und Ramadan-Geschenkideen",
+      type: "SEASONAL" as const,
+      featured: true,
+      sortOrder: 3,
+    },
+    {
+      slug: "back-to-school",
+      nameEn: "Back to School",
+      nameAr: "العودة للمدرسة",
+      nameDe: "Schulanfang",
+      descriptionEn: "Useful picks for school season",
+      descriptionAr: "اختيارات مفيدة لموسم العودة للمدرسة",
+      descriptionDe: "Praktische Auswahl für den Schulanfang",
+      type: "SEASONAL" as const,
+      featured: true,
+      sortOrder: 4,
+    },
+    {
+      slug: "summer-picks",
+      nameEn: "Summer Picks",
+      nameAr: "اختيارات الصيف",
+      nameDe: "Sommer-Auswahl",
+      descriptionEn: "Outdoor and summer fun products",
+      descriptionAr: "منتجات للعب والخروج في الصيف",
+      descriptionDe: "Outdoor- und Sommerspaß-Produkte",
+      type: "SEASONAL" as const,
+      featured: true,
+      sortOrder: 5,
+    },
+    {
+      slug: "gift-picks",
+      nameEn: "Gift Picks",
+      nameAr: "اختيارات للهدايا",
+      nameDe: "Geschenkideen",
+      descriptionEn: "Easy gift ideas for kids",
+      descriptionAr: "أفكار هدايا سهلة ومناسبة للأطفال",
+      descriptionDe: "Einfache Geschenkideen für Kinder",
+      type: "MARKETING" as const,
+      featured: true,
+      sortOrder: 6,
+    },
+  ];
+
+  const collectionRecords: Record<string, { id: string }> = {};
+
+  for (const collection of collections) {
+    const record = await prisma.collection.upsert({
+      where: { slug: collection.slug },
+      update: {
+        nameEn: collection.nameEn,
+        nameAr: collection.nameAr,
+        nameDe: collection.nameDe,
+        descriptionEn: collection.descriptionEn,
+        descriptionAr: collection.descriptionAr,
+        descriptionDe: collection.descriptionDe,
+        type: collection.type,
+        visible: true,
+        featured: collection.featured,
+        sortOrder: collection.sortOrder,
+      },
+      create: {
+        ...collection,
+        visible: true,
+      },
+      select: { id: true },
+    });
+
+    collectionRecords[collection.slug] = record;
+  }
+
+  // ─── Age Groups ──────────────────────────────────────────────────────────
+  const ageGroups = [
+    {
+      slug: "0-2-years",
+      nameEn: "0-2 Years",
+      nameAr: "من 0 إلى 2 سنة",
+      nameDe: "0-2 Jahre",
+      minAgeMonths: 0,
+      maxAgeMonths: 24,
+      featured: true,
+      sortOrder: 1,
+    },
+    {
+      slug: "3-5-years",
+      nameEn: "3-5 Years",
+      nameAr: "من 3 إلى 5 سنوات",
+      nameDe: "3-5 Jahre",
+      minAgeMonths: 36,
+      maxAgeMonths: 60,
+      featured: true,
+      sortOrder: 2,
+    },
+    {
+      slug: "6-9-years",
+      nameEn: "6-9 Years",
+      nameAr: "من 6 إلى 9 سنوات",
+      nameDe: "6-9 Jahre",
+      minAgeMonths: 72,
+      maxAgeMonths: 108,
+      featured: true,
+      sortOrder: 3,
+    },
+    {
+      slug: "10-plus-years",
+      nameEn: "10+ Years",
+      nameAr: "10 سنوات فأكثر",
+      nameDe: "10+ Jahre",
+      minAgeMonths: 120,
+      maxAgeMonths: null,
+      featured: true,
+      sortOrder: 4,
+    },
+  ];
+
+  const ageGroupRecords: Record<string, { id: string }> = {};
+
+  for (const ageGroup of ageGroups) {
+    const record = await prisma.ageGroup.upsert({
+      where: { slug: ageGroup.slug },
+      update: {
+        nameEn: ageGroup.nameEn,
+        nameAr: ageGroup.nameAr,
+        nameDe: ageGroup.nameDe,
+        minAgeMonths: ageGroup.minAgeMonths,
+        maxAgeMonths: ageGroup.maxAgeMonths,
+        visible: true,
+        featured: ageGroup.featured,
+        sortOrder: ageGroup.sortOrder,
+      },
+      create: {
+        ...ageGroup,
+        visible: true,
+      },
+      select: { id: true },
+    });
+
+    ageGroupRecords[ageGroup.slug] = record;
+  }
+
+  // ─── Tags ────────────────────────────────────────────────────────────────
+  const tags = [
+    {
+      slug: "gift",
+      nameEn: "Gift",
+      nameAr: "هدية",
+      nameDe: "Geschenk",
+      featured: true,
+      sortOrder: 1,
+    },
+    {
+      slug: "outdoor",
+      nameEn: "Outdoor",
+      nameAr: "خروج ولعب خارجي",
+      nameDe: "Outdoor",
+      featured: true,
+      sortOrder: 2,
+    },
+    {
+      slug: "educational",
+      nameEn: "Educational",
+      nameAr: "تعليمي",
+      nameDe: "Lernspielzeug",
+      featured: true,
+      sortOrder: 3,
+    },
+    {
+      slug: "travel",
+      nameEn: "Travel",
+      nameAr: "مناسب للسفر",
+      nameDe: "Reise",
+      featured: true,
+      sortOrder: 4,
+    },
+    {
+      slug: "popular",
+      nameEn: "Popular",
+      nameAr: "رائج",
+      nameDe: "Beliebt",
+      featured: true,
+      sortOrder: 5,
+    },
+    {
+      slug: "safe-choice",
+      nameEn: "Safe Choice",
+      nameAr: "اختيار آمن",
+      nameDe: "Sichere Wahl",
+      featured: true,
+      sortOrder: 6,
+    },
+    {
+      slug: "premium",
+      nameEn: "Premium",
+      nameAr: "فاخر",
+      nameDe: "Premium",
+      featured: false,
+      sortOrder: 7,
+    },
+    {
+      slug: "limited-offer",
+      nameEn: "Limited Offer",
+      nameAr: "عرض محدود",
+      nameDe: "Limitierte Aktion",
+      featured: false,
+      sortOrder: 8,
+    },
+  ];
+
+  const tagRecords: Record<string, { id: string }> = {};
+
+  for (const tag of tags) {
+    const record = await prisma.tag.upsert({
+      where: { slug: tag.slug },
+      update: {
+        nameEn: tag.nameEn,
+        nameAr: tag.nameAr,
+        nameDe: tag.nameDe,
+        visible: true,
+        featured: tag.featured,
+        sortOrder: tag.sortOrder,
+      },
+      create: {
+        ...tag,
+        visible: true,
+      },
+      select: { id: true },
+    });
+
+    tagRecords[tag.slug] = record;
+  }
 
   // ─── Products ────────────────────────────────────────────────────────────
   const products = [
@@ -106,15 +393,20 @@ async function main() {
       shortDescEn: "Lightweight and compact for traveling families",
       shortDescAr: "خفيفة ومضغوطة للعائلات المسافرة",
       shortDescDe: "Leicht und kompakt für reisende Familien",
-      descriptionEn: "Our Premium Travel Stroller combines lightweight design with robust safety features. Perfect for navigating airports, hotels, and city streets. Features a one-hand fold mechanism, UV-protected canopy, and all-terrain wheels.",
-      descriptionAr: "عربة السفر الفاخرة تجمع بين التصميم الخفيف ومميزات الأمان القوية. مثالية للتنقل في المطارات والفنادق وشوارع المدينة.",
-      descriptionDe: "Unser Premium Reise-Kinderwagen vereint leichtes Design mit robusten Sicherheitsmerkmalen. Perfekt für Flughäfen, Hotels und Stadtstraßen.",
+      descriptionEn:
+        "Our Premium Travel Stroller combines lightweight design with robust safety features. Perfect for navigating airports, hotels, and city streets. Features a one-hand fold mechanism, UV-protected canopy, and all-terrain wheels.",
+      descriptionAr:
+        "عربة السفر الفاخرة تجمع بين التصميم الخفيف ومميزات الأمان القوية. مثالية للتنقل في المطارات والفنادق وشوارع المدينة.",
+      descriptionDe:
+        "Unser Premium Reise-Kinderwagen vereint leichtes Design mit robusten Sicherheitsmerkmalen. Perfekt für Flughäfen, Hotels und Stadtstraßen.",
       price: 4500,
       compareAtPrice: 5500,
       discountPercentage: 15,
       featured: true,
       categoryId: strollers.id,
-      images: ["https://images.unsplash.com/photo-1566004100477-7b3d6e801e78?w=600"],
+      images: [
+        "https://images.unsplash.com/photo-1566004100477-7b3d6e801e78?w=600",
+      ],
       colors: ["Black", "Navy", "Gray"],
       sizes: [],
       availability: "AVAILABLE" as const,
@@ -127,34 +419,44 @@ async function main() {
       shortDescEn: "Adjustable height, LED wheels, ages 3-8",
       shortDescAr: "ارتفاع قابل للتعديل، عجلات LED، للأعمار 3-8",
       shortDescDe: "Verstellbare Höhe, LED-Räder, Alter 3-8",
-      descriptionEn: "The 3-Wheel Pro Scooter features a sturdy aluminum deck, smooth-glide LED wheels that light up, and an adjustable handlebar for growing kids. Supports up to 50kg.",
-      descriptionAr: "سكوتر 3 عجلات برو يتميز بقاعدة ألمنيوم متينة، عجلات LED مضيئة، ومقود قابل للتعديل.",
-      descriptionDe: "Der 3-Rad Pro Roller verfügt über ein stabiles Aluminium-Deck, LED-Räder und einen verstellbaren Lenker.",
+      descriptionEn:
+        "The 3-Wheel Pro Scooter features a sturdy aluminum deck, smooth-glide LED wheels that light up, and an adjustable handlebar for growing kids. Supports up to 50kg.",
+      descriptionAr:
+        "سكوتر 3 عجلات برو يتميز بقاعدة ألمنيوم متينة، عجلات LED مضيئة، ومقود قابل للتعديل.",
+      descriptionDe:
+        "Der 3-Rad Pro Roller verfügt über ein stabiles Aluminium-Deck, LED-Räder und einen verstellbaren Lenker.",
       price: 1200,
       compareAtPrice: 1500,
       featured: true,
       categoryId: scooters.id,
-      images: ["https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=600"],
+      images: [
+        "https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=600",
+      ],
       colors: ["Pink", "Blue", "Green"],
       sizes: [],
       availability: "AVAILABLE" as const,
     },
     {
       slug: "bluetooth-hoverboard-65",
-      nameEn: "Bluetooth Hoverboard 6.5\"",
+      nameEn: 'Bluetooth Hoverboard 6.5"',
       nameAr: "هوفربورد بلوتوث 6.5 بوصة",
-      nameDe: "Bluetooth Hoverboard 6,5\"",
+      nameDe: 'Bluetooth Hoverboard 6,5"',
       shortDescEn: "Self-balancing with Bluetooth speaker",
       shortDescAr: "ذاتي التوازن مع سماعة بلوتوث",
       shortDescDe: "Selbstbalancierend mit Bluetooth-Lautsprecher",
-      descriptionEn: "Experience the thrill of riding with our 6.5\" Bluetooth Hoverboard. Features LED lights, built-in Bluetooth speaker, anti-slip footpads, and UL-certified battery.",
-      descriptionAr: "استمتع بتجربة الركوب مع هوفربورد 6.5 بوصة بتقنية البلوتوث. يتميز بأضواء LED وسماعة بلوتوث مدمجة.",
-      descriptionDe: "Erleben Sie den Nervenkitzel mit unserem 6,5\" Bluetooth Hoverboard mit LED-Lichtern und eingebautem Lautsprecher.",
+      descriptionEn:
+        'Experience the thrill of riding with our 6.5" Bluetooth Hoverboard. Features LED lights, built-in Bluetooth speaker, anti-slip footpads, and UL-certified battery.',
+      descriptionAr:
+        "استمتع بتجربة الركوب مع هوفربورد 6.5 بوصة بتقنية البلوتوث. يتميز بأضواء LED وسماعة بلوتوث مدمجة.",
+      descriptionDe:
+        'Erleben Sie den Nervenkitzel mit unserem 6,5" Bluetooth Hoverboard mit LED-Lichtern und eingebautem Lautsprecher.',
       price: 3200,
       discountPercentage: 10,
       featured: true,
       categoryId: hoverboards.id,
-      images: ["https://images.unsplash.com/photo-1621101668838-a1d8e1d02c42?w=600"],
+      images: [
+        "https://images.unsplash.com/photo-1621101668838-a1d8e1d02c42?w=600",
+      ],
       colors: ["Black", "Red", "Chrome"],
       sizes: [],
       availability: "AVAILABLE" as const,
@@ -167,14 +469,19 @@ async function main() {
       shortDescEn: "Soothing vibrations, music, and toy bar",
       shortDescAr: "اهتزازات مهدئة، موسيقى، وشريط ألعاب",
       shortDescDe: "Beruhigende Vibrationen, Musik und Spielbogen",
-      descriptionEn: "The Deluxe Baby Bouncer keeps your little one entertained and relaxed with gentle vibrations, calming music, and an interactive toy bar.",
-      descriptionAr: "الكرسي الهزاز الفاخر يبقي طفلك مستمتعاً ومسترخياً مع اهتزازات لطيفة وموسيقى هادئة.",
-      descriptionDe: "Die Deluxe Babywippe hält Ihr Baby mit sanften Vibrationen, beruhigender Musik und einem interaktiven Spielbogen zufrieden.",
+      descriptionEn:
+        "The Deluxe Baby Bouncer keeps your little one entertained and relaxed with gentle vibrations, calming music, and an interactive toy bar.",
+      descriptionAr:
+        "الكرسي الهزاز الفاخر يبقي طفلك مستمتعاً ومسترخياً مع اهتزازات لطيفة وموسيقى هادئة.",
+      descriptionDe:
+        "Die Deluxe Babywippe hält Ihr Baby mit sanften Vibrationen, beruhigender Musik und einem interaktiven Spielbogen zufrieden.",
       price: 2800,
       compareAtPrice: 3500,
       featured: true,
       categoryId: bouncers.id,
-      images: ["https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=600"],
+      images: [
+        "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=600",
+      ],
       colors: ["Pink", "Blue", "Beige"],
       sizes: [],
       availability: "AVAILABLE" as const,
@@ -187,13 +494,18 @@ async function main() {
       shortDescEn: "360° spin, LED lights, ages 6+",
       shortDescAr: "دوران 360 درجة، أضواء LED، للأعمار 6+",
       shortDescDe: "360° Spin, LED-Lichter, ab 6 Jahre",
-      descriptionEn: "The Electric Drift Kart delivers thrilling 360-degree spins with dual rear motors. Features LED underglow lights, adjustable seat, and a top speed of 12 km/h.",
-      descriptionAr: "كارت الدريفت الكهربائي يقدم دوران 360 درجة مثير مع محركين خلفيين. يتميز بأضواء LED ومقعد قابل للتعديل.",
-      descriptionDe: "Das Elektro Drift-Kart bietet aufregende 360-Grad-Drehungen mit zwei Hinterradmotoren und LED-Unterboden-Beleuchtung.",
+      descriptionEn:
+        "The Electric Drift Kart delivers thrilling 360-degree spins with dual rear motors. Features LED underglow lights, adjustable seat, and a top speed of 12 km/h.",
+      descriptionAr:
+        "كارت الدريفت الكهربائي يقدم دوران 360 درجة مثير مع محركين خلفيين. يتميز بأضواء LED ومقعد قابل للتعديل.",
+      descriptionDe:
+        "Das Elektro Drift-Kart bietet aufregende 360-Grad-Drehungen mit zwei Hinterradmotoren und LED-Unterboden-Beleuchtung.",
       price: 5500,
       featured: true,
       categoryId: driftCars.id,
-      images: ["https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=600"],
+      images: [
+        "https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=600",
+      ],
       colors: ["Red", "Blue", "Black"],
       sizes: [],
       availability: "AVAILABLE" as const,
@@ -206,15 +518,20 @@ async function main() {
       shortDescEn: "Large family pool with slide attachment",
       shortDescAr: "مسبح عائلي كبير مع زحلقة",
       shortDescDe: "Großes Familienpool mit Rutsche",
-      descriptionEn: "Make summer unforgettable with our Inflatable Pool Set! Includes a large pool, attached slide, and repair kit. Perfect for Hurghada summer days.",
-      descriptionAr: "اجعل الصيف لا يُنسى مع مجموعة المسبح القابل للنفخ! تتضمن مسبح كبير وزحلقة.",
-      descriptionDe: "Machen Sie den Sommer unvergesslich mit unserem aufblasbaren Pool-Set mit Rutsche!",
+      descriptionEn:
+        "Make summer unforgettable with our Inflatable Pool Set! Includes a large pool, attached slide, and repair kit. Perfect for Hurghada summer days.",
+      descriptionAr:
+        "اجعل الصيف لا يُنسى مع مجموعة المسبح القابل للنفخ! تتضمن مسبح كبير وزحلقة.",
+      descriptionDe:
+        "Machen Sie den Sommer unvergesslich mit unserem aufblasbaren Pool-Set mit Rutsche!",
       price: 1800,
       compareAtPrice: 2200,
       discountPercentage: 20,
       featured: true,
       categoryId: beach.id,
-      images: ["https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=600"],
+      images: [
+        "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=600",
+      ],
       colors: ["Blue/Yellow", "Pink/Purple"],
       sizes: ["Medium", "Large"],
       availability: "AVAILABLE" as const,
@@ -227,13 +544,18 @@ async function main() {
       shortDescEn: "Ultra-compact fold for city life",
       shortDescAr: "طي فائق الضغط لحياة المدينة",
       shortDescDe: "Ultra-kompakte Faltung für das Stadtleben",
-      descriptionEn: "Designed for urban families. The Compact City Stroller fits in the smallest spaces with its ultra-compact fold. Lightweight yet durable.",
-      descriptionAr: "مصممة للعائلات في المدن. عربة المدينة المضغوطة تناسب أصغر المساحات بفضل طيها الفائق.",
-      descriptionDe: "Für städtische Familien konzipiert. Ultra-kompakte Faltung, leicht und langlebig.",
+      descriptionEn:
+        "Designed for urban families. The Compact City Stroller fits in the smallest spaces with its ultra-compact fold. Lightweight yet durable.",
+      descriptionAr:
+        "مصممة للعائلات في المدن. عربة المدينة المضغوطة تناسب أصغر المساحات بفضل طيها الفائق.",
+      descriptionDe:
+        "Für städtische Familien konzipiert. Ultra-kompakte Faltung, leicht und langlebig.",
       price: 3200,
       featured: false,
       categoryId: strollers.id,
-      images: ["https://images.unsplash.com/photo-1566004100477-7b3d6e801e78?w=600"],
+      images: [
+        "https://images.unsplash.com/photo-1566004100477-7b3d6e801e78?w=600",
+      ],
       colors: ["Gray", "Black"],
       sizes: [],
       availability: "AVAILABLE" as const,
@@ -246,38 +568,185 @@ async function main() {
       shortDescEn: "Electric, foldable, 12km range",
       shortDescAr: "كهربائي، قابل للطي، مدى 12 كم",
       shortDescDe: "Elektrisch, faltbar, 12km Reichweite",
-      descriptionEn: "Our Electric Scooter for kids is foldable and features a 12km range. Comes with hand brake and rear fender brake for extra safety.",
-      descriptionAr: "السكوتر الكهربائي للأطفال قابل للطي بمدى 12 كم. يأتي مع فرامل يد وفرامل خلفية.",
-      descriptionDe: "Unser Elektroroller für Kinder ist faltbar mit 12km Reichweite, Handbremse und Hinterradbremse.",
+      descriptionEn:
+        "Our Electric Scooter for kids is foldable and features a 12km range. Comes with hand brake and rear fender brake for extra safety.",
+      descriptionAr:
+        "السكوتر الكهربائي للأطفال قابل للطي بمدى 12 كم. يأتي مع فرامل يد وفرامل خلفية.",
+      descriptionDe:
+        "Unser Elektroroller für Kinder ist faltbar mit 12km Reichweite, Handbremse und Hinterradbremse.",
       price: 2500,
       featured: true,
       categoryId: scooters.id,
-      images: ["https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=600"],
+      images: [
+        "https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=600",
+      ],
       colors: ["Black", "White"],
       sizes: [],
       availability: "AVAILABLE" as const,
     },
   ];
 
-  for (const p of products) {
+  for (const product of products) {
     await prisma.product.upsert({
-      where: { slug: p.slug },
+      where: { slug: product.slug },
       update: {},
-      create: p,
+      create: product,
     });
+  }
+
+  // ─── Product Classification Links ────────────────────────────────────────
+  const productClassifications: Record<
+    string,
+    {
+      collections: string[];
+      tags: string[];
+      ageGroups: string[];
+    }
+  > = {
+    "premium-travel-stroller": {
+      collections: ["best-sellers", "gift-picks"],
+      tags: ["travel", "premium", "safe-choice"],
+      ageGroups: ["0-2-years"],
+    },
+    "compact-city-stroller": {
+      collections: ["new-arrivals"],
+      tags: ["travel", "safe-choice"],
+      ageGroups: ["0-2-years"],
+    },
+    "3-wheel-pro-scooter": {
+      collections: ["best-sellers", "summer-picks", "gift-picks"],
+      tags: ["outdoor", "popular", "gift"],
+      ageGroups: ["3-5-years", "6-9-years"],
+    },
+    "kids-electric-scooter": {
+      collections: ["new-arrivals", "summer-picks"],
+      tags: ["outdoor", "popular", "gift"],
+      ageGroups: ["6-9-years", "10-plus-years"],
+    },
+    "bluetooth-hoverboard-65": {
+      collections: ["best-sellers", "gift-picks"],
+      tags: ["outdoor", "popular", "premium"],
+      ageGroups: ["10-plus-years"],
+    },
+    "deluxe-baby-bouncer": {
+      collections: ["best-sellers", "gift-picks"],
+      tags: ["gift", "safe-choice", "premium"],
+      ageGroups: ["0-2-years"],
+    },
+    "electric-drift-kart": {
+      collections: ["new-arrivals", "summer-picks", "gift-picks"],
+      tags: ["outdoor", "popular", "premium"],
+      ageGroups: ["6-9-years", "10-plus-years"],
+    },
+    "inflatable-pool-set": {
+      collections: ["summer-picks", "ramadan-offers"],
+      tags: ["outdoor", "gift", "limited-offer"],
+      ageGroups: ["3-5-years", "6-9-years"],
+    },
+  };
+
+  for (const [productSlug, classification] of Object.entries(
+    productClassifications
+  )) {
+    const product = await prisma.product.findUnique({
+      where: { slug: productSlug },
+      select: { id: true },
+    });
+
+    if (!product) continue;
+
+    for (const collectionSlug of classification.collections) {
+      const collection = collectionRecords[collectionSlug];
+      if (!collection) continue;
+
+      await prisma.productCollection.upsert({
+        where: {
+          productId_collectionId: {
+            productId: product.id,
+            collectionId: collection.id,
+          },
+        },
+        update: {},
+        create: {
+          productId: product.id,
+          collectionId: collection.id,
+        },
+      });
+    }
+
+    for (const tagSlug of classification.tags) {
+      const tag = tagRecords[tagSlug];
+      if (!tag) continue;
+
+      await prisma.productTag.upsert({
+        where: {
+          productId_tagId: {
+            productId: product.id,
+            tagId: tag.id,
+          },
+        },
+        update: {},
+        create: {
+          productId: product.id,
+          tagId: tag.id,
+        },
+      });
+    }
+
+    for (const ageGroupSlug of classification.ageGroups) {
+      const ageGroup = ageGroupRecords[ageGroupSlug];
+      if (!ageGroup) continue;
+
+      await prisma.productAgeGroup.upsert({
+        where: {
+          productId_ageGroupId: {
+            productId: product.id,
+            ageGroupId: ageGroup.id,
+          },
+        },
+        update: {},
+        create: {
+          productId: product.id,
+          ageGroupId: ageGroup.id,
+        },
+      });
+    }
   }
 
   // ─── Site Settings ───────────────────────────────────────────────────────
   const settings = [
     { key: "whatsapp_number", value: "+201234567890" },
-    { key: "whatsapp_template_en", value: "Hi Kidorly! I just placed order {{orderNumber}}. Please confirm." },
-    { key: "whatsapp_template_ar", value: "مرحبا كيدورلي! قمت بتقديم الطلب {{orderNumber}}. يرجى التأكيد." },
-    { key: "whatsapp_template_de", value: "Hallo Kidorly! Ich habe gerade Bestellung {{orderNumber}} aufgegeben. Bitte bestätigen." },
+    {
+      key: "whatsapp_template_en",
+      value:
+        "Hi Kidorly! I just placed order {{orderNumber}}. Please confirm.",
+    },
+    {
+      key: "whatsapp_template_ar",
+      value: "مرحبا كيدورلي! قمت بتقديم الطلب {{orderNumber}}. يرجى التأكيد.",
+    },
+    {
+      key: "whatsapp_template_de",
+      value:
+        "Hallo Kidorly! Ich habe gerade Bestellung {{orderNumber}} aufgegeben. Bitte bestätigen.",
+    },
     { key: "vodafone_cash_number", value: "01012345678" },
     { key: "instapay_id", value: "kidorly@instapay" },
-    { key: "payment_instructions_en", value: "Please send the total amount to the number/account shown below, then confirm on WhatsApp with a screenshot." },
-    { key: "payment_instructions_ar", value: "يرجى إرسال المبلغ الإجمالي إلى الرقم/الحساب أدناه، ثم التأكيد عبر واتساب مع لقطة شاشة." },
-    { key: "payment_instructions_de", value: "Bitte senden Sie den Gesamtbetrag an die unten angezeigte Nummer/Konto und bestätigen Sie per WhatsApp mit einem Screenshot." },
+    {
+      key: "payment_instructions_en",
+      value:
+        "Please send the total amount to the number/account shown below, then confirm on WhatsApp with a screenshot.",
+    },
+    {
+      key: "payment_instructions_ar",
+      value:
+        "يرجى إرسال المبلغ الإجمالي إلى الرقم/الحساب أدناه، ثم التأكيد عبر واتساب مع لقطة شاشة.",
+    },
+    {
+      key: "payment_instructions_de",
+      value:
+        "Bitte senden Sie den Gesamtbetrag an die unten angezeigte Nummer/Konto und bestätigen Sie per WhatsApp mit einem Screenshot.",
+    },
     { key: "shipping_fee_hurghada", value: "50" },
     { key: "shipping_fee_cairo", value: "80" },
     { key: "shipping_fee_alexandria", value: "80" },
@@ -288,30 +757,52 @@ async function main() {
     { key: "social_facebook", value: "https://facebook.com/kidorly" },
     { key: "social_tiktok", value: "https://tiktok.com/@kidorly" },
     { key: "brand_name", value: "Kidorly" },
-    { key: "seo_title_en", value: "Kidorly — Premium Kids Products Delivered Across Egypt" },
-    { key: "seo_title_ar", value: "كيدورلي — منتجات أطفال فاخرة توصّل في مصر" },
-    { key: "seo_title_de", value: "Kidorly — Premium Kinderprodukte in Ägypten" },
-    { key: "seo_desc_en", value: "Shop strollers, scooters, hoverboards and more. Delivered to Hurghada, Cairo & Alexandria. Cash on delivery, Vodafone Cash, InstaPay." },
-    { key: "seo_desc_ar", value: "تسوق عربات أطفال، سكوترات، هوفربورد والمزيد. توصيل للغردقة، القاهرة والإسكندرية." },
-    { key: "seo_desc_de", value: "Kinderwagen, Roller, Hoverboards und mehr. Lieferung nach Hurghada, Kairo & Alexandria." },
+    {
+      key: "seo_title_en",
+      value: "Kidorly — Premium Kids Products Delivered Across Egypt",
+    },
+    {
+      key: "seo_title_ar",
+      value: "كيدورلي — منتجات أطفال فاخرة توصّل في مصر",
+    },
+    {
+      key: "seo_title_de",
+      value: "Kidorly — Premium Kinderprodukte in Ägypten",
+    },
+    {
+      key: "seo_desc_en",
+      value:
+        "Shop strollers, scooters, hoverboards and more. Delivered to Hurghada, Cairo & Alexandria. Cash on delivery, Vodafone Cash, InstaPay.",
+    },
+    {
+      key: "seo_desc_ar",
+      value:
+        "تسوق عربات أطفال، سكوترات، هوفربورد والمزيد. توصيل للغردقة، القاهرة والإسكندرية.",
+    },
+    {
+      key: "seo_desc_de",
+      value:
+        "Kinderwagen, Roller, Hoverboards und mehr. Lieferung nach Hurghada, Kairo & Alexandria.",
+    },
   ];
 
-  for (const s of settings) {
+  for (const setting of settings) {
     await prisma.siteSetting.upsert({
-      where: { key: s.key },
+      where: { key: setting.key },
       update: {},
-      create: s,
+      create: setting,
     });
   }
 
-  // ─── Homepage Sections ────────────────────────────────────────────────────
+  // ─── Homepage Sections ───────────────────────────────────────────────────
   const homepageSections = [
     {
       sectionKey: "announcement",
       data: JSON.stringify({
         textEn: "Free delivery on orders above 2000 EGP in Hurghada! 🎉",
         textAr: "توصيل مجاني للطلبات فوق 2000 ج.م في الغردقة! 🎉",
-        textDe: "Kostenlose Lieferung bei Bestellungen über 2000 EGP in Hurghada! 🎉",
+        textDe:
+          "Kostenlose Lieferung bei Bestellungen über 2000 EGP in Hurghada! 🎉",
       }),
       sortOrder: 0,
     },
@@ -321,9 +812,12 @@ async function main() {
         titleEn: "Premium Kids Products, Delivered to Your Door",
         titleAr: "منتجات أطفال مميزة، توصيل لباب بيتك",
         titleDe: "Premium Kinderprodukte, direkt zu Ihnen geliefert",
-        subtitleEn: "Strollers, scooters, hoverboards & more — trusted quality for your little ones in Hurghada, Cairo & Alexandria.",
-        subtitleAr: "عربات أطفال، سكوترات، هوفربورد والمزيد — جودة موثوقة لأطفالك.",
-        subtitleDe: "Kinderwagen, Roller, Hoverboards & mehr — vertrauenswürdige Qualität.",
+        subtitleEn:
+          "Strollers, scooters, hoverboards & more — trusted quality for your little ones in Hurghada, Cairo & Alexandria.",
+        subtitleAr:
+          "عربات أطفال، سكوترات، هوفربورد والمزيد — جودة موثوقة لأطفالك.",
+        subtitleDe:
+          "Kinderwagen, Roller, Hoverboards & mehr — vertrauenswürdige Qualität.",
         ctaEn: "Shop Now",
         ctaAr: "تسوق الآن",
         ctaDe: "Jetzt einkaufen",
@@ -333,24 +827,27 @@ async function main() {
     },
   ];
 
-  for (const hs of homepageSections) {
+  for (const section of homepageSections) {
     await prisma.homepageSection.upsert({
-      where: { sectionKey: hs.sectionKey },
+      where: { sectionKey: section.sectionKey },
       update: {},
-      create: hs,
+      create: section,
     });
   }
 
   console.log("✅ Seed complete!");
   console.log(`   📦 ${products.length} products`);
-  console.log(`   📁 6 categories`);
+  console.log("   📁 6 categories");
+  console.log(`   🧩 ${collections.length} collections`);
+  console.log(`   🏷️  ${tags.length} tags`);
+  console.log(`   👶 ${ageGroups.length} age groups`);
   console.log(`   ⚙️  ${settings.length} settings`);
   console.log(`   🏠 ${homepageSections.length} homepage sections`);
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
+  .catch((error) => {
+    console.error("❌ Seed failed:", error);
     process.exit(1);
   })
   .finally(async () => {
