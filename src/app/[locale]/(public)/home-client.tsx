@@ -108,7 +108,7 @@ function CategoryCarouselSection({
     if (!element) return;
 
     const isRtl = locale === "ar";
-    const amount = direction === "next" ? 320 : -320;
+    const amount = direction === "next" ? 260 : -260;
 
     element.scrollBy({
       left: isRtl ? -amount : amount,
@@ -116,10 +116,24 @@ function CategoryCarouselSection({
     });
   }
 
+  function productCountText(count: number) {
+    if (locale === "ar") {
+      if (count === 1) return "منتج واحد";
+      if (count === 2) return "منتجان";
+      return `${count} منتجات`;
+    }
+
+    if (locale === "de") {
+      return count === 1 ? "1 Produkt" : `${count} Produkte`;
+    }
+
+    return count === 1 ? "1 product" : `${count} products`;
+  }
+
   return (
-    <section className="relative overflow-hidden bg-white py-12 sm:py-16 md:py-24">
-      <div className="pointer-events-none absolute -top-24 right-0 h-72 w-72 rounded-full bg-brand-coral/10 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 left-0 h-72 w-72 rounded-full bg-brand-sky/10 blur-3xl" />
+    <section className="relative overflow-hidden bg-white py-8 sm:py-14 md:py-24">
+      <div className="pointer-events-none absolute -top-20 right-0 h-56 w-56 rounded-full bg-brand-coral/10 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-56 w-56 rounded-full bg-brand-sky/10 blur-3xl" />
 
       <div className="container relative">
         <SectionHeader
@@ -135,122 +149,177 @@ function CategoryCarouselSection({
           actionLabel={t("common.viewAll")}
         />
 
-        <div className="mb-4 hidden justify-end gap-2 md:flex">
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="rounded-full"
-            onClick={() => scroll("prev")}
-            aria-label="Previous categories"
+        {/* Mobile circular categories */}
+        <div className="relative md:hidden">
+        
+
+          <div
+            ref={scrollerRef}
+            className="category-scroll-snap scrollbar-hide -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 pt-1"
           >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
+            {categories.map((cat, index) => {
+              const categoryName = getTranslated(cat, "name", locale);
+              const image = cat.image || cat.icon || cat.banner;
+              const productCount = cat._count?.products ?? 0;
 
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="rounded-full"
-            onClick={() => scroll("next")}
-            aria-label="Next categories"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
+              return (
+                <Reveal key={cat.id} delay={index * 45}>
+                  <Link
+                    href={`/${locale}/category/${cat.slug}`}
+                    className="group flex w-[calc((100vw-56px)/3)] min-w-[92px] max-w-[118px] shrink-0 snap-start flex-col items-center text-center"
+                  >
+                    <div className="relative">
+                      <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-brand-coral/60 via-brand-sun/50 to-brand-sky/60 opacity-80 blur-[1px] transition-transform group-active:scale-95" />
 
-        <div
-          ref={scrollerRef}
-          className="category-scroll-snap scrollbar-hide -mx-4 flex gap-4 overflow-x-auto px-4 pb-3 sm:gap-5 md:-mx-2 md:px-2"
-        >
-          {categories.map((cat, index) => {
-            const categoryName = getTranslated(cat, "name", locale);
-            const image = cat.banner || cat.image || cat.icon;
-            const productCount = cat._count?.products ?? 0;
-            const childCount = cat.children?.length ?? 0;
-
-            return (
-              <Reveal key={cat.id} delay={index * 60}>
-                <Link
-                  href={`/${locale}/category/${cat.slug}`}
-                  className={cn(
-                    "group relative block h-full w-[74vw] max-w-[280px] shrink-0 overflow-hidden rounded-[2rem]",
-                    "border border-gray-100 bg-white shadow-[0_12px_34px_rgba(15,23,42,0.10)]",
-                    "transition-all duration-300 md:w-[250px] md:hover:-translate-y-1 md:hover:shadow-[0_18px_48px_rgba(15,23,42,0.14)]"
-                  )}
-                >
-                  <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-brand-coral/15 via-brand-sky/10 to-brand-sun/20">
-                    {image ? (
-                      <Image
-                        src={image}
-                        alt={categoryName}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                        sizes="(max-width: 640px) 74vw, 250px"
-                      />
-                    ) : (
-                      <div className="flex h-full items-center justify-center">
-                        <Layers3 className="h-12 w-12 text-brand-coral/70" />
+                      <div className="relative flex h-[82px] w-[82px] items-center justify-center overflow-hidden rounded-full border-[4px] border-white bg-gradient-to-br from-brand-coral/10 via-white to-brand-sky/10 shadow-[0_12px_28px_rgba(15,23,42,0.12)] transition-transform duration-300 group-active:scale-95">
+                        {image ? (
+                          <Image
+                            src={image}
+                            alt={categoryName}
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover:scale-110"
+                            sizes="82px"
+                          />
+                        ) : (
+                          <Layers3 className="h-8 w-8 text-brand-coral/75" />
+                        )}
                       </div>
-                    )}
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent" />
-
-                    {cat.discountPercentage ? (
-                      <span className="absolute start-4 top-4 rounded-full bg-brand-coral px-3 py-1 text-xs font-extrabold text-white shadow-lg">
-                        -{cat.discountPercentage}%
-                      </span>
-                    ) : null}
-
-                    {cat.featured && (
-                      <span className="absolute end-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-brand-coral shadow-lg backdrop-blur">
-                        <Sparkles className="h-4 w-4" />
-                      </span>
-                    )}
-
-                    <div className="absolute bottom-4 start-4 end-4">
-                      <h3 className="line-clamp-2 text-lg font-extrabold leading-tight text-white drop-shadow md:text-xl">
-                        {categoryName}
-                      </h3>
-                    </div>
-                  </div>
-
-                  <div className="p-4">
-                    <div className="flex flex-wrap gap-2">
-                      <span className="rounded-full bg-brand-sky/10 px-3 py-1 text-xs font-bold text-brand-ocean">
-                        {productCount}{" "}
-                        {locale === "ar"
-                          ? "منتج"
-                          : locale === "de"
-                            ? "Produkte"
-                            : "products"}
-                      </span>
-
-                      {childCount > 0 && (
-                        <span className="rounded-full bg-brand-coral/10 px-3 py-1 text-xs font-bold text-brand-coral">
-                          {childCount}{" "}
-                          {locale === "ar"
-                            ? "فئات فرعية"
-                            : locale === "de"
-                              ? "Unterkategorien"
-                              : "subcategories"}
+                      {cat.featured && (
+                        <span className="absolute -end-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-white text-brand-coral shadow-md">
+                          <Sparkles className="h-3.5 w-3.5" />
                         </span>
                       )}
+
+                      <span className="absolute -bottom-2 left-1/2 max-w-[78px] -translate-x-1/2 truncate rounded-full bg-white px-2 py-0.5 text-[9px] font-extrabold text-brand-ocean shadow-[0_6px_16px_rgba(15,23,42,0.12)]">
+                        {productCountText(productCount)}
+                      </span>
                     </div>
 
-                    <p className="mt-3 flex items-center text-sm font-bold text-gray-950 transition-colors group-hover:text-primary">
-                      {locale === "ar"
-                        ? "تصفح المنتجات"
-                        : locale === "de"
-                          ? "Produkte ansehen"
-                          : "Explore products"}
-                      <ArrowRight className="ms-1 h-4 w-4" />
-                    </p>
-                  </div>
-                </Link>
-              </Reveal>
-            );
-          })}
+                    <h3 className="mt-4 line-clamp-2 min-h-[34px] text-[12px] font-extrabold leading-tight text-gray-950 transition-colors group-hover:text-primary">
+                      {categoryName}
+                    </h3>
+                  </Link>
+                </Reveal>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Desktop carousel */}
+        <div className="hidden md:block">
+          <div className="mb-4 flex justify-end gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="rounded-full"
+              onClick={() => scroll("prev")}
+              aria-label="Previous categories"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="rounded-full"
+              onClick={() => scroll("next")}
+              aria-label="Next categories"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+
+          <div
+            ref={scrollerRef}
+            className="category-scroll-snap scrollbar-hide -mx-2 flex gap-5 overflow-x-auto px-2 pb-3"
+          >
+            {categories.map((cat, index) => {
+              const categoryName = getTranslated(cat, "name", locale);
+              const image = cat.banner || cat.image || cat.icon;
+              const productCount = cat._count?.products ?? 0;
+              const childCount = cat.children?.length ?? 0;
+
+              return (
+                <Reveal key={cat.id} delay={index * 60}>
+                  <Link
+                    href={`/${locale}/category/${cat.slug}`}
+                    className={cn(
+                      "group relative block h-full w-[250px] shrink-0 overflow-hidden rounded-[2rem]",
+                      "border border-gray-100 bg-white shadow-[0_12px_34px_rgba(15,23,42,0.10)]",
+                      "transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_48px_rgba(15,23,42,0.14)]",
+                    )}
+                  >
+                    <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-brand-coral/15 via-brand-sky/10 to-brand-sun/20">
+                      {image ? (
+                        <Image
+                          src={image}
+                          alt={categoryName}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-110"
+                          sizes="250px"
+                        />
+                      ) : (
+                        <div className="flex h-full items-center justify-center">
+                          <Layers3 className="h-12 w-12 text-brand-coral/70" />
+                        </div>
+                      )}
+
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent" />
+
+                      {cat.discountPercentage ? (
+                        <span className="absolute start-4 top-4 rounded-full bg-brand-coral px-3 py-1 text-xs font-extrabold text-white shadow-lg">
+                          -{cat.discountPercentage}%
+                        </span>
+                      ) : null}
+
+                      {cat.featured && (
+                        <span className="absolute end-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-brand-coral shadow-lg backdrop-blur">
+                          <Sparkles className="h-4 w-4" />
+                        </span>
+                      )}
+
+                      <div className="absolute bottom-4 start-4 end-4">
+                        <h3 className="line-clamp-2 text-xl font-extrabold leading-tight text-white drop-shadow">
+                          {categoryName}
+                        </h3>
+                      </div>
+                    </div>
+
+                    <div className="p-4">
+                      <div className="flex flex-wrap gap-2">
+                        <span className="rounded-full bg-brand-sky/10 px-3 py-1 text-xs font-bold text-brand-ocean">
+                          {productCountText(productCount)}
+                        </span>
+
+                        {childCount > 0 && (
+                          <span className="rounded-full bg-brand-coral/10 px-3 py-1 text-xs font-bold text-brand-coral">
+                            {childCount}{" "}
+                            {locale === "ar"
+                              ? "فئات فرعية"
+                              : locale === "de"
+                                ? "Unterkategorien"
+                                : "subcategories"}
+                          </span>
+                        )}
+                      </div>
+
+                      <p className="mt-3 flex items-center text-sm font-bold text-gray-950 transition-colors group-hover:text-primary">
+                        {locale === "ar"
+                          ? "تصفح المنتجات"
+                          : locale === "de"
+                            ? "Produkte ansehen"
+                            : "Explore products"}
+                        <ArrowRight className="ms-1 h-4 w-4" />
+                      </p>
+                    </div>
+                  </Link>
+                </Reveal>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
