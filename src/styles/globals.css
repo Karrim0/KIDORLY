@@ -270,3 +270,61 @@ html {
     padding-top: 8rem;
   }
 }
+@keyframes partners-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ── Horizontal category carousel ─────────────────── */
+.category-scroll-snap {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.category-scroll-snap > * {
+  scroll-snap-align: start;
+}
+
+/* ── Partners marquee ─────────────────────────────── */
+@keyframes partners-marquee-ltr {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes partners-marquee-rtl {
+  from {
+    transform: translateX(-50%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.partners-marquee {
+  animation: partners-marquee-ltr 30s linear infinite;
+}
+
+.partners-marquee-rtl {
+  animation-name: partners-marquee-rtl;
+}
+
+.partners-marquee:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .partners-marquee {
+    animation: none;
+  }
+}

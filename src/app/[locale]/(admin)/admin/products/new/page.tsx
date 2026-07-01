@@ -9,17 +9,48 @@ export default async function NewProductPage({
 }: {
   params: { locale: string };
 }) {
-  const [categories, brands] = await Promise.all([
-    prisma.category.findMany({ orderBy: { nameEn: "asc" } }),
-    prisma.brand.findMany({ orderBy: { nameEn: "asc" } }),
-  ]);
+  const [categories, brands, collections, tags, ageGroups, t] =
+    await Promise.all([
+      prisma.category.findMany({
+        orderBy: [{ sortOrder: "asc" }, { nameEn: "asc" }],
+      }),
 
-  const t = await getTranslations({ locale, namespace: "admin" });
+      prisma.brand.findMany({
+        orderBy: { nameEn: "asc" },
+      }),
+
+      prisma.collection.findMany({
+        orderBy: [{ sortOrder: "asc" }, { nameEn: "asc" }],
+      }),
+
+      prisma.tag.findMany({
+        orderBy: [{ sortOrder: "asc" }, { nameEn: "asc" }],
+      }),
+
+      prisma.ageGroup.findMany({
+        orderBy: [{ sortOrder: "asc" }, { minAgeMonths: "asc" }],
+      }),
+
+      getTranslations({ locale, namespace: "admin" }),
+    ]);
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">{t("newProduct")}</h1>
-      <ProductForm categories={categories} brands={brands} />
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold">{t("newProduct")}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Create a product with category, brand, collections, tags, age groups,
+          pricing, media, and SEO.
+        </p>
+      </div>
+
+      <ProductForm
+        categories={categories}
+        brands={brands}
+        collections={collections}
+        tags={tags}
+        ageGroups={ageGroups}
+      />
     </div>
   );
 }

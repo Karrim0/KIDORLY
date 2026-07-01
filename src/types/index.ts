@@ -22,42 +22,7 @@ export interface BrandFull extends BrandBasic {
   updatedAt: Date;
 }
 
-// ─── Product types ───────────────────────────────────────────────────────────
-
-export interface ProductWithCategory {
-  id: string;
-  slug: string;
-  nameAr: string;
-  nameEn: string;
-  nameDe: string;
-  brandId: string | null;
-  brand: BrandBasic | null;
-  shortDescAr: string | null;
-  shortDescEn: string | null;
-  shortDescDe: string | null;
-  descriptionAr: string | null;
-  descriptionEn: string | null;
-  descriptionDe: string | null;
-  price: number;
-  compareAtPrice: number | null;
-  discountPercentage: number | null;
-  availability: "AVAILABLE" | "UNAVAILABLE";
-  featured: boolean;
-  images: string[];
-  colors: string[];
-  sizes: string[];
-  seoTitleAr: string | null;
-  seoTitleEn: string | null;
-  seoTitleDe: string | null;
-  seoDescAr: string | null;
-  seoDescEn: string | null;
-  seoDescDe: string | null;
-  categoryId: string | null;
-  category: CategoryBasic | null;
-  createdAt: Date;
-  updatedAt: Date;
-  saleEndsAt: Date | null;
-}
+// ─── Category types ──────────────────────────────────────────────────────────
 
 export interface CategoryBasic {
   id: string;
@@ -66,20 +31,145 @@ export interface CategoryBasic {
   nameEn: string;
   nameDe: string;
   image: string | null;
+  icon: string | null;
+  banner: string | null;
   discountPercentage: number | null;
+  visible: boolean;
+  featured: boolean;
+  sortOrder: number;
+  parentId: string | null;
 }
 
 export interface CategoryFull extends CategoryBasic {
   descriptionAr: string | null;
   descriptionEn: string | null;
   descriptionDe: string | null;
+
+  parent?: CategoryBasic | null;
+  children?: CategoryBasic[];
+  relatedTo?: CategoryBasic[];
+  relatedFrom?: CategoryBasic[];
+
   seoTitleAr: string | null;
   seoTitleEn: string | null;
   seoTitleDe: string | null;
   seoDescAr: string | null;
   seoDescEn: string | null;
   seoDescDe: string | null;
+
   _count?: { products: number };
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// ─── Collections / Tags / Age Groups ─────────────────────────────────────────
+
+export interface CollectionBasic {
+  id: string;
+  slug: string;
+  nameAr: string;
+  nameEn: string;
+  nameDe: string;
+  image: string | null;
+  banner: string | null;
+  type: "MARKETING" | "SEASONAL" | "SYSTEM";
+  visible: boolean;
+  featured: boolean;
+  sortOrder: number;
+}
+
+export interface CollectionFull extends CollectionBasic {
+  descriptionAr: string | null;
+  descriptionEn: string | null;
+  descriptionDe: string | null;
+  _count?: { products: number };
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface TagBasic {
+  id: string;
+  slug: string;
+  nameAr: string;
+  nameEn: string;
+  nameDe: string;
+  visible: boolean;
+  featured: boolean;
+  sortOrder: number;
+}
+
+export interface AgeGroupBasic {
+  id: string;
+  slug: string;
+  nameAr: string;
+  nameEn: string;
+  nameDe: string;
+  minAgeMonths: number | null;
+  maxAgeMonths: number | null;
+  visible: boolean;
+  featured: boolean;
+  sortOrder: number;
+}
+
+export interface ProductCollectionData {
+  collection: CollectionBasic;
+}
+
+export interface ProductTagData {
+  tag: TagBasic;
+}
+
+export interface ProductAgeGroupData {
+  ageGroup: AgeGroupBasic;
+}
+
+// ─── Product types ───────────────────────────────────────────────────────────
+
+export interface ProductWithCategory {
+  id: string;
+  slug: string;
+
+  nameAr: string;
+  nameEn: string;
+  nameDe: string;
+
+  brandId: string | null;
+  brand: BrandBasic | null;
+
+  shortDescAr: string | null;
+  shortDescEn: string | null;
+  shortDescDe: string | null;
+
+  descriptionAr: string | null;
+  descriptionEn: string | null;
+  descriptionDe: string | null;
+
+  price: number;
+  compareAtPrice: number | null;
+  discountPercentage: number | null;
+  saleEndsAt: Date | null;
+
+  availability: "AVAILABLE" | "UNAVAILABLE";
+  featured: boolean;
+
+  images: string[];
+  colors: string[];
+  sizes: string[];
+
+  seoTitleAr: string | null;
+  seoTitleEn: string | null;
+  seoTitleDe: string | null;
+  seoDescAr: string | null;
+  seoDescEn: string | null;
+  seoDescDe: string | null;
+
+  categoryId: string | null;
+  category: CategoryBasic | null;
+
+  collections?: ProductCollectionData[];
+  tags?: ProductTagData[];
+  ageGroups?: ProductAgeGroupData[];
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -112,7 +202,7 @@ export interface OrderWithItems {
   customerName: string;
   whatsappNumber: string;
   city: string;
-governorate?: string | null;
+  governorate?: string | null;
   deliveryType: "HOME" | "HOTEL";
   address: string | null;
   hotelName: string | null;

@@ -1,16 +1,74 @@
 import { z } from "zod";
 
+const emptyToNull = (value: unknown) => {
+  if (typeof value === "string" && value.trim() === "") return null;
+  return value;
+};
+
+const nullableText = z.preprocess(
+  emptyToNull,
+  z.string().trim().nullable().optional()
+);
+
+const nullableNumber = z.preprocess(
+  emptyToNull,
+  z.coerce.number().nullable().optional()
+);
+
+export const categorySchema = z.object({
+  slug: z
+    .string()
+    .trim()
+    .min(1, "Slug is required")
+    .max(160, "Slug is too long"),
+
+  nameEn: z.string().trim().min(1, "English name is required"),
+  nameAr: z.string().trim().min(1, "Arabic name is required"),
+  nameDe: z.string().trim().min(1, "German name is required"),
+
+  descriptionEn: nullableText,
+  descriptionAr: nullableText,
+  descriptionDe: nullableText,
+
+  image: nullableText,
+  icon: nullableText,
+  banner: nullableText,
+
+  parentId: nullableText,
+
+  visible: z.boolean().default(true),
+  featured: z.boolean().default(false),
+
+  sortOrder: z.coerce.number().int().min(0).default(0),
+
+  discountPercentage: nullableNumber.refine(
+    (value) => value == null || (value >= 0 && value <= 100),
+    "Discount must be between 0 and 100"
+  ),
+
+  seoTitleEn: nullableText,
+  seoTitleAr: nullableText,
+  seoTitleDe: nullableText,
+
+  seoDescEn: nullableText,
+  seoDescAr: nullableText,
+  seoDescDe: nullableText,
+});
+
+export const categoryUpdateSchema = categorySchema.partial();
+
+export type CategoryInput = z.infer<typeof categorySchema>;
+export type CategoryUpdateInput = z.infer<typeof categoryUpdateSchema>;
+
 export const checkoutSchema = z
   .object({
     customerName: z.string().min(2),
     countryCode: z.string().optional(),
     whatsappNumber: z.string().min(8),
 
-    // بدل enum المدن القديمة
     governorate: z.string().optional(),
     city: z.string().min(1),
 
-    // دول جايين من الفرونت عشان الشحن لو حبيت تستخدمهم
     governorateKey: z.string().optional(),
     locationKey: z.string().optional(),
 
@@ -22,7 +80,11 @@ export const checkoutSchema = z
     roomNumber: z.string().optional(),
     notes: z.string().optional(),
 
-    paymentMethod: z.enum(["CASH_ON_DELIVERY", "VODAFONE_CASH", "INSTAPAY"]),
+    paymentMethod: z.enum([
+      "CASH_ON_DELIVERY",
+      "VODAFONE_CASH",
+      "INSTAPAY",
+    ]),
 
     items: z
       .array(
@@ -34,7 +96,7 @@ export const checkoutSchema = z
           color: z.string().optional().nullable(),
           size: z.string().optional().nullable(),
           image: z.string().optional().nullable(),
-        }),
+        })
       )
       .min(1),
 
@@ -48,7 +110,7 @@ export const checkoutSchema = z
     {
       path: ["address"],
       message: "Address is required for home delivery",
-    },
+    }
   )
   .refine(
     (data) => {
@@ -58,7 +120,7 @@ export const checkoutSchema = z
     {
       path: ["hotelName"],
       message: "Hotel name is required for hotel delivery",
-    },
+    }
   )
   .refine(
     (data) => {
@@ -68,7 +130,7 @@ export const checkoutSchema = z
     {
       path: ["guestName"],
       message: "Guest name is required for hotel delivery",
-    },
+    }
   );
 
 export type CheckoutInput = z.infer<typeof checkoutSchema>;

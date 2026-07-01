@@ -10,23 +10,73 @@ export default async function EditProductPage({
 }: {
   params: { id: string; locale: string };
 }) {
-  const [product, categories, brands] = await Promise.all([
-    prisma.product.findUnique({
-      where: { id },
-      include: { category: true, brand: true },
-    }),
-    prisma.category.findMany({ orderBy: { nameEn: "asc" } }),
-    prisma.brand.findMany({ orderBy: { nameEn: "asc" } }),
-  ]);
+  const [product, categories, brands, collections, tags, ageGroups, t] =
+    await Promise.all([
+      prisma.product.findUnique({
+        where: { id },
+        include: {
+          category: true,
+          brand: true,
+          collections: {
+            include: {
+              collection: true,
+            },
+          },
+          tags: {
+            include: {
+              tag: true,
+            },
+          },
+          ageGroups: {
+            include: {
+              ageGroup: true,
+            },
+          },
+        },
+      }),
+
+      prisma.category.findMany({
+        orderBy: [{ sortOrder: "asc" }, { nameEn: "asc" }],
+      }),
+
+      prisma.brand.findMany({
+        orderBy: { nameEn: "asc" },
+      }),
+
+      prisma.collection.findMany({
+        orderBy: [{ sortOrder: "asc" }, { nameEn: "asc" }],
+      }),
+
+      prisma.tag.findMany({
+        orderBy: [{ sortOrder: "asc" }, { nameEn: "asc" }],
+      }),
+
+      prisma.ageGroup.findMany({
+        orderBy: [{ sortOrder: "asc" }, { minAgeMonths: "asc" }],
+      }),
+
+      getTranslations({ locale, namespace: "admin" }),
+    ]);
 
   if (!product) notFound();
 
-  const t = await getTranslations({ locale, namespace: "admin" });
-
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">{t("editProduct")}</h1>
-      <ProductForm product={product} categories={categories} brands={brands} />
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold">{t("editProduct")}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Update product details, classification, pricing, media, and SEO.
+        </p>
+      </div>
+
+      <ProductForm
+        product={product as any}
+        categories={categories}
+        brands={brands}
+        collections={collections}
+        tags={tags}
+        ageGroups={ageGroups}
+      />
     </div>
   );
 }

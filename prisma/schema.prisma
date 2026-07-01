@@ -21,15 +21,19 @@ model Product {
   descriptionAr      String?      @map("description_ar") @db.Text
   descriptionEn      String?      @map("description_en") @db.Text
   descriptionDe      String?      @map("description_de") @db.Text
+
   price              Float
   compareAtPrice     Float?       @map("compare_at_price")
   discountPercentage Float?       @map("discount_percentage")
-  saleEndsAt  DateTime? @map("sale_ends_at")
+  saleEndsAt         DateTime?    @map("sale_ends_at")
+
   availability       Availability @default(AVAILABLE)
   featured           Boolean      @default(false)
+
   images             String[]
   colors             String[]
   sizes              String[]
+
   seoTitleAr         String?      @map("seo_title_ar")
   seoTitleEn         String?      @map("seo_title_en")
   seoTitleDe         String?      @map("seo_title_de")
@@ -43,12 +47,20 @@ model Product {
   brandId            String?      @map("brand_id")
   brand              Brand?       @relation(fields: [brandId], references: [id], onDelete: SetNull)
 
+  collections        ProductCollection[]
+  tags               ProductTag[]
+  ageGroups          ProductAgeGroup[]
+
   orderItems         OrderItem[]
 
   createdAt          DateTime     @default(now()) @map("created_at")
   updatedAt          DateTime     @updatedAt @map("updated_at")
 
+  @@index([categoryId])
   @@index([brandId])
+  @@index([featured])
+  @@index([availability])
+  @@index([saleEndsAt])
   @@map("products")
 }
 
@@ -83,27 +95,181 @@ enum Availability {
 // ─── Categories ──────────────────────────────────────────────────────────────
 
 model Category {
-  id                 String    @id @default(cuid())
-  slug               String    @unique
-  nameAr             String    @map("name_ar")
-  nameEn             String    @map("name_en")
-  nameDe             String    @map("name_de")
-  descriptionAr      String?   @map("description_ar")
-  descriptionEn      String?   @map("description_en")
-  descriptionDe      String?   @map("description_de")
-  image              String?
-  discountPercentage Float?    @map("discount_percentage")
-  seoTitleAr         String?   @map("seo_title_ar")
-  seoTitleEn         String?   @map("seo_title_en")
-  seoTitleDe         String?   @map("seo_title_de")
-  seoDescAr          String?   @map("seo_desc_ar")
-  seoDescEn          String?   @map("seo_desc_en")
-  seoDescDe          String?   @map("seo_desc_de")
-  products           Product[]
-  createdAt          DateTime  @default(now()) @map("created_at")
-  updatedAt          DateTime  @updatedAt @map("updated_at")
+  id                 String     @id @default(cuid())
+  slug               String     @unique
 
+  nameAr             String     @map("name_ar")
+  nameEn             String     @map("name_en")
+  nameDe             String     @map("name_de")
+
+  descriptionAr      String?    @map("description_ar")
+  descriptionEn      String?    @map("description_en")
+  descriptionDe      String?    @map("description_de")
+
+  image              String?
+  icon               String?
+  banner             String?
+
+  discountPercentage Float?     @map("discount_percentage")
+
+  visible            Boolean    @default(true)
+  featured           Boolean    @default(false)
+  sortOrder          Int        @default(0) @map("sort_order")
+
+  parentId           String?    @map("parent_id")
+  parent             Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children           Category[] @relation("CategoryTree")
+
+  relatedTo          Category[] @relation("RelatedCategories")
+  relatedFrom        Category[] @relation("RelatedCategories")
+
+  seoTitleAr         String?    @map("seo_title_ar")
+  seoTitleEn         String?    @map("seo_title_en")
+  seoTitleDe         String?    @map("seo_title_de")
+  seoDescAr          String?    @map("seo_desc_ar")
+  seoDescEn          String?    @map("seo_desc_en")
+  seoDescDe          String?    @map("seo_desc_de")
+
+  products           Product[]
+
+  createdAt          DateTime   @default(now()) @map("created_at")
+  updatedAt          DateTime   @updatedAt @map("updated_at")
+
+  @@index([parentId])
+  @@index([visible])
+  @@index([featured])
+  @@index([sortOrder])
   @@map("categories")
+}
+
+// ─── Collections / Tags / Age Groups ─────────────────────────────────────────
+
+model Collection {
+  id            String              @id @default(cuid())
+  slug          String              @unique
+
+  nameAr        String              @map("name_ar")
+  nameEn        String              @map("name_en")
+  nameDe        String              @map("name_de")
+
+  descriptionAr String?             @map("description_ar") @db.Text
+  descriptionEn String?             @map("description_en") @db.Text
+  descriptionDe String?             @map("description_de") @db.Text
+
+  image         String?
+  banner        String?
+
+  type          CollectionType      @default(MARKETING)
+  visible       Boolean             @default(true)
+  featured      Boolean             @default(false)
+  sortOrder     Int                 @default(0) @map("sort_order")
+
+  products      ProductCollection[]
+
+  createdAt     DateTime            @default(now()) @map("created_at")
+  updatedAt     DateTime            @updatedAt @map("updated_at")
+
+  @@index([visible])
+  @@index([featured])
+  @@index([sortOrder])
+  @@map("collections")
+}
+
+model Tag {
+  id        String       @id @default(cuid())
+  slug      String       @unique
+
+  nameAr    String       @map("name_ar")
+  nameEn    String       @map("name_en")
+  nameDe    String       @map("name_de")
+
+  visible   Boolean      @default(true)
+  featured  Boolean      @default(false)
+  sortOrder Int          @default(0) @map("sort_order")
+
+  products  ProductTag[]
+
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @updatedAt @map("updated_at")
+
+  @@index([visible])
+  @@index([featured])
+  @@index([sortOrder])
+  @@map("tags")
+}
+
+model AgeGroup {
+  id           String            @id @default(cuid())
+  slug         String            @unique
+
+  nameAr       String            @map("name_ar")
+  nameEn       String            @map("name_en")
+  nameDe       String            @map("name_de")
+
+  minAgeMonths Int?              @map("min_age_months")
+  maxAgeMonths Int?              @map("max_age_months")
+
+  visible      Boolean           @default(true)
+  featured     Boolean           @default(false)
+  sortOrder    Int               @default(0) @map("sort_order")
+
+  products     ProductAgeGroup[]
+
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+
+  @@index([visible])
+  @@index([featured])
+  @@index([sortOrder])
+  @@map("age_groups")
+}
+
+model ProductCollection {
+  productId    String     @map("product_id")
+  collectionId String     @map("collection_id")
+
+  product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  assignedAt   DateTime   @default(now()) @map("assigned_at")
+
+  @@id([productId, collectionId])
+  @@index([collectionId])
+  @@map("product_collections")
+}
+
+model ProductTag {
+  productId  String   @map("product_id")
+  tagId      String   @map("tag_id")
+
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  assignedAt DateTime @default(now()) @map("assigned_at")
+
+  @@id([productId, tagId])
+  @@index([tagId])
+  @@map("product_tags")
+}
+
+model ProductAgeGroup {
+  productId  String   @map("product_id")
+  ageGroupId String   @map("age_group_id")
+
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  ageGroup   AgeGroup @relation(fields: [ageGroupId], references: [id], onDelete: Cascade)
+
+  assignedAt DateTime @default(now()) @map("assigned_at")
+
+  @@id([productId, ageGroupId])
+  @@index([ageGroupId])
+  @@map("product_age_groups")
+}
+
+enum CollectionType {
+  MARKETING
+  SEASONAL
+  SYSTEM
 }
 
 // ─── Orders ──────────────────────────────────────────────────────────────────
@@ -150,8 +316,6 @@ model OrderItem {
 
   @@map("order_items")
 }
-
-
 
 enum DeliveryType {
   HOME

@@ -1,97 +1,554 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
+import { Loader2, Save, Sparkles } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { createCategory, updateCategory } from "@/actions/products";
 import { slugify } from "@/lib/utils";
-import { Loader2, Save } from "lucide-react";
 import type { CategoryFull } from "@/types";
 
-export function CategoryForm({ category }: { category?: CategoryFull | null }) {
+type AdminCategory = CategoryFull & {
+  icon?: string | null;
+  banner?: string | null;
+  visible?: boolean;
+  featured?: boolean;
+  sortOrder?: number;
+  parentId?: string | null;
+};
+
+type CategoryOption = Pick<
+  AdminCategory,
+  "id" | "nameAr" | "nameEn" | "nameDe" | "parentId"
+>;
+
+type CategoryFormProps = {
+  category?: AdminCategory | null;
+  parentCategories?: CategoryOption[];
+};
+
+export function CategoryForm({
+  category,
+  parentCategories = [],
+}: CategoryFormProps) {
   const locale = useLocale();
   const t = useTranslations("admin");
   const router = useRouter();
+
   const [saving, setSaving] = useState(false);
+
+  function tr(key: string, fallback: string) {
+    try {
+      return t(key);
+    } catch {
+      return fallback;
+    }
+  }
+
+  const availableParents = useMemo(() => {
+    return parentCategories.filter((item) => item.id !== category?.id);
+  }, [parentCategories, category?.id]);
 
   const [form, setForm] = useState({
     slug: category?.slug || "",
-    nameEn: category?.nameEn || "", nameAr: category?.nameAr || "", nameDe: category?.nameDe || "",
-    descriptionEn: category?.descriptionEn || "", descriptionAr: category?.descriptionAr || "", descriptionDe: category?.descriptionDe || "",
+
+    nameEn: category?.nameEn || "",
+    nameAr: category?.nameAr || "",
+    nameDe: category?.nameDe || "",
+
+    descriptionEn: category?.descriptionEn || "",
+    descriptionAr: category?.descriptionAr || "",
+    descriptionDe: category?.descriptionDe || "",
+
     image: category?.image || "",
+    icon: category?.icon || "",
+    banner: category?.banner || "",
+
+    parentId: category?.parentId || "none",
+    sortOrder: category?.sortOrder?.toString() || "0",
     discountPercentage: category?.discountPercentage?.toString() || "",
-    seoTitleEn: category?.seoTitleEn || "", seoTitleAr: category?.seoTitleAr || "", seoTitleDe: category?.seoTitleDe || "",
-    seoDescEn: category?.seoDescEn || "", seoDescAr: category?.seoDescAr || "", seoDescDe: category?.seoDescDe || "",
+
+    visible: category?.visible ?? true,
+    featured: category?.featured ?? false,
+
+    seoTitleEn: category?.seoTitleEn || "",
+    seoTitleAr: category?.seoTitleAr || "",
+    seoTitleDe: category?.seoTitleDe || "",
+
+    seoDescEn: category?.seoDescEn || "",
+    seoDescAr: category?.seoDescAr || "",
+    seoDescDe: category?.seoDescDe || "",
   });
 
-  function set(key: string, value: string) { setForm((prev) => ({ ...prev, [key]: value })); }
+  function setValue(key: string, value: string | boolean) {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function getCategoryName(item: CategoryOption) {
+    if (locale === "ar") return item.nameAr || item.nameEn;
+    if (locale === "de") return item.nameDe || item.nameEn;
+    return item.nameEn || item.nameAr;
+  }
+
+  function generateSlug() {
+    const source = form.nameEn || form.nameAr || form.nameDe;
+    if (!source) return;
+
+    setValue("slug", slugify(source));
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
+
     const data = {
-      slug: form.slug || slugify(form.nameEn),
-      nameEn: form.nameEn, nameAr: form.nameAr, nameDe: form.nameDe,
-      descriptionEn: form.descriptionEn || null, descriptionAr: form.descriptionAr || null, descriptionDe: form.descriptionDe || null,
+      slug: form.slug || slugify(form.nameEn || form.nameAr || form.nameDe),
+
+      nameEn: form.nameEn,
+      nameAr: form.nameAr,
+      nameDe: form.nameDe,
+
+      descriptionEn: form.descriptionEn || null,
+      descriptionAr: form.descriptionAr || null,
+      descriptionDe: form.descriptionDe || null,
+
       image: form.image || null,
-      discountPercentage: form.discountPercentage ? parseFloat(form.discountPercentage) : null,
-      seoTitleEn: form.seoTitleEn || null, seoTitleAr: form.seoTitleAr || null, seoTitleDe: form.seoTitleDe || null,
-      seoDescEn: form.seoDescEn || null, seoDescAr: form.seoDescAr || null, seoDescDe: form.seoDescDe || null,
+      icon: form.icon || null,
+      banner: form.banner || null,
+
+      parentId:
+        form.parentId && form.parentId !== "none" ? form.parentId : null,
+
+      sortOrder: form.sortOrder ? Number(form.sortOrder) : 0,
+
+      discountPercentage: form.discountPercentage
+        ? Number(form.discountPercentage)
+        : null,
+
+      visible: form.visible,
+      featured: form.featured,
+
+      seoTitleEn: form.seoTitleEn || null,
+      seoTitleAr: form.seoTitleAr || null,
+      seoTitleDe: form.seoTitleDe || null,
+
+      seoDescEn: form.seoDescEn || null,
+      seoDescAr: form.seoDescAr || null,
+      seoDescDe: form.seoDescDe || null,
     };
+
     try {
-      if (category) await updateCategory(category.id, data);
-      else await createCategory(data);
+      if (category) {
+        await updateCategory(category.id, data);
+      } else {
+        await createCategory(data);
+      }
+
       router.push(`/${locale}/admin/categories`);
       router.refresh();
-    } catch (error) { console.error(error); }
-    finally { setSaving(false); }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-4xl space-y-8">
-      <div className="bg-white rounded-2xl border p-6 space-y-5">
-        <h2 className="font-semibold text-lg">{t("categoryDetails")}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div><Label>{t("slug")}</Label><Input value={form.slug} onChange={(e) => set("slug", e.target.value)} placeholder="auto-generated" className="mt-1.5" /></div>
-          <div><Label>{t("imageUrl")}</Label><Input value={form.image} onChange={(e) => set("image", e.target.value)} className="mt-1.5" placeholder="https://..." /></div>
+    <form onSubmit={handleSubmit} className="max-w-6xl space-y-8">
+      <div className="grid grid-cols-1 gap-8 xl:grid-cols-[1fr_320px]">
+        <div className="space-y-8">
+          <section className="rounded-2xl border bg-white p-6 shadow-sm">
+            <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-lg font-bold">
+                  {tr("categoryDetails", "Category details")}
+                </h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {tr(
+                    "categoryDetailsHint",
+                    "Basic category information shown across the website."
+                  )}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary">
+                <Sparkles className="h-3.5 w-3.5" />
+                {form.featured
+                  ? tr("featuredCategory", "Featured")
+                  : tr("normalCategory", "Normal")}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-[1fr_auto]">
+              <div>
+                <Label>{tr("slug", "Slug")}</Label>
+                <Input
+                  value={form.slug}
+                  onChange={(e) => setValue("slug", e.target.value)}
+                  placeholder="auto-generated"
+                  className="mt-1.5"
+                />
+              </div>
+
+              <div className="flex items-end">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full md:w-auto"
+                  onClick={generateSlug}
+                >
+                  {tr("generateSlug", "Generate slug")}
+                </Button>
+              </div>
+            </div>
+
+            <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
+              <div>
+                <Label>{tr("nameEn", "Name EN")}</Label>
+                <Input
+                  value={form.nameEn}
+                  onChange={(e) => setValue("nameEn", e.target.value)}
+                  className="mt-1.5"
+                  required
+                />
+              </div>
+
+              <div>
+                <Label>{tr("nameAr", "Name AR")}</Label>
+                <Input
+                  value={form.nameAr}
+                  onChange={(e) => setValue("nameAr", e.target.value)}
+                  className="mt-1.5"
+                  dir="rtl"
+                  required
+                />
+              </div>
+
+              <div>
+                <Label>{tr("nameDe", "Name DE")}</Label>
+                <Input
+                  value={form.nameDe}
+                  onChange={(e) => setValue("nameDe", e.target.value)}
+                  className="mt-1.5"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
+              <div>
+                <Label>{tr("descEn", "Description EN")}</Label>
+                <Textarea
+                  value={form.descriptionEn}
+                  onChange={(e) => setValue("descriptionEn", e.target.value)}
+                  className="mt-1.5"
+                  rows={4}
+                />
+              </div>
+
+              <div>
+                <Label>{tr("descAr", "Description AR")}</Label>
+                <Textarea
+                  value={form.descriptionAr}
+                  onChange={(e) => setValue("descriptionAr", e.target.value)}
+                  className="mt-1.5"
+                  rows={4}
+                  dir="rtl"
+                />
+              </div>
+
+              <div>
+                <Label>{tr("descDe", "Description DE")}</Label>
+                <Textarea
+                  value={form.descriptionDe}
+                  onChange={(e) => setValue("descriptionDe", e.target.value)}
+                  className="mt-1.5"
+                  rows={4}
+                />
+              </div>
+            </div>
+          </section>
+
+          <section className="rounded-2xl border bg-white p-6 shadow-sm">
+            <h2 className="text-lg font-bold">
+              {tr("categoryMedia", "Category media")}
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {tr(
+                "categoryMediaHint",
+                "Use clean square images for carousel cards and wide banners for category pages."
+              )}
+            </p>
+
+            <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
+              <div>
+                <Label>{tr("imageUrl", "Image URL")}</Label>
+                <Input
+                  value={form.image}
+                  onChange={(e) => setValue("image", e.target.value)}
+                  className="mt-1.5"
+                  placeholder="https://..."
+                />
+              </div>
+
+              <div>
+                <Label>{tr("iconUrl", "Icon URL")}</Label>
+                <Input
+                  value={form.icon}
+                  onChange={(e) => setValue("icon", e.target.value)}
+                  className="mt-1.5"
+                  placeholder="https://..."
+                />
+              </div>
+
+              <div>
+                <Label>{tr("bannerUrl", "Banner URL")}</Label>
+                <Input
+                  value={form.banner}
+                  onChange={(e) => setValue("banner", e.target.value)}
+                  className="mt-1.5"
+                  placeholder="https://..."
+                />
+              </div>
+            </div>
+          </section>
+
+          <section className="rounded-2xl border bg-white p-6 shadow-sm">
+            <h2 className="text-lg font-bold">{tr("seo", "SEO")}</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {tr(
+                "seoHint",
+                "Optional metadata for better search visibility."
+              )}
+            </p>
+
+            <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
+              <div>
+                <Label>{tr("seoTitleEn", "SEO title EN")}</Label>
+                <Input
+                  value={form.seoTitleEn}
+                  onChange={(e) => setValue("seoTitleEn", e.target.value)}
+                  className="mt-1.5"
+                />
+              </div>
+
+              <div>
+                <Label>{tr("seoTitleAr", "SEO title AR")}</Label>
+                <Input
+                  value={form.seoTitleAr}
+                  onChange={(e) => setValue("seoTitleAr", e.target.value)}
+                  className="mt-1.5"
+                  dir="rtl"
+                />
+              </div>
+
+              <div>
+                <Label>{tr("seoTitleDe", "SEO title DE")}</Label>
+                <Input
+                  value={form.seoTitleDe}
+                  onChange={(e) => setValue("seoTitleDe", e.target.value)}
+                  className="mt-1.5"
+                />
+              </div>
+            </div>
+
+            <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
+              <div>
+                <Label>{tr("seoDescEn", "SEO description EN")}</Label>
+                <Textarea
+                  value={form.seoDescEn}
+                  onChange={(e) => setValue("seoDescEn", e.target.value)}
+                  className="mt-1.5"
+                  rows={3}
+                />
+              </div>
+
+              <div>
+                <Label>{tr("seoDescAr", "SEO description AR")}</Label>
+                <Textarea
+                  value={form.seoDescAr}
+                  onChange={(e) => setValue("seoDescAr", e.target.value)}
+                  className="mt-1.5"
+                  rows={3}
+                  dir="rtl"
+                />
+              </div>
+
+              <div>
+                <Label>{tr("seoDescDe", "SEO description DE")}</Label>
+                <Textarea
+                  value={form.seoDescDe}
+                  onChange={(e) => setValue("seoDescDe", e.target.value)}
+                  className="mt-1.5"
+                  rows={3}
+                />
+              </div>
+            </div>
+          </section>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div><Label>{t("nameEn")}</Label><Input value={form.nameEn} onChange={(e) => set("nameEn", e.target.value)} className="mt-1.5" required /></div>
-          <div><Label>{t("nameAr")}</Label><Input value={form.nameAr} onChange={(e) => set("nameAr", e.target.value)} className="mt-1.5" dir="rtl" required /></div>
-          <div><Label>{t("nameDe")}</Label><Input value={form.nameDe} onChange={(e) => set("nameDe", e.target.value)} className="mt-1.5" required /></div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div><Label>{t("descEn")}</Label><Textarea value={form.descriptionEn} onChange={(e) => set("descriptionEn", e.target.value)} className="mt-1.5" rows={3} /></div>
-          <div><Label>{t("descAr")}</Label><Textarea value={form.descriptionAr} onChange={(e) => set("descriptionAr", e.target.value)} className="mt-1.5" rows={3} dir="rtl" /></div>
-          <div><Label>{t("descDe")}</Label><Textarea value={form.descriptionDe} onChange={(e) => set("descriptionDe", e.target.value)} className="mt-1.5" rows={3} /></div>
-        </div>
-        <div><Label>{t("discountPercent")}</Label><Input type="number" value={form.discountPercentage} onChange={(e) => set("discountPercentage", e.target.value)} className="mt-1.5 max-w-[200px]" min="0" max="100" /></div>
+
+        <aside className="space-y-6">
+          <section className="rounded-2xl border bg-white p-5 shadow-sm">
+            <h3 className="font-bold">{tr("publishing", "Publishing")}</h3>
+
+            <div className="mt-5 space-y-5">
+              <div className="flex items-center justify-between gap-4 rounded-2xl border bg-gray-50/70 p-4">
+                <div>
+                  <Label className="font-semibold">
+                    {tr("visible", "Visible")}
+                  </Label>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {tr("visibleHint", "Show this category to customers.")}
+                  </p>
+                </div>
+
+                <Switch
+                  checked={form.visible}
+                  onCheckedChange={(checked) => setValue("visible", checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between gap-4 rounded-2xl border bg-gray-50/70 p-4">
+                <div>
+                  <Label className="font-semibold">
+                    {tr("featured", "Featured")}
+                  </Label>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {tr("featuredHint", "Show in homepage carousel.")}
+                  </p>
+                </div>
+
+                <Switch
+                  checked={form.featured}
+                  onCheckedChange={(checked) => setValue("featured", checked)}
+                />
+              </div>
+
+              <div>
+                <Label>{tr("parentCategory", "Parent category")}</Label>
+                <select
+                  value={form.parentId}
+                  onChange={(e) => setValue("parentId", e.target.value)}
+                  className="mt-1.5 h-10 w-full rounded-md border border-input bg-background px-3 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <option value="none">
+                    {tr("noParentCategory", "No parent category")}
+                  </option>
+
+                  {availableParents.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {getCategoryName(item)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <Label>{tr("sortOrder", "Sort order")}</Label>
+                <Input
+                  type="number"
+                  value={form.sortOrder}
+                  onChange={(e) => setValue("sortOrder", e.target.value)}
+                  className="mt-1.5"
+                  min="0"
+                />
+              </div>
+
+              <div>
+                <Label>{tr("discountPercent", "Discount percent")}</Label>
+                <Input
+                  type="number"
+                  value={form.discountPercentage}
+                  onChange={(e) =>
+                    setValue("discountPercentage", e.target.value)
+                  }
+                  className="mt-1.5"
+                  min="0"
+                  max="100"
+                  step="1"
+                />
+              </div>
+            </div>
+          </section>
+
+          <section className="rounded-2xl border bg-white p-5 shadow-sm">
+            <h3 className="font-bold">{tr("preview", "Preview")}</h3>
+
+            <div className="mt-4 space-y-4">
+              <div className="overflow-hidden rounded-2xl border bg-gray-50">
+                <div className="relative aspect-[16/8]">
+                  {form.banner || form.image ? (
+                    <Image
+                      src={form.banner || form.image}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      sizes="320px"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
+                      {tr("noBannerPreview", "No banner preview")}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 rounded-2xl border bg-gray-50 p-3">
+                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-white shadow-sm">
+                  {form.icon || form.image ? (
+                    <Image
+                      src={form.icon || form.image}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      sizes="56px"
+                    />
+                  ) : null}
+                </div>
+
+                <div className="min-w-0">
+                  <p className="truncate font-bold">
+                    {locale === "ar"
+                      ? form.nameAr || form.nameEn || "Category name"
+                      : form.nameEn || form.nameAr || "Category name"}
+                  </p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    /category/{form.slug || "category-slug"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </aside>
       </div>
 
-      <div className="bg-white rounded-2xl border p-6 space-y-5">
-        <h2 className="font-semibold text-lg">{t("seo")}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div><Label>{t("seoTitleEn")}</Label><Input value={form.seoTitleEn} onChange={(e) => set("seoTitleEn", e.target.value)} className="mt-1.5" /></div>
-          <div><Label>{t("seoTitleAr")}</Label><Input value={form.seoTitleAr} onChange={(e) => set("seoTitleAr", e.target.value)} className="mt-1.5" dir="rtl" /></div>
-          <div><Label>{t("seoTitleDe")}</Label><Input value={form.seoTitleDe} onChange={(e) => set("seoTitleDe", e.target.value)} className="mt-1.5" /></div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div><Label>{t("seoDescEn")}</Label><Textarea value={form.seoDescEn} onChange={(e) => set("seoDescEn", e.target.value)} className="mt-1.5" rows={2} /></div>
-          <div><Label>{t("seoDescAr")}</Label><Textarea value={form.seoDescAr} onChange={(e) => set("seoDescAr", e.target.value)} className="mt-1.5" rows={2} dir="rtl" /></div>
-          <div><Label>{t("seoDescDe")}</Label><Textarea value={form.seoDescDe} onChange={(e) => set("seoDescDe", e.target.value)} className="mt-1.5" rows={2} /></div>
-        </div>
-      </div>
-
-      <div className="flex gap-3">
+      <div className="sticky bottom-4 z-10 flex flex-col gap-3 rounded-2xl border bg-white/90 p-3 shadow-lg backdrop-blur sm:flex-row">
         <Button type="submit" size="lg" disabled={saving}>
-          {saving ? <Loader2 className="h-4 w-4 animate-spin me-2" /> : <Save className="h-4 w-4 me-2" />}
-          {category ? t("updateCategory") : t("createCategory")}
+          {saving ? (
+            <Loader2 className="me-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Save className="me-2 h-4 w-4" />
+          )}
+          {category
+            ? tr("updateCategory", "Update category")
+            : tr("createCategory", "Create category")}
         </Button>
-        <Button type="button" variant="outline" size="lg" onClick={() => router.back()}>{t("cancel")}</Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          size="lg"
+          onClick={() => router.back()}
+        >
+          {tr("cancel", "Cancel")}
+        </Button>
       </div>
     </form>
   );
