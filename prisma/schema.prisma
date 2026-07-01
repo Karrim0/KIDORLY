@@ -10,51 +10,51 @@ datasource db {
 // ─── Products ────────────────────────────────────────────────────────────────
 
 model Product {
-  id                 String       @id @default(cuid())
-  slug               String       @unique
-  nameAr             String       @map("name_ar")
-  nameEn             String       @map("name_en")
-  nameDe             String       @map("name_de")
-  shortDescAr        String?      @map("short_desc_ar")
-  shortDescEn        String?      @map("short_desc_en")
-  shortDescDe        String?      @map("short_desc_de")
-  descriptionAr      String?      @map("description_ar") @db.Text
-  descriptionEn      String?      @map("description_en") @db.Text
-  descriptionDe      String?      @map("description_de") @db.Text
+  id            String  @id @default(cuid())
+  slug          String  @unique
+  nameAr        String  @map("name_ar")
+  nameEn        String  @map("name_en")
+  nameDe        String  @map("name_de")
+  shortDescAr   String? @map("short_desc_ar")
+  shortDescEn   String? @map("short_desc_en")
+  shortDescDe   String? @map("short_desc_de")
+  descriptionAr String? @map("description_ar") @db.Text
+  descriptionEn String? @map("description_en") @db.Text
+  descriptionDe String? @map("description_de") @db.Text
 
   price              Float
-  compareAtPrice     Float?       @map("compare_at_price")
-  discountPercentage Float?       @map("discount_percentage")
-  saleEndsAt         DateTime?    @map("sale_ends_at")
+  compareAtPrice     Float?    @map("compare_at_price")
+  discountPercentage Float?    @map("discount_percentage")
+  saleEndsAt         DateTime? @map("sale_ends_at")
 
-  availability       Availability @default(AVAILABLE)
-  featured           Boolean      @default(false)
+  availability Availability @default(AVAILABLE)
+  featured     Boolean      @default(false)
 
-  images             String[]
-  colors             String[]
-  sizes              String[]
+  images String[]
+  colors String[]
+  sizes  String[]
 
-  seoTitleAr         String?      @map("seo_title_ar")
-  seoTitleEn         String?      @map("seo_title_en")
-  seoTitleDe         String?      @map("seo_title_de")
-  seoDescAr          String?      @map("seo_desc_ar")
-  seoDescEn          String?      @map("seo_desc_en")
-  seoDescDe          String?      @map("seo_desc_de")
+  seoTitleAr String? @map("seo_title_ar")
+  seoTitleEn String? @map("seo_title_en")
+  seoTitleDe String? @map("seo_title_de")
+  seoDescAr  String? @map("seo_desc_ar")
+  seoDescEn  String? @map("seo_desc_en")
+  seoDescDe  String? @map("seo_desc_de")
 
-  categoryId         String?      @map("category_id")
-  category           Category?    @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId String?   @map("category_id")
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
-  brandId            String?      @map("brand_id")
-  brand              Brand?       @relation(fields: [brandId], references: [id], onDelete: SetNull)
+  brandId String? @map("brand_id")
+  brand   Brand?  @relation(fields: [brandId], references: [id], onDelete: SetNull)
 
-  collections        ProductCollection[]
-  tags               ProductTag[]
-  ageGroups          ProductAgeGroup[]
+  collections ProductCollection[]
+  tags        ProductTag[]
+  ageGroups   ProductAgeGroup[]
 
-  orderItems         OrderItem[]
+  orderItems OrderItem[]
 
-  createdAt          DateTime     @default(now()) @map("created_at")
-  updatedAt          DateTime     @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([categoryId])
   @@index([brandId])
@@ -65,22 +65,22 @@ model Product {
 }
 
 model Brand {
-  id            String    @id @default(cuid())
-  slug          String    @unique
-  nameEn        String    @map("name_en")
-  nameAr        String    @map("name_ar")
-  nameDe        String    @map("name_de")
-  descriptionEn String?   @map("description_en") @db.Text
-  descriptionAr String?   @map("description_ar") @db.Text
-  descriptionDe String?   @map("description_de") @db.Text
+  id            String  @id @default(cuid())
+  slug          String  @unique
+  nameEn        String  @map("name_en")
+  nameAr        String  @map("name_ar")
+  nameDe        String  @map("name_de")
+  descriptionEn String? @map("description_en") @db.Text
+  descriptionAr String? @map("description_ar") @db.Text
+  descriptionDe String? @map("description_de") @db.Text
   logo          String?
   banner        String?
-  featured      Boolean   @default(false)
+  featured      Boolean @default(false)
 
-  products      Product[]
+  products Product[]
 
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([slug])
   @@index([featured])
@@ -95,45 +95,45 @@ enum Availability {
 // ─── Categories ──────────────────────────────────────────────────────────────
 
 model Category {
-  id                 String     @id @default(cuid())
-  slug               String     @unique
+  id   String @id @default(cuid())
+  slug String @unique
 
-  nameAr             String     @map("name_ar")
-  nameEn             String     @map("name_en")
-  nameDe             String     @map("name_de")
+  nameAr String @map("name_ar")
+  nameEn String @map("name_en")
+  nameDe String @map("name_de")
 
-  descriptionAr      String?    @map("description_ar")
-  descriptionEn      String?    @map("description_en")
-  descriptionDe      String?    @map("description_de")
+  descriptionAr String? @map("description_ar")
+  descriptionEn String? @map("description_en")
+  descriptionDe String? @map("description_de")
 
-  image              String?
-  icon               String?
-  banner             String?
+  image  String?
+  icon   String?
+  banner String?
 
-  discountPercentage Float?     @map("discount_percentage")
+  discountPercentage Float? @map("discount_percentage")
 
-  visible            Boolean    @default(true)
-  featured           Boolean    @default(false)
-  sortOrder          Int        @default(0) @map("sort_order")
+  visible   Boolean @default(true)
+  featured  Boolean @default(false)
+  sortOrder Int     @default(0) @map("sort_order")
 
-  parentId           String?    @map("parent_id")
-  parent             Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
-  children           Category[] @relation("CategoryTree")
+  parentId String?    @map("parent_id")
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children Category[] @relation("CategoryTree")
 
-  relatedTo          Category[] @relation("RelatedCategories")
-  relatedFrom        Category[] @relation("RelatedCategories")
+  relatedTo   Category[] @relation("RelatedCategories")
+  relatedFrom Category[] @relation("RelatedCategories")
 
-  seoTitleAr         String?    @map("seo_title_ar")
-  seoTitleEn         String?    @map("seo_title_en")
-  seoTitleDe         String?    @map("seo_title_de")
-  seoDescAr          String?    @map("seo_desc_ar")
-  seoDescEn          String?    @map("seo_desc_en")
-  seoDescDe          String?    @map("seo_desc_de")
+  seoTitleAr String? @map("seo_title_ar")
+  seoTitleEn String? @map("seo_title_en")
+  seoTitleDe String? @map("seo_title_de")
+  seoDescAr  String? @map("seo_desc_ar")
+  seoDescEn  String? @map("seo_desc_en")
+  seoDescDe  String? @map("seo_desc_de")
 
-  products           Product[]
+  products Product[]
 
-  createdAt          DateTime   @default(now()) @map("created_at")
-  updatedAt          DateTime   @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([parentId])
   @@index([visible])
@@ -145,29 +145,29 @@ model Category {
 // ─── Collections / Tags / Age Groups ─────────────────────────────────────────
 
 model Collection {
-  id            String              @id @default(cuid())
-  slug          String              @unique
+  id   String @id @default(cuid())
+  slug String @unique
 
-  nameAr        String              @map("name_ar")
-  nameEn        String              @map("name_en")
-  nameDe        String              @map("name_de")
+  nameAr String @map("name_ar")
+  nameEn String @map("name_en")
+  nameDe String @map("name_de")
 
-  descriptionAr String?             @map("description_ar") @db.Text
-  descriptionEn String?             @map("description_en") @db.Text
-  descriptionDe String?             @map("description_de") @db.Text
+  descriptionAr String? @map("description_ar") @db.Text
+  descriptionEn String? @map("description_en") @db.Text
+  descriptionDe String? @map("description_de") @db.Text
 
-  image         String?
-  banner        String?
+  image  String?
+  banner String?
 
-  type          CollectionType      @default(MARKETING)
-  visible       Boolean             @default(true)
-  featured      Boolean             @default(false)
-  sortOrder     Int                 @default(0) @map("sort_order")
+  type      CollectionType @default(MARKETING)
+  visible   Boolean        @default(true)
+  featured  Boolean        @default(false)
+  sortOrder Int            @default(0) @map("sort_order")
 
-  products      ProductCollection[]
+  products ProductCollection[]
 
-  createdAt     DateTime            @default(now()) @map("created_at")
-  updatedAt     DateTime            @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([visible])
   @@index([featured])
@@ -176,21 +176,21 @@ model Collection {
 }
 
 model Tag {
-  id        String       @id @default(cuid())
-  slug      String       @unique
+  id   String @id @default(cuid())
+  slug String @unique
 
-  nameAr    String       @map("name_ar")
-  nameEn    String       @map("name_en")
-  nameDe    String       @map("name_de")
+  nameAr String @map("name_ar")
+  nameEn String @map("name_en")
+  nameDe String @map("name_de")
 
-  visible   Boolean      @default(true)
-  featured  Boolean      @default(false)
-  sortOrder Int          @default(0) @map("sort_order")
+  visible   Boolean @default(true)
+  featured  Boolean @default(false)
+  sortOrder Int     @default(0) @map("sort_order")
 
-  products  ProductTag[]
+  products ProductTag[]
 
-  createdAt DateTime     @default(now()) @map("created_at")
-  updatedAt DateTime     @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([visible])
   @@index([featured])
@@ -199,24 +199,24 @@ model Tag {
 }
 
 model AgeGroup {
-  id           String            @id @default(cuid())
-  slug         String            @unique
+  id   String @id @default(cuid())
+  slug String @unique
 
-  nameAr       String            @map("name_ar")
-  nameEn       String            @map("name_en")
-  nameDe       String            @map("name_de")
+  nameAr String @map("name_ar")
+  nameEn String @map("name_en")
+  nameDe String @map("name_de")
 
-  minAgeMonths Int?              @map("min_age_months")
-  maxAgeMonths Int?              @map("max_age_months")
+  minAgeMonths Int? @map("min_age_months")
+  maxAgeMonths Int? @map("max_age_months")
 
-  visible      Boolean           @default(true)
-  featured     Boolean           @default(false)
-  sortOrder    Int               @default(0) @map("sort_order")
+  visible   Boolean @default(true)
+  featured  Boolean @default(false)
+  sortOrder Int     @default(0) @map("sort_order")
 
-  products     ProductAgeGroup[]
+  products ProductAgeGroup[]
 
-  createdAt    DateTime          @default(now()) @map("created_at")
-  updatedAt    DateTime          @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([visible])
   @@index([featured])
@@ -225,13 +225,13 @@ model AgeGroup {
 }
 
 model ProductCollection {
-  productId    String     @map("product_id")
-  collectionId String     @map("collection_id")
+  productId    String @map("product_id")
+  collectionId String @map("collection_id")
 
-  product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
-  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  product    Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
 
-  assignedAt   DateTime   @default(now()) @map("assigned_at")
+  assignedAt DateTime @default(now()) @map("assigned_at")
 
   @@id([productId, collectionId])
   @@index([collectionId])
@@ -239,11 +239,11 @@ model ProductCollection {
 }
 
 model ProductTag {
-  productId  String   @map("product_id")
-  tagId      String   @map("tag_id")
+  productId String @map("product_id")
+  tagId     String @map("tag_id")
 
-  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   assignedAt DateTime @default(now()) @map("assigned_at")
 
@@ -253,11 +253,11 @@ model ProductTag {
 }
 
 model ProductAgeGroup {
-  productId  String   @map("product_id")
-  ageGroupId String   @map("age_group_id")
+  productId  String @map("product_id")
+  ageGroupId String @map("age_group_id")
 
-  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  ageGroup   AgeGroup @relation(fields: [ageGroupId], references: [id], onDelete: Cascade)
+  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  ageGroup AgeGroup @relation(fields: [ageGroupId], references: [id], onDelete: Cascade)
 
   assignedAt DateTime @default(now()) @map("assigned_at")
 
@@ -275,28 +275,28 @@ enum CollectionType {
 // ─── Orders ──────────────────────────────────────────────────────────────────
 
 model Order {
-  id              String         @id @default(cuid())
-  orderNumber     String         @unique @map("order_number")
-  customerName    String         @map("customer_name")
-  whatsappNumber  String         @map("whatsapp_number")
-  city            String
-  governorate     String?
-  deliveryType    DeliveryType   @map("delivery_type")
-  address         String?        @db.Text
-  hotelName       String?        @map("hotel_name")
-  guestName       String?        @map("guest_name")
-  roomNumber      String?        @map("room_number")
-  notes           String?        @db.Text
-  paymentMethod   PaymentMethod  @map("payment_method")
-  paymentStatus   PaymentStatus  @default(UNPAID) @map("payment_status")
-  deliveryStatus  DeliveryStatus @default(NOT_DELIVERED) @map("delivery_status")
-  subtotal        Float
-  shippingCost    Float          @map("shipping_cost")
-  total           Float
-  locale          String         @default("en")
-  items           OrderItem[]
-  createdAt       DateTime       @default(now()) @map("created_at")
-  updatedAt       DateTime       @updatedAt @map("updated_at")
+  id             String         @id @default(cuid())
+  orderNumber    String         @unique @map("order_number")
+  customerName   String         @map("customer_name")
+  whatsappNumber String         @map("whatsapp_number")
+  city           String
+  governorate    String?
+  deliveryType   DeliveryType   @map("delivery_type")
+  address        String?        @db.Text
+  hotelName      String?        @map("hotel_name")
+  guestName      String?        @map("guest_name")
+  roomNumber     String?        @map("room_number")
+  notes          String?        @db.Text
+  paymentMethod  PaymentMethod  @map("payment_method")
+  paymentStatus  PaymentStatus  @default(UNPAID) @map("payment_status")
+  deliveryStatus DeliveryStatus @default(NOT_DELIVERED) @map("delivery_status")
+  subtotal       Float
+  shippingCost   Float          @map("shipping_cost")
+  total          Float
+  locale         String         @default("en")
+  items          OrderItem[]
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
 
   @@map("orders")
 }
