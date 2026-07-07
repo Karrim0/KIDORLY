@@ -12,22 +12,21 @@ The platform includes a responsive public storefront and a complete admin dashbo
 
 ## Screenshots
 
-> Add your project screenshots inside `docs/screenshots`.
+### Storefront
 
-```txt
-docs/screenshots/home.png
-docs/screenshots/admin-dashboard.png
-docs/screenshots/products.png
-docs/screenshots/orders.png
-docs/screenshots/checkout.png
-```
+![Kidorly Storefront](docs/screenshots/home.png)
 
-Example:
+### Admin Dashboard
 
-```md
-![Kidorly Home](docs/screenshots/home.png)
 ![Kidorly Admin Dashboard](docs/screenshots/admin-dashboard.png)
-```
+
+### Checkout
+
+![Kidorly Checkout](docs/screenshots/checkout.png)
+
+### Orders Management
+
+![Kidorly Orders](docs/screenshots/orders.png)
 
 ---
 
