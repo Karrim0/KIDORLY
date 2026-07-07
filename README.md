@@ -12,23 +12,13 @@ The platform includes a responsive public storefront and a complete admin dashbo
 
 ## Screenshots
 
-### Storefront
+| Storefront | Admin Dashboard |
+|---|---|
+| <img src="docs/screenshots/home.png" alt="Kidorly Storefront" width="400" /> | <img src="docs/screenshots/admin-dashboard.png" alt="Kidorly Admin Dashboard" width="400" /> |
 
-![Kidorly Storefront](docs/screenshots/home.png)
-
-### Admin Dashboard
-
-![Kidorly Admin Dashboard](docs/screenshots/admin-dashboard.png)
-
-### Checkout
-
-![Kidorly Checkout](docs/screenshots/checkout.png)
-
-### Orders Management
-
-![Kidorly Orders](docs/screenshots/orders.png)
-
----
+| Checkout | Orders Management |
+|---|---|
+| <img src="docs/screenshots/checkout.png" alt="Kidorly Checkout" width="400" /> | <img src="docs/screenshots/orders.png" alt="Kidorly Orders Management" width="400" /> |
 
 ## Overview
 
