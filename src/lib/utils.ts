@@ -39,6 +39,14 @@ export function getDiscountedPrice(price: number, discountPercentage: number): n
   return Math.round(price * (1 - discountPercentage / 100) * 100) / 100;
 }
 
+/** Parse an optional non-negative numeric filter without turning an empty value into zero. */
+export function parseOptionalPrice(value?: string | null): number | undefined {
+  if (value == null || value.trim() === "") return undefined;
+
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : undefined;
+}
+
 /** Get translated field based on locale */
 export function getTranslated<T extends object>(
   obj: T,

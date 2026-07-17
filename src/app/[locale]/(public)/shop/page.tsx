@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { getTranslations } from "next-intl/server";
 import { ShopClient } from "./shop-client";
 import type { Locale } from "@/lib/i18n";
+import { parseOptionalPrice } from "@/lib/utils";
 
 type ShopSearchParams = {
   category?: string;
@@ -36,8 +37,8 @@ export default async function ShopPage({
   searchParams: Promise<ShopSearchParams>;
 }) {
   const searchParams = await searchParamsPromise;
-  const minPrice = Number(searchParams.minPrice || "");
-  const maxPrice = Number(searchParams.maxPrice || "");
+  const minPrice = parseOptionalPrice(searchParams.minPrice);
+  const maxPrice = parseOptionalPrice(searchParams.maxPrice);
 
   const where: any = {
     availability: "AVAILABLE",
@@ -98,11 +99,11 @@ export default async function ShopPage({
         }
       : {}),
 
-    ...(!Number.isNaN(minPrice) || !Number.isNaN(maxPrice)
+    ...(minPrice !== undefined || maxPrice !== undefined
       ? {
           price: {
-            ...(!Number.isNaN(minPrice) ? { gte: minPrice } : {}),
-            ...(!Number.isNaN(maxPrice) ? { lte: maxPrice } : {}),
+            ...(minPrice !== undefined ? { gte: minPrice } : {}),
+            ...(maxPrice !== undefined ? { lte: maxPrice } : {}),
           },
         }
       : {}),

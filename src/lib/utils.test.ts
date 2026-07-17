@@ -6,6 +6,7 @@ import {
   getDiscountedPrice,
   getEffectiveDiscount,
   normalizeWhatsAppNumber,
+  parseOptionalPrice,
 } from "./utils";
 
 test("product discounts take priority over category and global discounts", () => {
@@ -27,4 +28,12 @@ test("WhatsApp links only contain a normalized phone number and encoded message"
     "https://wa.me/201001234567?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%20Kidorly",
   );
   assert.equal(buildWhatsAppLink("", "hello"), "#");
+});
+
+test("empty price filters stay undefined instead of becoming zero", () => {
+  assert.equal(parseOptionalPrice(""), undefined);
+  assert.equal(parseOptionalPrice("   "), undefined);
+  assert.equal(parseOptionalPrice(undefined), undefined);
+  assert.equal(parseOptionalPrice("250"), 250);
+  assert.equal(parseOptionalPrice("-1"), undefined);
 });

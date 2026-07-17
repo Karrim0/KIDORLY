@@ -17,6 +17,7 @@ import {
   LogOut,
   ChevronLeft,
   Award,
+  Shapes,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ToastProvider } from "@/hooks/use-toast";
@@ -39,6 +40,7 @@ export default function AdminShell({
     { key: "/orders", label: t("orders"), icon: ShoppingBag },
     { key: "/products", label: t("products"), icon: Package },
     { key: "/categories", label: t("categories"), icon: FolderOpen },
+    { key: "/catalog", label: t("catalogManagement"), icon: Shapes },
     { key: "/brands", label: t("brands"), icon: Award },
     { key: "/discounts", label: t("discounts"), icon: Percent },
     { key: "/homepage", label: t("homepage"), icon: Home },

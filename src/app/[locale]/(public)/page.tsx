@@ -33,7 +33,7 @@ export default async function HomePage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
-  const [categories, featuredProducts, brands, collections, ageGroups] =
+  const [categories, featuredProducts, brands, collections, ageGroups, heroSection] =
     await Promise.all([
       prisma.category.findMany({
         where: {
@@ -118,7 +118,20 @@ export default async function HomePage({
         orderBy: [{ sortOrder: "asc" }, { minAgeMonths: "asc" }],
         take: 8,
       }),
+
+      prisma.homepageSection.findUnique({
+        where: { sectionKey: "hero" },
+      }),
     ]);
+
+  let heroContent: Record<string, string> | undefined;
+  if (heroSection?.visible) {
+    try {
+      heroContent = JSON.parse(heroSection.data) as Record<string, string>;
+    } catch {
+      heroContent = undefined;
+    }
+  }
 
   return (
     <>
@@ -146,6 +159,7 @@ export default async function HomePage({
         brands={brands}
         collections={collections}
         ageGroups={ageGroups}
+        heroContent={heroContent}
       />
     </>
   );

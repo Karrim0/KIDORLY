@@ -6,6 +6,7 @@ import { Metadata } from "next";
 import prisma from "@/lib/prisma";
 import { ShopClient } from "../../shop/shop-client";
 import type { Locale } from "@/lib/i18n";
+import { parseOptionalPrice } from "@/lib/utils";
 
 interface Props {
   params: Promise<{ locale: Locale; slug: string }>;
@@ -174,8 +175,8 @@ export default async function CategoryPage({
 
   if (!category || category.visible === false) notFound();
 
-  const minPrice = Number(searchParams.minPrice || "");
-  const maxPrice = Number(searchParams.maxPrice || "");
+  const minPrice = parseOptionalPrice(searchParams.minPrice);
+  const maxPrice = parseOptionalPrice(searchParams.maxPrice);
 
   const where: any = {
     availability: "AVAILABLE",
@@ -228,11 +229,11 @@ export default async function CategoryPage({
         }
       : {}),
 
-    ...(!Number.isNaN(minPrice) || !Number.isNaN(maxPrice)
+    ...(minPrice !== undefined || maxPrice !== undefined
       ? {
           price: {
-            ...(!Number.isNaN(minPrice) ? { gte: minPrice } : {}),
-            ...(!Number.isNaN(maxPrice) ? { lte: maxPrice } : {}),
+            ...(minPrice !== undefined ? { gte: minPrice } : {}),
+            ...(maxPrice !== undefined ? { lte: maxPrice } : {}),
           },
         }
       : {}),
