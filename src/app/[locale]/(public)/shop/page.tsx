@@ -17,10 +17,11 @@ type ShopSearchParams = {
 };
 
 export async function generateMetadata({
-  params: { locale },
+  params,
 }: {
-  params: { locale: Locale };
+  params: Promise<{ locale: Locale }>;
 }): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "shop" });
 
   return {
@@ -29,12 +30,12 @@ export async function generateMetadata({
 }
 
 export default async function ShopPage({
-  params: { locale },
-  searchParams,
+  searchParams: searchParamsPromise,
 }: {
-  params: { locale: Locale };
-  searchParams: ShopSearchParams;
+  params: Promise<{ locale: Locale }>;
+  searchParams: Promise<ShopSearchParams>;
 }) {
+  const searchParams = await searchParamsPromise;
   const minPrice = Number(searchParams.minPrice || "");
   const maxPrice = Number(searchParams.maxPrice || "");
 

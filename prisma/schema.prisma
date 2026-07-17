@@ -294,6 +294,8 @@ model Order {
   shippingCost   Float          @map("shipping_cost")
   total          Float
   locale         String         @default("en")
+  idempotencyKey String?        @unique @map("idempotency_key")
+  accessToken    String?        @unique @map("access_token")
   items          OrderItem[]
   createdAt      DateTime       @default(now()) @map("created_at")
   updatedAt      DateTime       @updatedAt @map("updated_at")

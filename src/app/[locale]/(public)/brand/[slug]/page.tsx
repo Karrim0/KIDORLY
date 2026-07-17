@@ -5,10 +5,11 @@ import { BrandDetailClient } from "./brand-detail-client";
 export default async function BrandPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
+  const { slug } = await params;
   const brand = await prisma.brand.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
     include: {
       products: {
         include: { category: true, brand: true },

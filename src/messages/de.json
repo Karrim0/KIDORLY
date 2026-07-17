@@ -22,7 +22,9 @@
     "unavailable": "Nicht verfügbar",
     "loading": "Laden...",
     "noResults": "Keine Ergebnisse gefunden",
-    "error": "Etwas ist schief gelaufen",
+  "error": "Etwas ist schief gelaufen",
+  "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es erneut.",
+  "retry": "Erneut versuchen",
     "save": "Speichern",
     "cancel": "Abbrechen",
     "delete": "Löschen",
@@ -59,12 +61,19 @@
   "offers": "Angebote",
   "contact": "Kontakt"
 },
-"hero": {
-  "title": "Premium-Kinderprodukte direkt bis zu deiner Tür",
-  "subtitle": "Kinderwagen, Scooter, Ride-on Toys und mehr — verlässliche Qualität für Familien in ganz Ägypten.",
-  "cta": "Jetzt shoppen",
-  "secondaryCta": "Angebote ansehen"
-},
+  "hero": {
+    "eyebrow": "Freude für Kinder, Sicherheit für Eltern",
+    "title": "Premium-Kinderprodukte direkt bis zu deiner Tür",
+    "subtitle": "Kinderwagen, Scooter, Ride-on Toys und mehr — verlässliche Qualität für Familien in ganz Ägypten.",
+    "cta": "Jetzt shoppen",
+    "secondaryCta": "Angebote ansehen",
+    "trustDelivery": "Lieferung in ganz Ägypten",
+    "trustQuality": "Geprüfte Qualität",
+    "trustSupport": "Schnelle Hilfe",
+    "slideLabel": "Zur Folie",
+    "previousSlide": "Vorherige Folie",
+    "nextSlide": "Nächste Folie"
+  },
 "sections": {
   "featuredCategories": "Nach Kategorie shoppen",
   "featuredProducts": "Beliebte Produkte",
@@ -111,7 +120,10 @@
   "quickLinks": "Schnellzugriff",
   "support": "Support",
   "followUs": "Folge uns",
-  "rights": "Alle Rechte vorbehalten."
+  "rights": "Alle Rechte vorbehalten.",
+  "socialDesc": "Folge uns für Angebote, Neuigkeiten und neue Kinderprodukte.",
+  "tagline": "Für kleine glückliche Momente",
+  "whatsappTemplate": "Hallo Kidorly, ich brauche Hilfe"
 },
   "product": {
     "addToCart": "In den Warenkorb",
@@ -126,6 +138,7 @@
     "wasPrice": "Vorher",
     "selectColor": "Farbe auswählen",
     "selectSize": "Größe auswählen",
+    "mobileTotal": "Auswahl gesamt",
 
   "saleEnds": "Angebot endet in",
 "days": "Tage",
@@ -166,8 +179,11 @@
 "backToShop": "Zurück zum Shop",
 "governorate": "Gouvernement",
 "selectGovernorate": "Gouvernement auswählen",
-"continueShopping": "Weiter einkaufen",
-"emptyCart": "Dein Warenkorb ist leer"
+    "continueShopping": "Weiter einkaufen",
+    "emptyCart": "Dein Warenkorb ist leer",
+    "itemCount": "{count, plural, one {# Artikel} other {# Artikel}}",
+    "orderError": "Die Bestellung konnte nicht gesendet werden. Prüfe deine Angaben und versuche es erneut.",
+    "networkError": "Es gibt ein Verbindungsproblem. Prüfe deine Internetverbindung und versuche es erneut."
   },
   "orderSuccess": {
     "title": "Bestellung erfolgreich aufgegeben!",
@@ -177,7 +193,8 @@
     "paymentInstructions": "Zahlungsanweisungen",
     "continueWhatsApp": "Weiter auf WhatsApp",
     "whatsappNote": "Tippen Sie auf die Schaltfläche unten, um Ihre Bestellung zu bestätigen und die Zahlung über WhatsApp zu arrangieren.",
-    "backToShop": "Weiter einkaufen"
+    "backToShop": "Weiter einkaufen",
+    "copyOrderNumber": "Bestellnummer kopieren"
   },
   "contact": {
     "title": "Kontakt",
@@ -198,9 +215,11 @@
   },
   "policies": {
     "title": "Richtlinien",
+    "intro": "Eine klare Übersicht zu Daten, Bestellung, Lieferung und Kundenservice.",
     "privacy": "Datenschutz",
     "terms": "AGB",
-    "shipping": "Versand & Lieferung"
+    "shipping": "Versand & Lieferung",
+    "returns": "Umtausch & Rückgabe"
   },
   "notFound": {
     "title": "Seite nicht gefunden",
@@ -249,7 +268,23 @@
   "admin": {
     "title": "Admin-Panel",
     "dashboard": "Dashboard",
-    "brands": "Brands",
+    "brands": "Marken",
+    "brand": "Marke",
+    "addBrand": "Marke hinzufügen",
+    "editBrand": "Marke bearbeiten",
+    "createBrand": "Marke erstellen",
+    "updateBrand": "Marke aktualisieren",
+    "selectBrand": "Marke auswählen",
+    "noBrandsYet": "Noch keine Marken",
+    "createFirstBrand": "Erste Marke erstellen",
+    "confirmDeleteBrand": "Möchten Sie diese Marke wirklich löschen?",
+    "brandImages": "Markenbilder",
+    "brandLogo": "Markenlogo",
+    "brandLogoHint": "Am besten eignet sich ein transparentes, kompaktes Logo.",
+    "brandBanner": "Markenbanner",
+    "brandBannerHint": "Verwenden Sie ein breites Bild für die Markenseite.",
+    "featuredBrand": "Empfohlene Marke",
+    "productsCount": "Produktanzahl",
     "orders": "Bestellungen",
     "products": "Produkte",
     "categories": "Kategorien",
@@ -412,11 +447,11 @@
     "defaultSeo": "Standard-SEO",
     "saveAllSettings": "Alle Einstellungen speichern",
     "selectCategory": "Kategorie auswählen",
-     "saleTimer": "تايمر العرض",
-  "saleTimerOptional": "(اختياري)",
-  "saleEndsAt": "تاريخ انتهاء العرض",
-  "saleEndsAtHint": "اتركه فارغاً لو مش عايز تايمر يظهر",
-  "timerPreview": "معاينة التايمر",
+     "saleTimer": "Angebots-Timer",
+  "saleTimerOptional": "(optional)",
+  "saleEndsAt": "Enddatum des Angebots",
+  "saleEndsAtHint": "Leer lassen, wenn kein Timer angezeigt werden soll.",
+  "timerPreview": "Timer-Vorschau",
   "categoryDetailsHint": "Grundlegende Kategorieinformationen, die auf der Website angezeigt werden.",
 "featuredCategory": "Hervorgehoben",
 "normalCategory": "Normal",

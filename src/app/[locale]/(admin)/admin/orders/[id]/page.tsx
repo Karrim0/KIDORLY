@@ -4,10 +4,11 @@ import prisma from "@/lib/prisma";
 import { OrderDetailClient } from "./order-detail-client";
 
 export default async function AdminOrderDetailPage({
-  params: { id },
+  params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const order = await prisma.order.findUnique({
     where: { id },
     include: { items: true },

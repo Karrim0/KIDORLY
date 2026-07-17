@@ -21,11 +21,12 @@ export default function PublicError({
         </div>
         <h2 className="text-2xl font-bold mb-2">{t("error")}</h2>
         <p className="text-muted-foreground mb-6 text-sm">
-          We encountered an unexpected error. Please try again.
+          {t("unexpectedError")}
         </p>
+        {error.digest && <span className="sr-only">{error.digest}</span>}
         <Button onClick={reset} variant="outline">
           <RefreshCw className="h-4 w-4 me-2" />
-          Try Again
+          {t("retry")}
         </Button>
       </div>
     </div>

@@ -2,23 +2,25 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const brand = await prisma.brand.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: { _count: { select: { products: true } } },
   });
   if (!brand) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json(brand);
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
+    const { id } = await params;
     const data = await req.json();
     const brand = await prisma.brand.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         slug: data.slug,
         nameEn: data.nameEn,
@@ -38,13 +40,14 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
+    const { id } = await params;
     // Products will have brandId set to null automatically (onDelete: SetNull)
-    await prisma.brand.delete({ where: { id: params.id } });
+    await prisma.brand.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 400 });

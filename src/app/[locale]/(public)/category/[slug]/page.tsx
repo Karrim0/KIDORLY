@@ -8,8 +8,8 @@ import { ShopClient } from "../../shop/shop-client";
 import type { Locale } from "@/lib/i18n";
 
 interface Props {
-  params: { locale: Locale; slug: string };
-  searchParams: {
+  params: Promise<{ locale: Locale; slug: string }>;
+  searchParams: Promise<{
     brand?: string;
     collection?: string;
     tag?: string;
@@ -18,7 +18,7 @@ interface Props {
     q?: string;
     minPrice?: string;
     maxPrice?: string;
-  };
+  }>;
 }
 
 type RelatedCategory = {
@@ -93,8 +93,9 @@ function mergeRelatedCategories(
 }
 
 export async function generateMetadata({
-  params: { locale, slug },
+  params,
 }: Props): Promise<Metadata> {
+  const { locale, slug } = await params;
   const category = await prisma.category.findUnique({
     where: { slug },
   });
@@ -115,9 +116,13 @@ export async function generateMetadata({
 }
 
 export default async function CategoryPage({
-  params: { locale, slug },
-  searchParams,
+  params,
+  searchParams: searchParamsPromise,
 }: Props) {
+  const [{ locale, slug }, searchParams] = await Promise.all([
+    params,
+    searchParamsPromise,
+  ]);
   const category = await prisma.category.findUnique({
     where: { slug },
     include: {

@@ -5,10 +5,11 @@ import { getTranslations } from "next-intl/server";
 import { CategoryForm } from "@/components/admin/category-form";
 
 export default async function NewCategoryPage({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   const [t, parentCategories] = await Promise.all([
     getTranslations({ locale, namespace: "admin" }),
     prisma.category.findMany({

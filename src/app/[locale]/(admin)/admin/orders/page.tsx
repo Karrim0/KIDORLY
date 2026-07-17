@@ -3,10 +3,11 @@ import prisma from "@/lib/prisma";
 import { OrdersListClient } from "./orders-list-client";
 
 export default async function AdminOrdersPage({
-  searchParams,
+  searchParams: searchParamsPromise,
 }: {
-  searchParams: { status?: string; payment?: string; search?: string };
+  searchParams: Promise<{ status?: string; payment?: string; search?: string }>;
 }) {
+  const searchParams = await searchParamsPromise;
   const where: Record<string, unknown> = {};
 
   if (searchParams.payment === "PAID" || searchParams.payment === "UNPAID") {

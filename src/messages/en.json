@@ -22,7 +22,9 @@
     "unavailable": "Unavailable",
     "loading": "Loading...",
     "noResults": "No results found",
-    "error": "Something went wrong",
+  "error": "Something went wrong",
+  "unexpectedError": "We encountered an unexpected error. Please try again.",
+  "retry": "Try again",
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
@@ -60,10 +62,17 @@
     "contact": "Contact Us"
   },
   "hero": {
+    "eyebrow": "Happy picks for kids, peace of mind for parents",
     "title": "Premium Kids Products, Delivered to Your Door",
     "subtitle": "Strollers, scooters, ride-on toys & more — trusted quality for families across Egypt.",
     "cta": "Shop Now",
-    "secondaryCta": "View Offers"
+    "secondaryCta": "View Offers",
+    "trustDelivery": "Egypt-wide delivery",
+    "trustQuality": "Trusted quality",
+    "trustSupport": "Fast support",
+    "slideLabel": "Go to slide",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide"
   },
   "sections": {
     "featuredCategories": "Shop by Category",
@@ -111,7 +120,10 @@
     "quickLinks": "Quick Links",
     "support": "Support",
     "followUs": "Follow Us",
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "socialDesc": "Follow us for offers, updates, and new kids products.",
+    "tagline": "Made for happy little moments",
+    "whatsappTemplate": "Hello Kidorly, I need help"
   },
   "product": {
     "addToCart": "Add to Cart",
@@ -126,6 +138,7 @@
     "wasPrice": "Was",
     "selectColor": "Select a color",
     "selectSize": "Select a size",
+    "mobileTotal": "Selection total",
     "saleEnds": "Sale ends in",
 "days": "days",
 "hours": "hours",
@@ -166,7 +179,10 @@
     "governorate": "Governorate",
     "selectGovernorate": "Select governorate",
     "continueShopping": "Continue Shopping",
-    "emptyCart": "Your cart is empty"
+    "emptyCart": "Your cart is empty",
+    "itemCount": "{count, plural, one {# item} other {# items}}",
+    "orderError": "We could not place your order. Review your details and try again.",
+    "networkError": "There is a connection problem. Check your internet and try again."
   },
   "orderSuccess": {
     "title": "Order Placed Successfully!",
@@ -176,7 +192,8 @@
     "paymentInstructions": "Payment Instructions",
     "continueWhatsApp": "Continue on WhatsApp",
     "whatsappNote": "Tap the button below to confirm your order and arrange payment through WhatsApp.",
-    "backToShop": "Continue Shopping"
+    "backToShop": "Continue Shopping",
+    "copyOrderNumber": "Copy order number"
   },
   "contact": {
     "title": "Contact Us",
@@ -197,9 +214,11 @@
   },
   "policies": {
     "title": "Policies",
+    "intro": "A clear summary of how we handle your data, order, delivery, and after-sales support.",
     "privacy": "Privacy Policy",
     "terms": "Terms & Conditions",
-    "shipping": "Shipping & Delivery"
+    "shipping": "Shipping & Delivery",
+    "returns": "Exchanges & Returns"
   },
 
   "notFound": {

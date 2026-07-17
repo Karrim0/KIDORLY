@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 
 interface Params {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 // GET /api/orders/[id] (admin only)
@@ -11,8 +11,9 @@ export async function GET(_request: Request, { params }: Params) {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const { id } = await params;
   const order = await prisma.order.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: { items: true },
   });
 
@@ -29,16 +30,24 @@ export async function PATCH(request: Request, { params }: Params) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
+    const { id } = await params;
     const data = await request.json();
-    const allowedFields = ["paymentStatus", "deliveryStatus"];
     const updateData: Record<string, string> = {};
 
-    for (const field of allowedFields) {
-      if (data[field]) updateData[field] = data[field];
+    if (data.paymentStatus === "PAID" || data.paymentStatus === "UNPAID") {
+      updateData.paymentStatus = data.paymentStatus;
+    }
+
+    if (data.deliveryStatus === "DELIVERED" || data.deliveryStatus === "NOT_DELIVERED") {
+      updateData.deliveryStatus = data.deliveryStatus;
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      return NextResponse.json({ error: "No valid status supplied" }, { status: 400 });
     }
 
     const order = await prisma.order.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
     });
 

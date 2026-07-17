@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 
 interface Params {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 function parseSaleDate(value: unknown) {
@@ -45,8 +45,9 @@ function prepareProductPayload(data: Record<string, unknown>) {
 
 // GET /api/products/[id]
 export async function GET(_request: Request, { params }: Params) {
+  const { id } = await params;
   const product = await prisma.product.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       category: true,
       brand: true,
@@ -84,12 +85,13 @@ export async function PUT(request: Request, { params }: Params) {
   }
 
   try {
+    const { id } = await params;
     const body = await request.json();
     const { productData, collectionIds, tagIds, ageGroupIds } =
       prepareProductPayload(body);
 
     const product = await prisma.product.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...productData,
 
@@ -140,8 +142,9 @@ export async function DELETE(_request: Request, { params }: Params) {
   }
 
   try {
+    const { id } = await params;
     await prisma.product.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ success: true });

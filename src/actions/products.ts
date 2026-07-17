@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { categorySchema, categoryUpdateSchema } from "@/lib/validations";
+import { requireAdmin } from "@/lib/auth";
 
 function parseSaleDate(value: unknown) {
   if (!value) return null;
@@ -92,6 +93,7 @@ function revalidateCatalog() {
 }
 
 export async function createProduct(data: Record<string, unknown>) {
+  await requireAdmin();
   const { productData, collectionIds, tagIds, ageGroupIds } =
     prepareProductPayload(data);
 
@@ -131,6 +133,7 @@ export async function createProduct(data: Record<string, unknown>) {
 }
 
 export async function updateProduct(id: string, data: Record<string, unknown>) {
+  await requireAdmin();
   const { productData, collectionIds, tagIds, ageGroupIds } =
     prepareProductPayload(data);
 
@@ -174,12 +177,14 @@ export async function updateProduct(id: string, data: Record<string, unknown>) {
 }
 
 export async function deleteProduct(id: string) {
+  await requireAdmin();
   await prisma.product.delete({ where: { id } });
 
   revalidateCatalog();
 }
 
 export async function createCategory(data: Record<string, unknown>) {
+  await requireAdmin();
   const { categoryData, relatedCategoryIds } = extractRelatedCategoryIds(data);
   const parsed = categorySchema.parse(categoryData);
 
@@ -204,6 +209,7 @@ export async function createCategory(data: Record<string, unknown>) {
 }
 
 export async function updateCategory(id: string, data: Record<string, unknown>) {
+  await requireAdmin();
   const { categoryData, relatedCategoryIds, hasRelatedCategoryIds } =
     extractRelatedCategoryIds(data);
 
@@ -239,6 +245,7 @@ export async function updateCategory(id: string, data: Record<string, unknown>) 
 }
 
 export async function deleteCategory(id: string) {
+  await requireAdmin();
   await prisma.category.delete({
     where: { id },
   });

@@ -11,12 +11,13 @@ export const metadata: Metadata = {
 };
 
 export default async function OrderSuccessPage({
-  params: { locale, id },
+  params,
 }: {
-  params: { locale: Locale; id: string };
+  params: Promise<{ locale: Locale; id: string }>;
 }) {
+  const { id } = await params;
   const order = await prisma.order.findUnique({
-    where: { id },
+    where: { accessToken: id },
     include: { items: true },
   });
   if (!order) notFound();

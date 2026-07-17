@@ -3,7 +3,8 @@ import { getSettings, SETTING_KEYS } from "@/lib/settings";
 import { ContactClient } from "./contact-client";
 import type { Locale } from "@/lib/i18n";
 
-export async function generateMetadata({ params: { locale } }: { params: { locale: Locale } }) {
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "contact" });
   return { title: `${t("title")} — Kidorly` };
 }

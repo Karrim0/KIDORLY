@@ -1,304 +1,179 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Reveal } from "@/components/shared/reveal";
+import {
+  ArrowUpRight,
+  ChevronLeft,
+  ChevronRight,
+  Headphones,
+  ShieldCheck,
+  Sparkles,
+  Truck,
+} from "lucide-react";
+
 import { cn } from "@/lib/utils";
 
 const SLIDES = [
-  {
-    desktopImage: "/images/hero.png",
-    mobileImage: "/images/hero-mobile.png",
-    desktopPosition: "object-[72%_center]",
-    mobilePosition: "object-[58%_center]",
-  },
-  {
-    desktopImage: "/images/hero1.png",
-    mobileImage: "/images/hero1-mobile.png",
-    desktopPosition: "object-[72%_center]",
-    mobilePosition: "object-[58%_center]",
-  },
-  {
-    desktopImage: "/images/hero2.png",
-    mobileImage: "/images/hero2-mobile.png",
-    desktopPosition: "object-[70%_center]",
-    mobilePosition: "object-[55%_center]",
-  },
-  {
-    desktopImage: "/images/hero3.png",
-    mobileImage: "/images/hero3-mobile.png",
-    desktopPosition: "object-[74%_center]",
-    mobilePosition: "object-[58%_center]",
-  },
-];
+  { desktop: "/images/hero.webp", mobile: "/images/hero-mobile.webp", position: "object-[58%_center] md:object-[72%_center]" },
+  { desktop: "/images/hero1.webp", mobile: "/images/hero1-mobile.webp", position: "object-[58%_center] md:object-[72%_center]" },
+  { desktop: "/images/hero2.webp", mobile: "/images/hero2-mobile.webp", position: "object-[55%_center] md:object-[70%_center]" },
+  { desktop: "/images/hero3.webp", mobile: "/images/hero3-mobile.webp", position: "object-[58%_center] md:object-[74%_center]" },
+] as const;
 
-const SLIDE_DURATION = 5000;
+const SLIDE_DURATION = 6500;
 
 export function HeroSection() {
   const t = useTranslations("hero");
   const locale = useLocale();
-
   const [current, setCurrent] = useState(0);
-  const [progress, setProgress] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
 
-  const total = SLIDES.length;
+  const goTo = useCallback((index: number) => {
+    setCurrent((index + SLIDES.length) % SLIDES.length);
+  }, []);
 
-  const next = useCallback(() => {
-    setCurrent((prev) => (prev + 1) % total);
-    setProgress(0);
-  }, [total]);
+  const next = useCallback(() => goTo(current + 1), [current, goTo]);
+  const previous = useCallback(() => goTo(current - 1), [current, goTo]);
 
-  const prev = useCallback(() => {
-    setCurrent((prev) => (prev - 1 + total) % total);
-    setProgress(0);
-  }, [total]);
-
-  const goTo = useCallback((i: number) => {
-    setCurrent(i);
-    setProgress(0);
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduceMotion(media.matches);
+    update();
+    media.addEventListener?.("change", update);
+    return () => media.removeEventListener?.("change", update);
   }, []);
 
   useEffect(() => {
-    if (paused || total <= 1) return;
+    if (paused || reduceMotion) return;
+    const timeout = window.setTimeout(next, SLIDE_DURATION);
+    return () => window.clearTimeout(timeout);
+  }, [current, next, paused, reduceMotion]);
 
-    const tick = 50;
-    const step = (tick / SLIDE_DURATION) * 100;
-
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        const nextProgress = prev + step;
-
-        if (nextProgress >= 100) {
-          setCurrent((curr) => (curr + 1) % total);
-          return 0;
-        }
-
-        return nextProgress;
-      });
-    }, tick);
-
-    return () => clearInterval(interval);
-  }, [paused, total]);
-
-  function handleTouchStart(e: React.TouchEvent) {
-    setTouchStart(e.touches[0].clientX);
-  }
-
-  function handleTouchEnd(e: React.TouchEvent) {
-    if (touchStart === null) return;
-
-    const diff = touchStart - e.changedTouches[0].clientX;
-
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) next();
-      else prev();
-    }
-
-    setTouchStart(null);
-  }
+  const slide = SLIDES[current];
+  const trustItems = [
+    { icon: Truck, label: t("trustDelivery") },
+    { icon: ShieldCheck, label: t("trustQuality") },
+    { icon: Headphones, label: t("trustSupport") },
+  ];
 
   return (
     <section
-      dir="ltr"
-      className="relative h-[100svh] min-h-[620px] max-h-[920px] overflow-hidden sm:min-h-[680px] md:min-h-[720px]"
+      className="relative min-h-[570px] h-[82svh] max-h-[820px] overflow-hidden bg-slate-950 md:h-[88svh] md:min-h-[680px] md:max-h-[900px]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
+      onTouchStart={(event) => setTouchStart(event.touches[0].clientX)}
+      onTouchEnd={(event) => {
+        if (touchStart === null) return;
+        const distance = touchStart - event.changedTouches[0].clientX;
+        if (Math.abs(distance) > 48) {
+          if (distance > 0) next();
+          else previous();
+        }
+        setTouchStart(null);
+      }}
     >
-      {SLIDES.map((slide, i) => (
-        <div
-          key={i}
-          className={cn(
-            "absolute inset-0 transition-all duration-[1200ms] ease-in-out",
-            i === current
-              ? "opacity-100 scale-100 pointer-events-auto"
-              : "opacity-0 scale-[1.03] pointer-events-none",
-          )}
-        >
-          {/* Mobile Image */}
-          <Image
-            src={slide.mobileImage}
-            alt={`Hero mobile slide ${i + 1}`}
-            fill
-            priority={i === 0}
-            quality={95}
-            sizes="(max-width: 767px) 100vw"
-            className={cn(
-              "block md:hidden object-cover",
-              slide.mobilePosition,
-              "transition-transform duration-[1400ms] ease-out",
-            )}
-          />
+      <div key={current} className="absolute inset-0 hero-slide-enter">
+        <Image
+          src={slide.mobile}
+          alt={t("title")}
+          fill
+          priority={current === 0}
+          quality={82}
+          sizes="(max-width: 767px) 100vw"
+          className={cn("object-cover md:hidden", slide.position)}
+        />
+        <Image
+          src={slide.desktop}
+          alt=""
+          fill
+          priority={current === 0}
+          quality={84}
+          sizes="(min-width: 768px) 100vw"
+          className={cn("hidden object-cover md:block", slide.position)}
+        />
+      </div>
 
-          {/* Desktop Image */}
-          <Image
-            src={slide.desktopImage}
-            alt={`Hero desktop slide ${i + 1}`}
-            fill
-            priority={i === 0}
-            quality={95}
-            sizes="(min-width: 768px) 100vw"
-            className={cn(
-              "hidden md:block object-cover",
-              slide.desktopPosition,
-              "transition-transform duration-[1400ms] ease-out",
-            )}
-          />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(9,16,30,.15)_0%,rgba(9,16,30,.18)_36%,rgba(9,16,30,.88)_100%)] md:bg-[linear-gradient(90deg,rgba(9,16,30,.88)_0%,rgba(9,16,30,.58)_43%,rgba(9,16,30,.08)_78%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_45%,rgba(255,107,107,.20),transparent_30%)]" />
 
-          {/* ثابتة من الشمال دايمًا عشان الكلام يفضل LTR حتى في العربي */}
-          <div className="absolute inset-0 z-[1] bg-gradient-to-r from-black/78 via-black/38 to-transparent md:from-black/65 md:via-black/25 md:to-transparent" />
+      <span aria-hidden className="absolute end-[7%] top-[18%] hidden h-16 w-16 rotate-12 items-center justify-center rounded-[1.5rem] border border-white/20 bg-white/10 text-brand-sun backdrop-blur-md md:flex motion-safe:animate-[float_7s_ease-in-out_infinite]">
+        <Sparkles className="h-7 w-7" />
+      </span>
 
-          {/* تهدئة تحت الصورة عشان الـ dots والأزرار */}
-          <div className="absolute inset-0 z-[1] bg-gradient-to-t from-black/50 via-black/10 to-transparent md:from-black/45 md:via-black/10 md:to-transparent" />
+      <div className="container relative z-10 flex h-full items-end pb-20 pt-24 md:items-center md:pb-16 md:pt-24">
+        <div className="max-w-[620px] text-start text-white">
+          <div className="hero-copy-enter inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-2 text-[11px] font-extrabold uppercase tracking-[.14em] text-white/95 shadow-lg backdrop-blur-md sm:text-xs">
+            <Sparkles className="h-3.5 w-3.5 text-brand-sun" />
+            {t("eyebrow")}
+          </div>
 
-          {/* طبقة خفيفة للموبايل بس */}
-          <div className="absolute inset-0 z-[1] bg-black/10 md:bg-transparent" />
-        </div>
-      ))}
+          <h1 className="hero-copy-enter mt-4 text-[2.35rem] font-black leading-[1.02] tracking-[-.045em] drop-shadow-lg sm:text-5xl md:mt-6 md:text-6xl lg:text-[4.35rem]">
+            {t("title")}
+          </h1>
 
-      <div className="absolute top-20 right-[8%] z-[2] h-20 w-20 rounded-full bg-brand-coral/15 blur-3xl pointer-events-none animate-[float_6s_ease-in-out_infinite] md:h-32 md:w-32" />
+          <p className="hero-copy-enter mt-4 max-w-[540px] text-sm font-medium leading-6 text-white/86 sm:text-base sm:leading-7 md:mt-5 md:text-lg">
+            {t("subtitle")}
+          </p>
 
-      <div className="absolute bottom-24 left-[4%] z-[2] h-24 w-24 rounded-full bg-brand-sky/15 blur-3xl pointer-events-none animate-[float_8s_ease-in-out_infinite_1s] md:h-40 md:w-40" />
-
-      <div className="container relative z-10 flex h-full items-center pt-24 pb-24 sm:pt-28 md:pt-32 md:pb-24">
-        <div className="w-full max-w-[92%] text-left sm:max-w-[520px] md:max-w-2xl">
-          <Reveal direction="up" duration={800}>
-            <h1
-              dir="ltr"
-              className={cn(
-                "mb-4 max-w-[720px] text-left font-bold tracking-tight text-white drop-shadow-xl",
-                "text-[2.05rem] leading-[1.05]",
-                "sm:text-4xl sm:leading-[1.05]",
-                "md:mb-6 md:text-5xl",
-                "lg:text-6xl",
-              )}
+          <div className="hero-copy-enter mt-6 flex flex-wrap gap-3 md:mt-8">
+            <Link
+              href={`/${locale}/shop`}
+              className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-brand-coral px-5 py-3 text-sm font-black text-white shadow-[0_14px_38px_rgba(255,107,107,.38)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#ff5959] hover:shadow-[0_18px_44px_rgba(255,107,107,.48)] active:translate-y-0 active:scale-[.98] sm:min-h-14 sm:px-7 sm:text-base"
             >
-              {t("title")}
-            </h1>
-          </Reveal>
+              {t("cta")}
+              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" />
+            </Link>
 
-          <Reveal direction="up" delay={200} duration={800}>
-            <p
-              dir="ltr"
-              className={cn(
-                "mb-7 max-w-[520px] text-left leading-relaxed text-white/90 drop-shadow-md",
-                "text-[0.95rem]",
-                "sm:text-base",
-                "md:mb-10 md:text-lg",
-                "lg:text-xl",
-              )}
+            <Link
+              href={`/${locale}/offers`}
+              className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/35 bg-white/10 px-5 py-3 text-sm font-black text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/20 active:translate-y-0 active:scale-[.98] sm:min-h-14 sm:px-7 sm:text-base"
             >
-              {t("subtitle")}
-            </p>
-          </Reveal>
+              {t("secondaryCta")}
+            </Link>
+          </div>
 
-          <Reveal direction="up" delay={400} duration={800}>
-            <div className="flex w-full flex-col items-start gap-3 sm:w-auto sm:flex-row md:gap-4">
-<Button
-  size="lg"
-  className={cn(
-    "w-auto min-w-[96px] sm:min-w-0 sm:w-auto",
-    "h-9 px-3 text-xs font-bold sm:h-12 sm:px-6 sm:text-sm md:h-14 md:px-10 md:text-base",
-    "border-0 bg-brand-coral text-white hover:bg-brand-coral/90",
-    "shadow-lg shadow-brand-coral/30 hover:shadow-xl hover:shadow-brand-coral/40",
-    "transition-all duration-300 press-effect",
-  )}
-  asChild
->
-  <Link href={`/${locale}/shop`} className="inline-flex items-center justify-center">
-    {t("cta")}
-    <ArrowRight className="ml-1.5 h-3.5 w-3.5 sm:ml-2 sm:h-4 sm:w-4 md:h-5 md:w-5" />
-  </Link>
-</Button>
-
-<Button
-  size="lg"
-  className={cn(
-    "w-auto min-w-[96px] sm:min-w-0 sm:w-auto",
-    "h-9 px-3 text-xs font-bold sm:h-12 sm:px-6 sm:text-sm md:h-14 md:px-10 md:text-base",
-    "bg-white/15 text-white hover:bg-white/25",
-    "border border-white/35 hover:border-white/50 sm:border-2",
-    "backdrop-blur-md shadow-lg",
-    "transition-all duration-300 press-effect",
-  )}
-  asChild
->
-  <Link href={`/${locale}/offers`} className="inline-flex items-center justify-center">
-    {t("secondaryCta")}
-  </Link>
-</Button>
-            </div>
-          </Reveal>
+          <div className="mt-6 flex max-w-[540px] items-center gap-2 overflow-x-auto pb-1 scrollbar-hide md:mt-8 md:gap-3">
+            {trustItems.map(({ icon: Icon, label }) => (
+              <span key={label} className="flex shrink-0 items-center gap-1.5 rounded-full border border-white/15 bg-black/15 px-3 py-2 text-[10px] font-bold text-white/85 backdrop-blur-sm sm:text-xs">
+                <Icon className="h-3.5 w-3.5 text-brand-sun" />
+                {label}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
-      {total > 1 && (
-        <>
+      <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/10 bg-black/15 px-2 py-1.5 backdrop-blur-md md:bottom-8">
+        {SLIDES.map((_, index) => (
           <button
-            onClick={prev}
+            key={index}
+            type="button"
+            onClick={() => goTo(index)}
+            aria-label={`${t("slideLabel")} ${index + 1}`}
+            aria-current={index === current}
             className={cn(
-              "absolute left-4 top-1/2 z-20 -translate-y-1/2",
-              "hidden h-11 w-11 items-center justify-center rounded-full md:flex",
-              "border border-white/25 bg-white/10 text-white backdrop-blur-md",
-              "transition-all duration-300 hover:scale-110 hover:border-white/40 hover:bg-white/20 active:scale-95",
+              "relative h-2.5 overflow-hidden rounded-full bg-white/35 transition-[width,background-color] duration-300",
+              index === current ? "w-10 bg-white/50" : "w-2.5 hover:bg-white/70",
             )}
-            aria-label="Previous slide"
           >
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-
-          <button
-            onClick={next}
-            className={cn(
-              "absolute right-4 top-1/2 z-20 -translate-y-1/2",
-              "hidden h-11 w-11 items-center justify-center rounded-full md:flex",
-              "border border-white/25 bg-white/10 text-white backdrop-blur-md",
-              "transition-all duration-300 hover:scale-110 hover:border-white/40 hover:bg-white/20 active:scale-95",
+            {index === current && !reduceMotion && (
+              <span key={`${current}-progress`} className="absolute inset-y-0 start-0 bg-brand-coral hero-progress" />
             )}
-            aria-label="Next slide"
-          >
-            <ChevronRight className="h-5 w-5" />
           </button>
+        ))}
+      </div>
 
-          <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/10 px-3 py-2 backdrop-blur-sm sm:bottom-8 md:bottom-10 md:gap-3">
-            {SLIDES.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i)}
-                className="relative h-2 overflow-hidden rounded-full transition-all duration-500 active:scale-90"
-                style={{ width: i === current ? 34 : 10 }}
-                aria-label={`Slide ${i + 1}`}
-              >
-                <span
-                  className={cn(
-                    "absolute inset-0 rounded-full transition-colors duration-300",
-                    i === current
-                      ? "bg-white/35"
-                      : "bg-white/45 hover:bg-white/70",
-                  )}
-                />
-
-                {i === current && (
-                  <span
-                    className="absolute inset-y-0 left-0 rounded-full bg-brand-coral"
-                    style={{
-                      width: `${progress}%`,
-                      transition: "width 50ms linear",
-                    }}
-                  />
-                )}
-              </button>
-            ))}
-          </div>
-        </>
-      )}
+      <button type="button" onClick={previous} aria-label={t("previousSlide")} className="absolute start-4 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/15 text-white backdrop-blur-md transition hover:scale-105 hover:bg-white/15 md:flex">
+        <ChevronLeft className="h-5 w-5 rtl:rotate-180" />
+      </button>
+      <button type="button" onClick={next} aria-label={t("nextSlide")} className="absolute end-4 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/15 text-white backdrop-blur-md transition hover:scale-105 hover:bg-white/15 md:flex">
+        <ChevronRight className="h-5 w-5 rtl:rotate-180" />
+      </button>
     </section>
   );
 }

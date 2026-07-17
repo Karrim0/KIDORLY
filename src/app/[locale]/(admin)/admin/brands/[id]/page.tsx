@@ -5,9 +5,10 @@ import { BrandForm } from "@/components/admin/brand-form";
 export default async function EditBrandPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const brand = await prisma.brand.findUnique({ where: { id: params.id } });
+  const { id } = await params;
+  const brand = await prisma.brand.findUnique({ where: { id } });
   if (!brand) notFound();
 
   return <BrandForm brand={brand as any} />;

@@ -3,10 +3,12 @@ import { locales } from "@/lib/i18n";
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://kidorly.com";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const [products, categories] = await Promise.all([
-    prisma.product.findMany({ select: { slug: true, updatedAt: true } }),
-    prisma.category.findMany({ select: { slug: true, updatedAt: true } }),
+    prisma.product.findMany({ where: { availability: "AVAILABLE" }, select: { slug: true, updatedAt: true } }),
+    prisma.category.findMany({ where: { visible: true }, select: { slug: true, updatedAt: true } }),
   ]);
 
   const staticPages = ["", "/shop", "/offers", "/contact", "/faq", "/policies"];
@@ -29,6 +31,7 @@ export async function GET() {
           `<xhtml:link rel="alternate" hreflang="${l}" href="${BASE_URL}/${l}${page}" />`
       )
       .join("\n    ")}
+    <xhtml:link rel="alternate" hreflang="x-default" href="${BASE_URL}/ar${page}" />
   </url>`;
     }
   }
@@ -48,6 +51,7 @@ export async function GET() {
           `<xhtml:link rel="alternate" hreflang="${l}" href="${BASE_URL}/${l}/product/${product.slug}" />`
       )
       .join("\n    ")}
+    <xhtml:link rel="alternate" hreflang="x-default" href="${BASE_URL}/ar/product/${product.slug}" />
   </url>`;
     }
   }
@@ -61,6 +65,13 @@ export async function GET() {
     <lastmod>${cat.updatedAt.toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+    ${locales
+      .map(
+        (l) =>
+          `<xhtml:link rel="alternate" hreflang="${l}" href="${BASE_URL}/${l}/category/${cat.slug}" />`
+      )
+      .join("\n    ")}
+    <xhtml:link rel="alternate" hreflang="x-default" href="${BASE_URL}/ar/category/${cat.slug}" />
   </url>`;
     }
   }
@@ -68,6 +79,9 @@ export async function GET() {
   xml += `\n</urlset>`;
 
   return new Response(xml, {
-    headers: { "Content-Type": "application/xml" },
+    headers: {
+      "Content-Type": "application/xml",
+      "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+    },
   });
 }

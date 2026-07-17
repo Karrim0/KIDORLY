@@ -6,10 +6,6 @@ import { useLocale, useTranslations } from "next-intl";
 import {
   Instagram,
   Facebook,
-  
-  ShieldCheck,
-  Truck,
-  CreditCard,
 } from "lucide-react";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
@@ -28,7 +24,7 @@ export function Footer({ settings = {} }: FooterProps) {
   const brandName = settings["brand_name"] || "Kidorly";
 
   const whatsappTemplate =
-    settings[`whatsapp_template_${locale}`] || "Hello, I need help";
+    settings[`whatsapp_template_${locale}`] || t("footer.whatsappTemplate");
 
   const quickLinks = [
     { href: `/${locale}/shop`, label: t("common.shop") },
@@ -42,23 +38,8 @@ export function Footer({ settings = {} }: FooterProps) {
     { href: `/${locale}/faq`, label: t("common.faq") },
   ];
 
-  const trustItems = [
-    {
-      icon: ShieldCheck,
-      label: "Safe Shopping",
-    },
-    {
-      icon: Truck,
-      label: "Fast Delivery",
-    },
-    {
-      icon: CreditCard,
-      label: "Easy Payment",
-    },
-  ];
-
   return (
-    <footer className="relative mt-16 overflow-hidden border-t border-gray-100 bg-gradient-to-b from-white via-gray-50/80 to-white sm:mt-20">
+    <footer className="relative overflow-hidden border-t border-gray-100 bg-gradient-to-b from-white via-gray-50/80 to-white">
       <div className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-brand-coral/10 blur-3xl" />
       <div className="pointer-events-none absolute bottom-0 right-0 h-72 w-72 rounded-full bg-brand-sky/10 blur-3xl" />
 
@@ -72,7 +53,7 @@ export function Footer({ settings = {} }: FooterProps) {
               className="inline-flex items-center"
             >
               <Image
-                src="/images/logo.png"
+                src="/images/logo.webp"
                 alt={brandName}
                 width={170}
                 height={60}
@@ -84,19 +65,6 @@ export function Footer({ settings = {} }: FooterProps) {
               {t("footer.description")}
             </p>
 
-            <div className="mt-5 grid max-w-sm grid-cols-1 gap-2 sm:grid-cols-3">
-              {trustItems.map((item) => (
-                <div
-                  key={item.label}
-                  className="flex items-center gap-2 rounded-2xl border border-gray-100 bg-white/80 px-3 py-2 text-xs font-semibold text-gray-700 shadow-sm"
-                >
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-brand-coral/10 text-brand-coral">
-                    <item.icon className="h-4 w-4" />
-                  </span>
-                  <span className="leading-tight">{item.label}</span>
-                </div>
-              ))}
-            </div>
           </div>
 
           {/* Quick Links */}
@@ -146,7 +114,7 @@ export function Footer({ settings = {} }: FooterProps) {
             </h4>
 
             <p className="mb-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Follow us for offers, updates, and new kids products.
+              {t("footer.socialDesc")}
             </p>
 
             <div className="flex flex-wrap gap-3">
@@ -205,7 +173,7 @@ export function Footer({ settings = {} }: FooterProps) {
 
             <div className="flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-brand-coral" />
-              <span>Made for happy little moments</span>
+              <span>{t("footer.tagline")}</span>
             </div>
           </div>
         </div>

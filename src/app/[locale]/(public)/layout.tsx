@@ -4,6 +4,7 @@ import { WishlistProvider } from "@/hooks/use-wishlist"; // ← جديد
 import { Navbar } from "@/components/public/navbar";
 import { Footer } from "@/components/public/footer";
 import { CartDrawer } from "@/components/public/cart-drawer";
+import { MobileDock } from "@/components/public/mobile-dock";
 import { getSettings, SETTING_KEYS } from "@/lib/settings";
 
 export default async function PublicLayout({
@@ -31,8 +32,9 @@ export default async function PublicLayout({
         <ToastProvider>
           <Navbar />
           <CartDrawer />
-          <main className="min-h-[60vh]">{children}</main>
+          <div className="min-h-[60vh]">{children}</div>
           <Footer settings={settings} />
+          <MobileDock />
         </ToastProvider>
       </WishlistProvider>
     </CartProvider>

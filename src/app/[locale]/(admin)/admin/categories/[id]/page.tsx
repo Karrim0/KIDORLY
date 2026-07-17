@@ -6,10 +6,11 @@ import { getTranslations } from "next-intl/server";
 import { CategoryForm } from "@/components/admin/category-form";
 
 export default async function EditCategoryPage({
-  params: { id, locale },
+  params,
 }: {
-  params: { id: string; locale: string };
+  params: Promise<{ id: string; locale: string }>;
 }) {
+  const { id, locale } = await params;
   const [category, parentCategories, t] = await Promise.all([
     prisma.category.findUnique({
       where: { id },

@@ -276,7 +276,7 @@ export function Navbar() {
           onClick={closeMenus}
         >
           <Image
-            src="/images/logo.png"
+            src="/images/logo.webp"
             alt="Kidorly"
             width={170}
             height={60}
@@ -421,23 +421,18 @@ export function Navbar() {
             )}
           </div>
 
-          <Link href={`/${locale}/wishlist`} aria-label="Wishlist">
-            <Button
-              variant="ghost"
-              size="icon"
-              className={cn(
-                "relative h-8 w-8 rounded-xl transition-colors duration-300 sm:h-9 sm:w-9 lg:h-10 lg:w-10",
-                isTransparent
-                  ? "text-white/95 hover:bg-white/10 hover:text-white"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-950",
-              )}
-            >
-              <Heart className="h-[18px] w-[18px] lg:h-5 lg:w-5" />
-
-              {wishlistCount > 0 && (
-                <CountBadge value={getCountBadge(wishlistCount)} />
-              )}
-            </Button>
+          <Link
+            href={`/${locale}/wishlist`}
+            aria-label={t("wishlist.title")}
+            className={cn(
+              "relative flex h-11 w-11 items-center justify-center rounded-xl transition-colors duration-300 lg:h-11 lg:w-11",
+              isTransparent
+                ? "text-white/95 hover:bg-white/10 hover:text-white"
+                : "text-gray-600 hover:bg-gray-100 hover:text-gray-950",
+            )}
+          >
+            <Heart className="h-[18px] w-[18px] lg:h-5 lg:w-5" />
+            {wishlistCount > 0 && <CountBadge value={getCountBadge(wishlistCount)} />}
           </Link>
 
           <Button
@@ -447,7 +442,7 @@ export function Navbar() {
             aria-label="Open cart"
             onClick={openCart}
             className={cn(
-              "relative h-8 w-8 rounded-xl transition-colors duration-300 sm:h-9 sm:w-9 lg:h-10 lg:w-10",
+              "relative h-11 w-11 rounded-xl transition-colors duration-300",
               isTransparent
                 ? "text-white/95 hover:bg-white/10 hover:text-white"
                 : "text-gray-600 hover:bg-gray-100 hover:text-gray-950",
@@ -466,7 +461,7 @@ export function Navbar() {
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((prev) => !prev)}
             className={cn(
-              "h-8 w-8 rounded-xl transition-colors duration-300 sm:h-9 sm:w-9 lg:hidden",
+              "h-11 w-11 rounded-xl transition-colors duration-300 lg:hidden",
               isTransparent
                 ? "text-white/95 hover:bg-white/10 hover:text-white"
                 : "text-gray-600 hover:bg-gray-100 hover:text-gray-950",

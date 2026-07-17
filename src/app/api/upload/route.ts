@@ -3,6 +3,15 @@ import { getSession } from "@/lib/auth";
 import { uploadImage } from "@/lib/cloudinary";
 import prisma from "@/lib/prisma";
 
+const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
+const ALLOWED_IMAGE_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/avif",
+  "image/gif",
+]);
+
 export async function POST(request: Request) {
   const session = await getSession();
 
@@ -19,17 +28,33 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
+    if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
+      return NextResponse.json(
+        { error: "Unsupported image type. Use JPG, PNG, WebP, AVIF, or GIF." },
+        { status: 415 },
+      );
+    }
+
+    if (file.size <= 0 || file.size > MAX_UPLOAD_BYTES) {
+      return NextResponse.json(
+        { error: "Image must be smaller than 8 MB." },
+        { status: 413 },
+      );
+    }
+
+    const safeFolder = folder.replace(/[^a-zA-Z0-9/_-]/g, "").slice(0, 80) || "kidorly";
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const result = await uploadImage(buffer, folder);
+    const result = await uploadImage(buffer, safeFolder);
 
     const media = await prisma.media.create({
       data: {
         url: result.url,
         publicId: result.publicId,
         filename: file.name || null,
-        folder,
+        folder: safeFolder,
       },
     });
 

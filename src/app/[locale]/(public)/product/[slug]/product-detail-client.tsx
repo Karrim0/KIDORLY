@@ -50,7 +50,10 @@ export function ProductDetailClient({ product, relatedProducts }: Props) {
   const { addItem, addItemAndPersist } = useCart();
   const { has, toggle } = useWishlist();
 
-  const images = product.images?.length ? product.images : ["/placeholder.svg"];
+  const images = useMemo(
+    () => (product.images?.length ? product.images : ["/placeholder.svg"]),
+    [product.images],
+  );
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState<string | undefined>(
@@ -163,7 +166,7 @@ export function ProductDetailClient({ product, relatedProducts }: Props) {
       <div className="pointer-events-none absolute -top-28 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-brand-coral/10 blur-3xl" />
       <div className="pointer-events-none absolute right-0 top-[520px] h-72 w-72 rounded-full bg-brand-sky/10 blur-3xl" />
 
-      <div className="container relative page-safe-top pb-12 sm:pb-14 md:pb-16">
+      <div className="container relative page-safe-top pb-28 sm:pb-14 md:pb-16">
         {/* Back */}
         <div className="mb-4 sm:mb-6">
           <Button
@@ -555,13 +558,26 @@ export function ProductDetailClient({ product, relatedProducts }: Props) {
               </Button>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 md:gap-5 lg:grid-cols-4 lg:gap-6">
+            <div className="category-scroll-snap scrollbar-hide -mx-4 flex gap-4 overflow-x-auto px-4 pb-4 md:mx-0 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-4 lg:gap-6">
               {relatedProducts.map((p) => (
-                <ProductCard key={p.id} product={p} />
+                <div key={p.id} className="w-[78vw] max-w-[310px] shrink-0 snap-center md:w-auto md:max-w-none">
+                  <ProductCard product={p} />
+                </div>
               ))}
             </div>
           </section>
         )}
+      </div>
+
+      <div className="fixed inset-x-3 bottom-[max(.75rem,env(safe-area-inset-bottom))] z-40 flex min-h-[68px] items-center gap-3 rounded-[1.5rem] border border-white/80 bg-white/94 p-2.5 shadow-[0_18px_55px_rgba(15,23,42,.22)] backdrop-blur-xl sm:hidden">
+        <div className="min-w-0 flex-1 ps-2">
+          <p className="text-[10px] font-bold text-slate-500">{t("product.mobileTotal")}</p>
+          <p className="truncate text-lg font-black text-brand-coral">{formatPrice(finalPrice * quantity, locale)}</p>
+        </div>
+        <Button onClick={handleBuyNow} disabled={!isAvailable} className="h-12 min-w-[150px] rounded-2xl px-5 text-sm font-black shadow-lg shadow-brand-coral/25">
+          <Zap className="me-1.5 h-4 w-4" />
+          {isAvailable ? t("product.buyNow") : t("common.outOfStock")}
+        </Button>
       </div>
     </main>
   );

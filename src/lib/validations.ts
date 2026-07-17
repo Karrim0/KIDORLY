@@ -89,18 +89,16 @@ export const checkoutSchema = z
     items: z
       .array(
         z.object({
-          productId: z.string().optional().nullable(),
-          productName: z.string(),
-          price: z.number(),
-          quantity: z.number().min(1),
-          color: z.string().optional().nullable(),
-          size: z.string().optional().nullable(),
-          image: z.string().optional().nullable(),
+          productId: z.string().trim().min(1),
+          quantity: z.coerce.number().int().min(1).max(10),
+          color: z.string().trim().max(80).optional().nullable(),
+          size: z.string().trim().max(80).optional().nullable(),
         })
       )
-      .min(1),
+      .min(1)
+      .max(20),
 
-    locale: z.string().default("en"),
+    locale: z.enum(["ar", "en", "de"]).default("en"),
   })
   .refine(
     (data) => {

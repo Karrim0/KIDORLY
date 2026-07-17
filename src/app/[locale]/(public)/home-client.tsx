@@ -17,9 +17,7 @@ import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/public/product-card";
 import { HeroSection } from "@/components/public/hero-section";
 import {
-  WhyChooseUs,
-  CityHighlight,
-  PaymentMethodsSection,
+  ExperienceSection,
 } from "@/components/public/home-sections";
 import { Reveal } from "@/components/shared/reveal";
 import { getTranslated, cn } from "@/lib/utils";
@@ -554,9 +552,11 @@ export function HomeClient({
               actionLabel={t("common.viewAll")}
             />
 
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
+            <div className="category-scroll-snap scrollbar-hide -mx-4 flex gap-4 overflow-x-auto px-4 pb-5 md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-4">
               {featuredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <div key={product.id} className="w-[78vw] max-w-[310px] shrink-0 snap-center md:w-auto md:max-w-none">
+                  <ProductCard product={product} />
+                </div>
               ))}
             </div>
 
@@ -581,9 +581,7 @@ export function HomeClient({
 
       <PartnersSection brands={brands} />
 
-      <WhyChooseUs />
-      <CityHighlight />
-      <PaymentMethodsSection />
+      <ExperienceSection />
     </>
   );
 }

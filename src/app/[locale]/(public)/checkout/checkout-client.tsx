@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -338,6 +338,7 @@ export function CheckoutClient({ shippingFees }: CheckoutClientProps) {
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const idempotencyKeyRef = useRef("");
 
   const isAr = locale === "ar";
 
@@ -456,38 +457,39 @@ export function CheckoutClient({ shippingFees }: CheckoutClientProps) {
         governorateKey: data.governorate,
         items: items.map((item) => ({
           productId: item.productId,
-          productName: item.name,
-          price: item.finalPrice,
           quantity: item.quantity,
           color: item.color,
           size: item.size,
-          image: item.image,
         })),
         locale,
       };
 
+      if (!idempotencyKeyRef.current) {
+        idempotencyKeyRef.current = globalThis.crypto?.randomUUID?.().replace(/-/g, "") ||
+          `${Date.now()}${Math.random().toString(36).slice(2)}`;
+      }
+
       const res = await fetch("/api/orders/checkout", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": idempotencyKeyRef.current,
+        },
         body: JSON.stringify(orderPayload),
       });
 
       const result = await res.json();
 
-      if (result.success && result.order) {
+      if (result.success && result.order?.accessToken) {
         clearCart();
-        router.push(`/${locale}/order-success/${result.order.id}`);
+        router.push(`/${locale}/order-success/${result.order.accessToken}`);
       } else {
         console.error("Checkout error:", result);
-        setError(
-          result.error ||
-            result.message ||
-            "Failed to place order. Please try again.",
-        );
+        setError(t("orderError"));
       }
     } catch (err) {
       console.error(err);
-      setError("Network error. Please check your connection and try again.");
+      setError(t("networkError"));
     } finally {
       setSubmitting(false);
     }
@@ -548,7 +550,7 @@ export function CheckoutClient({ shippingFees }: CheckoutClientProps) {
           </Button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_390px] lg:gap-8">
             {/* Summary first on mobile, right on desktop */}
             <aside className="order-1 lg:order-2">
@@ -564,7 +566,7 @@ export function CheckoutClient({ shippingFees }: CheckoutClientProps) {
                   </div>
 
                   <span className="rounded-full bg-brand-coral/10 px-3 py-1 text-xs font-bold text-brand-coral">
-                    {items.length} {items.length === 1 ? "item" : "items"}
+                    {t("itemCount", { count: items.length })}
                   </span>
                 </div>
 
@@ -639,7 +641,7 @@ export function CheckoutClient({ shippingFees }: CheckoutClientProps) {
                 </div>
 
                 {error && (
-                  <div className="mt-4 flex items-start gap-2 rounded-2xl border border-destructive/20 bg-destructive/10 p-3">
+                  <div role="alert" aria-live="polite" className="mt-4 flex items-start gap-2 rounded-2xl border border-destructive/20 bg-destructive/10 p-3">
                     <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
                     <p className="text-sm font-semibold text-destructive">
                       {error}
@@ -690,6 +692,7 @@ export function CheckoutClient({ shippingFees }: CheckoutClientProps) {
                         <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                           {...register("customerName")}
+                          autoComplete="name"
                           className="h-11 rounded-2xl border-gray-200 bg-gray-50/70 pl-10 shadow-none focus-visible:ring-brand-coral/30"
                         />
                       </div>
@@ -735,6 +738,7 @@ export function CheckoutClient({ shippingFees }: CheckoutClientProps) {
                             {...register("whatsappNumber")}
                             placeholder="1000000000"
                             inputMode="tel"
+                            autoComplete="tel"
                             className="h-11 rounded-2xl border-gray-200 bg-gray-50/70 pl-10 shadow-none focus-visible:ring-brand-coral/30"
                           />
                         </div>

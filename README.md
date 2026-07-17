@@ -1,263 +1,85 @@
-# Kidorly — Full-Stack Kids E-Commerce Platform
+# Kidorly
 
-Kidorly is a full-stack multilingual e-commerce platform for kids products, built with **Next.js**, **TypeScript**, **Prisma**, **Neon/PostgreSQL**, and **Tailwind CSS**.
+Multilingual kids e-commerce storefront and admin dashboard for the Egyptian market. The experience is mobile-first, supports Arabic (RTL), English, and German, and includes products, categories, brands, offers, wishlist, cart, checkout, WhatsApp confirmation, and store management.
 
-The platform includes a responsive public storefront and a complete admin dashboard for managing products, categories, brands, orders, discounts, media, homepage content, shipping settings, and store configuration.
+## Highlights
 
-## Live Demo
+- Mobile-first storefront with a compact navigation dock, swipeable content, responsive product cards, and reduced-motion support.
+- Server-verified checkout: product prices, discounts, availability, variants, and shipping are calculated on the server.
+- Protected admin routes with signed JWT sessions, rate-limited login, and bcrypt password hashes.
+- Idempotent order submission and private order-success links.
+- Localized metadata, canonical/hreflang links, JSON-LD, sitemap, robots, and social sharing image.
+- Security headers, validated media uploads, and admin-only mutation endpoints.
+- Next.js 16, TypeScript, Prisma/PostgreSQL, Tailwind CSS, next-intl, Zod, and React Hook Form.
 
-[View Website](https://kidorly.vercel.app/ar)
+## Setup
 
----
+Requires Node.js 20.9 or newer and PostgreSQL.
 
-## Screenshots
+1. Install dependencies:
 
-| Storefront | Admin Dashboard |
+   ```bash
+   npm install
+   ```
+
+2. Copy `.env.example` to `.env` and set every value. Generate the admin password hash with:
+
+   ```bash
+   node -e "console.log(require('bcryptjs').hashSync('replace-with-a-strong-password', 12))"
+   ```
+
+   Generate `JWT_SECRET` with at least 32 random bytes, for example:
+
+   ```bash
+   openssl rand -hex 32
+   ```
+
+3. Apply the database migrations and generate Prisma Client:
+
+   ```bash
+   npx prisma migrate deploy
+   npm run db:generate
+   ```
+
+4. Optionally seed a new database, then start development:
+
+   ```bash
+   npm run db:seed
+   npm run dev
+   ```
+
+Open `http://localhost:3000`. Never commit `.env` or real credentials.
+
+## Quality checks
+
+Run the full validation suite before deployment:
+
+```bash
+npm run check
+```
+
+This runs ESLint, unit tests, TypeScript validation, and a production build.
+
+## Main scripts
+
+| Command | Purpose |
 |---|---|
-| <img src="docs/screenshots/home.png" alt="Kidorly Storefront" width="400" /> | <img src="docs/screenshots/admin-dashboard.png" alt="Kidorly Admin Dashboard" width="400" /> |
-
-| Checkout | Orders Management |
-|---|---|
-| <img src="docs/screenshots/checkout.png" alt="Kidorly Checkout" width="400" /> | <img src="docs/screenshots/orders.png" alt="Kidorly Orders Management" width="400" /> |
-
-## Overview
-
-Kidorly is designed for selling kids products such as strollers, scooters, toys, hoverboards, and related items.
-
-The storefront supports **Arabic**, **English**, and **German**, with RTL support for Arabic and a responsive shopping experience across desktop and mobile.
-
-Customers can browse products, explore categories and brands, view featured products, place real website orders, or order directly through WhatsApp.
-
----
-
-## Key Features
-
-- Full-stack e-commerce application
-- Multilingual storefront: Arabic, English, and German
-- Arabic RTL support
-- Responsive public storefront
-- Product listing and product details
-- Category and brand browsing
-- Featured products section
-- Product filtering by suitable age/category
-- Real checkout flow
-- Website order creation
-- WhatsApp ordering support
-- Cash on delivery support
-- InstaPay / Vodafone Cash payment instructions
-- Shipping settings
-- Admin authentication
-- Protected admin dashboard
-- Product management
-- Category management
-- Brand management
-- Order management
-- Discount management
-- Media management
-- Homepage content management
-- Store settings management
-- SEO-ready structure
-
----
-
-## Admin Dashboard
-
-The admin dashboard allows store managers to control the main parts of the platform from one place.
-
-Admin features include:
-
-- Dashboard statistics
-- Products management
-- Categories management
-- Brands management
-- Orders management
-- Discounts management
-- Media management
-- Homepage sections management
-- Shipping settings
-- Store settings
-
-The dashboard also includes order statistics such as total orders, paid orders, unpaid orders, delivered orders, and delivery status.
-
----
-
-## Tech Stack
-
-- Next.js
-- TypeScript
-- Tailwind CSS
-- Prisma
-- Neon / PostgreSQL
-- next-intl
-- JWT-based admin authentication
-- React Hook Form
-- Zod
-- Radix UI
-- Lucide React
-
----
-
-## Database
-
-The project uses Prisma with PostgreSQL through Neon.
-
-Main database models include:
-
-- Product
-- Category
-- Brand
-- Collection
-- Tag
-- AgeGroup
-- Order
-- OrderItem
-- SiteSetting
-- HomepageSection
-- Media
-
----
-
-## Payment Flow
-
-Kidorly does not use online card payment integration.
-
-Instead, it supports practical local payment options for the Egyptian market:
-
-- Cash on delivery
-- Vodafone Cash
-- InstaPay
-- Payment instructions displayed to the customer during checkout
-
----
-
-## Ordering Flow
-
-Customers can order in two ways:
-
-1. Place an order directly through the website checkout.
-2. Contact the store through WhatsApp for manual ordering or support.
-
-This gives customers a flexible buying experience and helps the store handle both online and direct customer communication.
-
----
-
-## Project Structure
-
-```txt
-KIDORLY
-├─ prisma
-│  ├─ schema.prisma
-│  └─ seed.ts
-├─ public
-├─ src
-│  ├─ app
-│  │  ├─ api
-│  │  └─ [locale]
-│  ├─ components
-│  ├─ lib
-│  ├─ middleware.ts
-│  └─ styles
-├─ .env.example
-├─ next.config.mjs
-├─ package.json
-├─ tailwind.config.ts
-└─ tsconfig.json
-```
-
----
-
-## Getting Started
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/Karrim0/KIDORLY.git
-cd KIDORLY
-```
-
-### 2. Install dependencies
-
-```bash
-npm install
-```
-
-### 3. Setup environment variables
-
-Create a `.env` file based on `.env.example`.
-
-```env
-DATABASE_URL="your-postgresql-database-url"
-
-ADMIN_EMAIL="admin@example.com"
-ADMIN_PASSWORD="change-this-password"
-JWT_SECRET="your-secure-jwt-secret"
-
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
-NEXT_PUBLIC_DEFAULT_LOCALE="en"
-```
-
-### 4. Generate Prisma client
-
-```bash
-npm run db:generate
-```
-
-### 5. Push database schema
-
-```bash
-npm run db:push
-```
-
-### 6. Seed database
-
-```bash
-npm run db:seed
-```
-
-### 7. Run the development server
-
-```bash
-npm run dev
-```
-
-Open the project locally:
-
-```txt
-http://localhost:3000
-```
-
----
-
-## Available Scripts
-
-```bash
-npm run dev
-npm run build
-npm run start
-npm run lint
-npm run db:generate
-npm run db:push
-npm run db:migrate
-npm run db:seed
-npm run db:studio
-```
-
----
-
-## My Role
-
-I built Kidorly as a full-stack e-commerce platform, including the public storefront, multilingual routing, admin dashboard, database structure, product and order management, checkout flow, shipping settings, and responsive UI implementation.
-
----
-
-## Status
-
-Production-ready demo with an active storefront and admin dashboard features.
-
----
-
-## Author
-
-Built by **Kareem Mohamed Hanafy**.
-
-GitHub: [Karrim0](https://github.com/Karrim0)
+| `npm run dev` | Start the development server |
+| `npm run build` | Create a production build |
+| `npm start` | Start the production server |
+| `npm run lint` | Run ESLint |
+| `npm test` | Run unit tests |
+| `npm run check` | Run all quality checks |
+| `npm run db:migrate` | Create/apply a development migration |
+| `npx prisma migrate deploy` | Apply migrations in production |
+| `npm run db:seed` | Seed a new database |
+| `npm run db:studio` | Open Prisma Studio |
+
+## Deployment checklist
+
+- Set `NEXT_PUBLIC_APP_URL` to the final HTTPS domain.
+- Set a unique `ADMIN_PASSWORD_HASH` and a random `JWT_SECRET`.
+- Configure the PostgreSQL and Cloudinary credentials.
+- Run `npx prisma migrate deploy` before starting the new release.
+- Review shipping prices, WhatsApp/payment instructions, products, and product media from the admin dashboard.
+- Run `npm run check` in CI before every deployment.

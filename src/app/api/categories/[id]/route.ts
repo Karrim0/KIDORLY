@@ -4,7 +4,7 @@ import { getSession } from "@/lib/auth";
 import { categoryUpdateSchema } from "@/lib/validations";
 
 interface Params {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 async function assertValidCategoryParent(
@@ -42,8 +42,9 @@ async function assertValidCategoryParent(
 
 // GET /api/categories/[id]
 export async function GET(_request: Request, { params }: Params) {
+  const { id } = await params;
   const category = await prisma.category.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       parent: {
         select: {
@@ -121,13 +122,14 @@ export async function PUT(request: Request, { params }: Params) {
   }
 
   try {
+    const { id } = await params;
     const body = await request.json();
     const data = categoryUpdateSchema.parse(body);
 
-    await assertValidCategoryParent(params.id, data.parentId);
+    await assertValidCategoryParent(id, data.parentId);
 
     const category = await prisma.category.update({
-      where: { id: params.id },
+      where: { id },
       data,
     });
 
@@ -149,8 +151,9 @@ export async function DELETE(_request: Request, { params }: Params) {
   }
 
   try {
+    const { id } = await params;
     await prisma.category.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ success: true });

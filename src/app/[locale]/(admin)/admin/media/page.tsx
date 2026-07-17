@@ -24,10 +24,6 @@ export default function MediaPage() {
   const [copied, setCopied] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchMedia();
-  }, []);
-
   async function fetchMedia() {
     setLoading(true);
     try {
@@ -42,6 +38,10 @@ export default function MediaPage() {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    fetchMedia();
+  }, []);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const files = e.target.files;

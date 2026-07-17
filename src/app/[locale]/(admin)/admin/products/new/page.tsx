@@ -5,10 +5,11 @@ import { getTranslations } from "next-intl/server";
 import { ProductForm } from "@/components/admin/product-form";
 
 export default async function NewProductPage({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   const [categories, brands, collections, tags, ageGroups, t] =
     await Promise.all([
       prisma.category.findMany({

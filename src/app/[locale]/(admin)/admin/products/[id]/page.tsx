@@ -6,10 +6,11 @@ import { getTranslations } from "next-intl/server";
 import { ProductForm } from "@/components/admin/product-form";
 
 export default async function EditProductPage({
-  params: { id, locale },
+  params,
 }: {
-  params: { id: string; locale: string };
+  params: Promise<{ id: string; locale: string }>;
 }) {
+  const { id, locale } = await params;
   const [product, categories, brands, collections, tags, ageGroups, t] =
     await Promise.all([
       prisma.product.findUnique({

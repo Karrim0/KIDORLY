@@ -112,6 +112,28 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
   "active:scale-[0.99]",
 )}
     >
+      <button
+        type="button"
+        onClick={handleToggleWishlist}
+        aria-label={
+          inWishlist
+            ? t("wishlist.removeFromWishlist")
+            : t("wishlist.addToWishlist")
+        }
+        className={cn(
+          "absolute end-2.5 top-2.5 z-30 flex h-11 w-11 items-center justify-center rounded-full",
+          "border border-white/70 bg-white/95 text-gray-600 shadow-[0_8px_22px_rgba(15,23,42,.14)] backdrop-blur-sm",
+          "transition-all duration-200 hover:scale-105 hover:text-brand-coral active:scale-95 sm:end-3 sm:top-3",
+        )}
+      >
+        <Heart
+          className={cn(
+            "h-[18px] w-[18px] transition-all duration-200",
+            inWishlist && "scale-110 fill-brand-coral text-brand-coral",
+          )}
+        />
+      </button>
+
       {/* Image */}
       <Link
         href={`/${locale}/product/${product.slug}`}
@@ -152,30 +174,6 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
           )}
         </div>
 
-        {/* Wishlist */}
-        <button
-          type="button"
-          onClick={handleToggleWishlist}
-          aria-label={
-            inWishlist
-              ? t("wishlist.removeFromWishlist")
-              : t("wishlist.addToWishlist")
-          }
-          className={cn(
-            "absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full",
-            "bg-white/95 text-gray-600 shadow-md backdrop-blur-sm",
-            "transition-all duration-200 hover:scale-110 hover:text-brand-coral active:scale-95",
-            "sm:right-3 sm:top-3 sm:h-9 sm:w-9 ",
-          )}
-        >
-          <Heart
-            className={cn(
-              "h-4 w-4 transition-colors duration-200",
-              inWishlist && "fill-brand-coral text-brand-coral",
-            )}
-          />
-        </button>
-
         {!isAvailable && (
           <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/75 backdrop-blur-[2px]">
             <Badge
@@ -189,7 +187,7 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
       </Link>
 
       {/* Info */}
-      <div className="flex flex-1 flex-col p-2.5 sm:p-4">
+        <div className="flex flex-1 flex-col p-3.5 sm:p-4">
         {/* Brand + Category */}
         {(brandName || categoryName) && (
           <div className="mb-1 flex min-h-[16px] items-center gap-1 overflow-hidden sm:mb-1.5 sm:gap-1.5">
@@ -221,9 +219,9 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
         <Link href={`/${locale}/product/${product.slug}`} className="block">
           <h3
             className={cn(
-              "line-clamp-2 min-h-[34px] text-[12px] font-bold leading-snug text-gray-900",
+              "line-clamp-2 min-h-[40px] text-sm font-extrabold leading-snug text-gray-900",
               "transition-colors duration-200 group-hover:text-primary",
-              "sm:min-h-[42px] sm:text-sm md:text-[15px]",
+              "sm:min-h-[42px] md:text-[15px]",
             )}
           >
             {name}
@@ -242,7 +240,7 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
         <div className="mt-2 flex min-h-[24px] flex-wrap items-baseline gap-x-1.5 gap-y-1 sm:mt-3 sm:gap-x-2">
           <span
             className={cn(
-              "text-[13px] font-extrabold leading-none sm:text-base",
+              "text-[15px] font-black leading-none sm:text-base",
               discount > 0 ? "text-brand-coral" : "text-foreground",
             )}
           >
@@ -259,11 +257,11 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
         {/* Actions */}
         <div className="mt-2.5 sm:mt-3">
           {isAvailable ? (
-            <div className="grid grid-cols-[1fr_40px] gap-2 sm:grid-cols-[1fr_44px]">
+            <div className="grid grid-cols-[1fr_46px] gap-2">
               <Button
                 size="sm"
                 className={cn(
-                  "h-9 rounded-xl px-2 text-[11px] font-extrabold leading-none sm:h-10 sm:text-sm",
+                  "h-11 rounded-xl px-3 text-xs font-extrabold leading-none sm:text-sm",
                   "bg-brand-coral text-white hover:bg-brand-coral/90",
                   "shadow-md shadow-brand-coral/20 hover:shadow-lg hover:shadow-brand-coral/30",
                   "press-effect",
@@ -278,7 +276,7 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
                 size="sm"
                 variant="outline"
                 className={cn(
-                  "h-9 w-10 rounded-xl p-0 sm:h-10 sm:w-11",
+                  "h-11 w-[46px] rounded-xl p-0",
                   "border-gray-200 bg-white text-gray-700",
                   "hover:border-brand-coral/40 hover:bg-brand-coral/5 hover:text-brand-coral",
                   "press-effect",
@@ -287,7 +285,7 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
                 title={t("product.addToCart")}
                 aria-label={t("product.addToCart")}
               >
-                <ShoppingBag className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <ShoppingBag className="h-4 w-4" />
               </Button>
             </div>
           ) : (

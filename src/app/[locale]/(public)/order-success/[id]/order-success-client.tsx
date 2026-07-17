@@ -40,6 +40,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
 export function OrderSuccessClient({ order, settings }: Props) {
   const t = useTranslations("orderSuccess");
   const ct = useTranslations("checkout");
+  const pt = useTranslations("payment");
   const locale = useLocale();
 
   const [copied, setCopied] = useState(false);
@@ -58,27 +59,39 @@ export function OrderSuccessClient({ order, settings }: Props) {
 
   const deliveryInfo =
     order.deliveryType === "HOTEL"
-      ? `Hotel: ${order.hotelName || "-"}\nRoom: ${order.roomNumber || "-"}`
-      : `Address: ${order.address || "-"}`;
+      ? `${ct("hotelName")}: ${order.hotelName || "-"}\n${ct("roomNumber")}: ${order.roomNumber || "-"}`
+      : `${ct("address")}: ${order.address || "-"}`;
 
-  const whatsappMessage = `🛒 *Kidorly Order Confirmation*
+  const paymentLabel =
+    order.paymentMethod === "VODAFONE_CASH"
+      ? pt("vodafone")
+      : order.paymentMethod === "INSTAPAY"
+        ? pt("instapay")
+        : pt("cash");
 
-Order Number: *${order.orderNumber}*
-Name: ${order.customerName}
-City: ${order.city}
-Delivery: ${order.deliveryType}
+  const deliveryLabel =
+    order.deliveryType === "HOTEL"
+      ? ct("hotelDelivery")
+      : ct("homeDelivery");
+
+  const whatsappMessage = `🛒 *Kidorly — ${t("summary")}*
+
+${t("orderNumber")}: *${order.orderNumber}*
+${ct("fullName")}: ${order.customerName}
+${ct("city")}: ${order.city}
+${ct("deliveryType")}: ${deliveryLabel}
 ${deliveryInfo}
-Payment: ${order.paymentMethod.replace(/_/g, " ")}
+${ct("paymentMethod")}: ${paymentLabel}
 
-*Items:*
+*${ct("orderSummary")}:*
 ${itemsList}
 
-Subtotal: ${formatPrice(order.subtotal, locale)}
-Shipping: ${formatPrice(order.shippingCost, locale)}
-*Total: ${formatPrice(order.total, locale)}*`;
+${ct("subtotal")}: ${formatPrice(order.subtotal, locale)}
+${ct("shipping")}: ${formatPrice(order.shippingCost, locale)}
+*${ct("total")}: ${formatPrice(order.total, locale)}*`;
 
   const whatsappLink = buildWhatsAppLink(whatsappNumber, whatsappMessage);
-    const hasWhatsAppNumber = Boolean(whatsappNumber?.replace(/[^\d]/g, ""));
+  const hasWhatsAppNumber = Boolean(whatsappNumber?.replace(/[^\d]/g, ""));
   const instructionsKey = `payment_instructions_${locale}`;
   const instructions =
     settings[instructionsKey] ||
@@ -139,7 +152,7 @@ Shipping: ${formatPrice(order.shippingCost, locale)}
                       ? "bg-emerald-100 text-emerald-600"
                       : "bg-white text-muted-foreground hover:text-brand-coral",
                   )}
-                  aria-label="Copy order number"
+                  aria-label={t("copyOrderNumber")}
                 >
                   {copied ? (
                     <Check className="h-4 w-4" />
@@ -226,8 +239,7 @@ Shipping: ${formatPrice(order.shippingCost, locale)}
                   {t("summary")}
                 </h2>
                 <p className="text-xs text-muted-foreground">
-                  {order.items.length}{" "}
-                  {order.items.length === 1 ? "item" : "items"}
+                  {ct("itemCount", { count: order.items.length })}
                 </p>
               </div>
             </div>
