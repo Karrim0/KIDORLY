@@ -20,6 +20,7 @@ import {
 } from "motion/react";
 
 import { KidorlyMascot } from "@/components/public/kidorly-mascot";
+import { sanitizeHeroCopy } from "@/lib/hero-copy";
 import { cn } from "@/lib/utils";
 
 export interface HeroContent {
@@ -62,12 +63,6 @@ const DEFAULT_SLIDES: HeroSlide[] = [
 
 const SLIDE_DURATION = 6200;
 
-const TEXT_LIMITS = {
-  title: { min: 8, max: 72 },
-  subtitle: { min: 16, max: 180 },
-  cta: { min: 5, max: 28 },
-} as const;
-
 function localizedValue(
   content: HeroContent | undefined,
   field: "title" | "subtitle" | "cta",
@@ -77,13 +72,7 @@ function localizedValue(
   const suffix = locale === "ar" ? "Ar" : locale === "de" ? "De" : "En";
   const value = content?.[`${field}${suffix}` as keyof HeroContent];
 
-  if (typeof value !== "string") return fallback;
-
-  const cleaned = value.replace(/\s+/g, " ").trim();
-  const limits = TEXT_LIMITS[field];
-  return cleaned.length >= limits.min && cleaned.length <= limits.max
-    ? cleaned
-    : fallback;
+  return sanitizeHeroCopy(value, field, fallback);
 }
 
 function validImage(value?: string) {
