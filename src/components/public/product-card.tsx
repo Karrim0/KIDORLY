@@ -4,19 +4,17 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { Check, ShoppingBag, Zap, Heart } from "lucide-react";
+import { Check, Heart, ShoppingBag } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/hooks/use-cart";
 import { useWishlist } from "@/hooks/use-wishlist";
 import {
   cn,
   formatPrice,
-  getTranslated,
-  getEffectiveDiscount,
   getDiscountedPrice,
+  getEffectiveDiscount,
+  getTranslated,
 } from "@/lib/utils";
 import type { Locale } from "@/lib/i18n";
 import type { ProductWithCategory } from "@/types";
@@ -26,42 +24,29 @@ interface ProductCardProps {
   globalDiscount?: number;
 }
 
-export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
+export function ProductCard({
+  product,
+  globalDiscount = 0,
+}: ProductCardProps) {
   const t = useTranslations();
   const locale = useLocale() as Locale;
-  const router = useRouter();
+  const { addItem } = useCart();
+  const { has, toggle } = useWishlist();
+
   const [justAdded, setJustAdded] = React.useState(false);
+  const [imageFailed, setImageFailed] = React.useState(false);
   const addedTimer = React.useRef<number | null>(null);
 
   React.useEffect(
     () => () => {
-      if (addedTimer.current) window.clearTimeout(addedTimer.current);
+      if (addedTimer.current) {
+        window.clearTimeout(addedTimer.current);
+      }
     },
     [],
   );
 
-  const { addItem, addItemAndPersist } = useCart();
-  const { has, toggle } = useWishlist();
-
   const name = getTranslated(product, "name", locale);
-  const shortDesc = getTranslated(product, "shortDesc", locale);
-
-  const discount = getEffectiveDiscount(
-    product.discountPercentage,
-    product.category?.discountPercentage,
-    globalDiscount,
-  );
-
-  const finalPrice =
-    discount > 0 ? getDiscountedPrice(product.price, discount) : product.price;
-
-  const rawImage = product.images?.[0]?.trim();
-  const mainImage =
-    rawImage && (rawImage.startsWith("/") || /^https?:\/\//i.test(rawImage))
-      ? rawImage
-      : "/placeholder.svg";
-  const isAvailable = product.availability === "AVAILABLE";
-  const inWishlist = has(product.id);
 
   const brandName = product.brand
     ? getTranslated(product.brand, "name", locale)
@@ -70,6 +55,31 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
   const categoryName = product.category
     ? getTranslated(product.category, "name", locale)
     : "";
+
+  const discount = getEffectiveDiscount(
+    product.discountPercentage,
+    product.category?.discountPercentage,
+    globalDiscount,
+  );
+
+  const finalPrice =
+    discount > 0
+      ? getDiscountedPrice(product.price, discount)
+      : product.price;
+
+  const rawImage = product.images?.[0]?.trim();
+
+  const validImage =
+    rawImage &&
+    (rawImage.startsWith("/") || /^https?:\/\//i.test(rawImage))
+      ? rawImage
+      : null;
+
+  const mainImage =
+    imageFailed || !validImage ? "/placeholder.svg" : validImage;
+
+  const isAvailable = product.availability === "AVAILABLE";
+  const inWishlist = has(product.id);
 
   const cartItem = {
     productId: product.id,
@@ -81,53 +91,44 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
     quantity: 1,
   };
 
-  function handleAddToCart(e: React.MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
+  function handleAddToCart(event: React.MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
 
     if (!isAvailable) return;
 
     addItem(cartItem);
     setJustAdded(true);
-    if (addedTimer.current) window.clearTimeout(addedTimer.current);
-    addedTimer.current = window.setTimeout(() => setJustAdded(false), 1300);
+
+    if (addedTimer.current) {
+      window.clearTimeout(addedTimer.current);
+    }
+
+    addedTimer.current = window.setTimeout(() => {
+      setJustAdded(false);
+    }, 1300);
   }
 
-  function handleBuyNow(e: React.MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!isAvailable) return;
-
-    /*
-      مهم:
-      مش بنستخدم addItem هنا عشان غالبًا هو اللي بيفتح الكارت.
-      بنستخدم persist بس، وبعدها نروح checkout مباشرة.
-    */
-    addItemAndPersist(cartItem);
-    router.push(`/${locale}/checkout`);
-  }
-
-  function handleToggleWishlist(e: React.MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-
+  function handleToggleWishlist(event: React.MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
     toggle(product.id);
   }
 
   return (
     <article
       className={cn(
-  "group relative flex h-full min-w-0 flex-col overflow-hidden bg-white",
-  "rounded-2xl sm:rounded-3xl",
-  "border border-gray-200/80 md:border-gray-100",
-  "shadow-[0_12px_34px_rgba(15,23,42,0.12)] md:shadow-[0_8px_24px_rgba(15,23,42,0.06)]",
-  "ring-1 ring-black/[0.03] md:ring-0",
-  "transition-all duration-300 ease-out",
-  "md:hover:-translate-y-1 md:hover:border-brand-coral/20 md:hover:shadow-[0_18px_42px_rgba(15,23,42,0.12)]",
-  "active:scale-[0.99]",
-)}
+        "group relative flex h-full min-w-0 flex-col overflow-hidden",
+        "rounded-xl border border-slate-200/80 bg-white",
+        "shadow-[0_6px_20px_rgba(15,23,42,.07)]",
+        "transition duration-300 ease-out",
+        "sm:rounded-2xl sm:shadow-[0_8px_26px_rgba(15,23,42,.07)]",
+        "md:hover:-translate-y-1",
+        "md:hover:border-brand-coral/25",
+        "md:hover:shadow-[0_16px_38px_rgba(15,23,42,.11)]",
+      )}
     >
+      {/* Wishlist */}
       <button
         type="button"
         onClick={handleToggleWishlist}
@@ -137,191 +138,158 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
             : t("wishlist.addToWishlist")
         }
         className={cn(
-          "absolute end-2.5 top-2.5 z-30 flex h-11 w-11 items-center justify-center rounded-full",
-          "border border-white/70 bg-white/95 text-gray-600 shadow-[0_8px_22px_rgba(15,23,42,.14)] backdrop-blur-sm",
-          "transition-all duration-200 hover:scale-105 hover:text-brand-coral active:scale-95 sm:end-3 sm:top-3",
+          "absolute end-2 top-2 z-40",
+          "flex h-10 w-10 items-center justify-center rounded-full",
+          "border border-white/80 bg-white/[.94] text-slate-600",
+          "shadow-[0_6px_18px_rgba(15,23,42,.13)] backdrop-blur-md",
+          "transition duration-200",
+          "hover:scale-105 hover:text-brand-coral active:scale-95",
+          "sm:end-2.5 sm:top-2.5 sm:h-11 sm:w-11",
         )}
       >
         <Heart
           className={cn(
-            "h-[18px] w-[18px] transition-all duration-200",
-            inWishlist && "scale-110 fill-brand-coral text-brand-coral",
+            "h-[18px] w-[18px] transition duration-200",
+            inWishlist &&
+              "scale-110 fill-brand-coral text-brand-coral",
           )}
         />
       </button>
 
       {/* Image */}
-      <Link
-        href={`/${locale}/product/${product.slug}`}
-        className={cn(
-          "relative block overflow-hidden bg-gray-50",
-          "aspect-[1/1.08] sm:aspect-square",
-        )}
-        aria-label={name}
-      >
-        <Image
-          src={mainImage}
-          alt={name}
-          fill
-          className={cn(
-            "object-cover",
-            "transition-transform duration-700 ease-out",
-            "group-hover:scale-105",
-          )}
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-        />
+      <div className="relative aspect-square overflow-hidden bg-slate-50">
+        <Link
+          href={`/${locale}/product/${product.slug}`}
+          aria-label={name}
+          className="absolute inset-0"
+        >
+          <Image
+            src={mainImage}
+            alt={name}
+            fill
+            onError={() => setImageFailed(true)}
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.045]"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          />
 
-<div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-100 md:opacity-0 md:transition-opacity md:duration-300 md:group-hover:opacity-100" />
-        {/* Badges */}
-        <div className="absolute left-2 top-2 z-10 flex max-w-[72%] flex-col items-start gap-1 sm:left-3 sm:top-3 sm:gap-1.5">
-          {discount > 0 && (
-            <Badge className="border-0 bg-brand-coral px-1.5 py-0.5 text-[9px] font-bold leading-none text-white shadow-md sm:px-2 sm:text-[11px]">
-              -{discount}%
-            </Badge>
-          )}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/20 via-transparent to-transparent" />
 
-          {product.featured && (
-            <Badge
-              variant="secondary"
-              className=" bg-[#4ACFC1] px-1.5 py-0.5 text-[9px] font-bold leading-none text-white shadow-md backdrop-blur-sm sm:px-2 sm:text-[11px]"
-            >
-              {t("common.featured")}
-            </Badge>
-          )}
-        </div>
+          {/* Badges */}
+          <div className="absolute start-2 top-2 z-10 flex max-w-[62%] flex-col items-start gap-1 sm:start-2.5 sm:top-2.5">
+            {discount > 0 && (
+              <Badge className="border-0 bg-brand-coral px-1.5 py-0.5 text-[9px] font-black leading-none text-white shadow-md sm:px-2 sm:text-[10px]">
+                -{discount}%
+              </Badge>
+            )}
 
-        {!isAvailable && (
-          <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/75 backdrop-blur-[2px]">
-            <Badge
-              variant="outline"
-              className="border-gray-200 bg-white/90 px-3 py-1 text-xs font-semibold shadow-sm"
-            >
-              {t("common.outOfStock")}
-            </Badge>
+            {product.featured && (
+              <Badge className="border-0 bg-brand-sky px-1.5 py-0.5 text-[9px] font-black leading-none text-white shadow-md sm:px-2 sm:text-[10px]">
+                {t("common.featured")}
+              </Badge>
+            )}
           </div>
-        )}
-      </Link>
 
-      {/* Info */}
-        <div className="flex flex-1 flex-col p-3.5 sm:p-4">
-        {/* Brand + Category */}
+          {!isAvailable && (
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/75 backdrop-blur-[2px]">
+              <Badge
+                variant="outline"
+                className="border-slate-200 bg-white/95 px-3 py-1 text-xs font-bold shadow-sm"
+              >
+                {t("common.outOfStock")}
+              </Badge>
+            </div>
+          )}
+        </Link>
+
+        {/* Add to cart */}
+        {isAvailable && (
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            title={t("product.addToCart")}
+            aria-label={t("product.addToCart")}
+            className={cn(
+              "absolute bottom-2 end-2 z-30",
+              "flex h-11 w-11 items-center justify-center rounded-full",
+              "border text-white",
+              "shadow-[0_10px_26px_rgba(15,23,42,.22)]",
+              "transition duration-200 active:scale-90",
+              "sm:bottom-2.5 sm:end-2.5 sm:h-12 sm:w-12",
+              justAdded
+                ? "border-emerald-400 bg-emerald-500"
+                : "border-white/30 bg-brand-coral hover:scale-105 hover:bg-[#ff5757]",
+            )}
+          >
+            {justAdded ? (
+              <Check className="h-5 w-5 stroke-[3]" />
+            ) : (
+              <ShoppingBag className="h-5 w-5" />
+            )}
+
+            {justAdded && (
+              <span className="cart-spark-burst" aria-hidden>
+                <i />
+                <i />
+                <i />
+              </span>
+            )}
+          </button>
+        )}
+      </div>
+
+      {/* Product information */}
+      <div className="flex flex-1 flex-col px-3 pb-3 pt-2.5 sm:px-3.5 sm:pb-3.5 sm:pt-3">
         {(brandName || categoryName) && (
-          <div className="mb-1 flex min-h-[16px] items-center gap-1 overflow-hidden sm:mb-1.5 sm:gap-1.5">
-            {product.brand && brandName && (
+          <div className="mb-1 flex min-h-3.5 items-center gap-1 overflow-hidden">
+            {brandName && product.brand && (
               <Link
                 href={`/${locale}/brand/${product.brand.slug}`}
-                onClick={(e) => e.stopPropagation()}
-                className="truncate text-[9px] font-bold uppercase tracking-wide text-brand-coral hover:underline sm:text-[11px]"
+                className="truncate text-[8px] font-black uppercase tracking-wide text-brand-coral hover:underline sm:text-[10px]"
               >
                 {brandName}
               </Link>
             )}
 
             {brandName && categoryName && (
-              <span className="shrink-0 text-[9px] text-muted-foreground sm:text-[10px]">
+              <span className="text-[8px] text-slate-300">
                 •
               </span>
             )}
 
             {categoryName && (
-              <span className="truncate text-[9px] font-semibold uppercase tracking-wide text-muted-foreground sm:text-[11px]">
+              <span className="truncate text-[8px] font-bold uppercase tracking-wide text-slate-400 sm:text-[10px]">
                 {categoryName}
               </span>
             )}
           </div>
         )}
 
-        {/* Name */}
-        <Link href={`/${locale}/product/${product.slug}`} className="block">
-          <h3
-            className={cn(
-              "line-clamp-2 min-h-[40px] text-sm font-extrabold leading-snug text-gray-900",
-              "transition-colors duration-200 group-hover:text-primary",
-              "sm:min-h-[42px] md:text-[15px]",
-            )}
-          >
+        <Link
+          href={`/${locale}/product/${product.slug}`}
+          className="block"
+        >
+          <h3 className="line-clamp-2 min-h-[38px] text-[13px] font-extrabold leading-[1.45] text-slate-900 transition-colors group-hover:text-brand-coral sm:min-h-[42px] sm:text-[15px]">
             {name}
           </h3>
         </Link>
 
-        {shortDesc && (
-          <p className="mt-1 hidden min-h-[18px] text-xs leading-relaxed text-muted-foreground line-clamp-1 md:block">
-            {shortDesc}
-          </p>
-        )}
-
-        <div className="flex-1" />
-
         {/* Price */}
-        <div className="mt-2 flex min-h-[24px] flex-wrap items-baseline gap-x-1.5 gap-y-1 sm:mt-3 sm:gap-x-2">
+        <div className="mt-auto flex min-h-7 flex-wrap items-end gap-x-1.5 gap-y-1 pt-2 sm:gap-x-2">
           <span
             className={cn(
-              "text-[15px] font-black leading-none sm:text-base",
-              discount > 0 ? "text-brand-coral" : "text-foreground",
+              "text-[14px] font-black leading-none sm:text-base",
+              discount > 0
+                ? "text-brand-coral"
+                : "text-slate-950",
             )}
           >
             {formatPrice(finalPrice, locale)}
           </span>
 
           {discount > 0 && (
-            <span className="text-[10px] font-medium leading-none text-muted-foreground line-through sm:text-xs">
+            <span className="text-[9px] font-semibold leading-none text-slate-400 line-through sm:text-[11px]">
               {formatPrice(product.price, locale)}
             </span>
-          )}
-        </div>
-
-        {/* Actions */}
-        <div className="mt-2.5 sm:mt-3">
-          {isAvailable ? (
-            <div className="grid grid-cols-[1fr_46px] gap-2">
-              <Button
-                size="sm"
-                className={cn(
-                  "h-11 rounded-xl px-3 text-xs font-extrabold leading-none sm:text-sm",
-                  "bg-brand-coral text-white hover:bg-brand-coral/90",
-                  "shadow-md shadow-brand-coral/20 hover:shadow-lg hover:shadow-brand-coral/30",
-                  "press-effect",
-                )}
-                onClick={handleBuyNow}
-              >
-                <Zap className="mr-1 h-3.5 w-3.5 shrink-0 sm:mr-1.5" />
-                <span className="truncate">{t("product.buyNow")}</span>
-              </Button>
-
-              <Button
-                size="sm"
-                variant="outline"
-                className={cn(
-                  "relative h-11 w-[46px] overflow-visible rounded-xl p-0",
-                  justAdded
-                    ? "border-emerald-500 bg-emerald-500 text-white hover:bg-emerald-500 hover:text-white"
-                    : "border-gray-200 bg-white text-gray-700",
-                  "hover:border-brand-coral/40 hover:bg-brand-coral/5 hover:text-brand-coral",
-                  "press-effect",
-                )}
-                onClick={handleAddToCart}
-                title={t("product.addToCart")}
-                aria-label={t("product.addToCart")}
-              >
-                {justAdded ? <Check className="h-4 w-4" /> : <ShoppingBag className="h-4 w-4" />}
-                {justAdded && (
-                  <span aria-hidden className="cart-spark-burst absolute inset-0">
-                    <i />
-                    <i />
-                    <i />
-                  </span>
-                )}
-              </Button>
-            </div>
-          ) : (
-            <Button
-              size="sm"
-              variant="outline"
-              className="h-9 w-full rounded-xl text-xs font-bold sm:h-10 sm:text-sm"
-              disabled
-            >
-              {t("common.outOfStock")}
-            </Button>
           )}
         </div>
       </div>

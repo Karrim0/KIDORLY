@@ -18,7 +18,10 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
 import { CollectionStory } from "@/components/public/collection-story";
 import { ExperienceSection } from "@/components/public/home-sections";
-import { HeroSection, type HeroContent } from "@/components/public/hero-section";
+import {
+  HeroSection,
+  type HeroContent,
+} from "@/components/public/hero-section";
 import { ProductCard } from "@/components/public/product-card";
 import { Button } from "@/components/ui/button";
 import { cn, getTranslated } from "@/lib/utils";
@@ -112,17 +115,22 @@ function homeCopy(locale: Locale) {
     return {
       categoriesEyebrow: "Hier starten",
       categoriesTitle: "Wähle die Welt deines Kindes",
-      categoriesSubtitle: "Klare Kategorien bringen dich mit einem Tippen zum richtigen Produkt.",
+      categoriesSubtitle:
+        "Klare Kategorien bringen dich mit einem Tippen zum richtigen Produkt.",
       productsEyebrow: "Kidorly Auswahl",
-      productsSubtitle: "Besondere Produkte, die deine Entscheidung leichter machen.",
+      productsSubtitle:
+        "Besondere Produkte, die deine Entscheidung leichter machen.",
       agesEyebrow: "Für jede Entwicklungsphase",
       agesTitle: "Nach Alter wählen",
-      agesSubtitle: "Wähle eine Phase und entdecke passend zugeordnete Produkte.",
+      agesSubtitle:
+        "Wähle eine Phase und entdecke passend zugeordnete Produkte.",
       explore: "Jetzt entdecken",
       partners: "Unsere Partner",
-      partnersSubtitle: "Vertrauenswürdige Marken für ein rundes Kidorly Erlebnis.",
+      partnersSubtitle:
+        "Vertrauenswürdige Marken für ein rundes Kidorly Erlebnis.",
       products: "Produkte",
-      noAgeProducts: "Für diese Altersgruppe sind noch keine Produkte zugeordnet.",
+      noAgeProducts:
+        "Für diese Altersgruppe sind noch keine Produkte zugeordnet.",
       ageCta: "Alle Produkte für dieses Alter",
       viewAll: "Alle ansehen",
     };
@@ -131,7 +139,8 @@ function homeCopy(locale: Locale) {
   return {
     categoriesEyebrow: "Start here",
     categoriesTitle: "Choose their little world",
-    categoriesSubtitle: "Clear categories take you to the right product in one tap.",
+    categoriesSubtitle:
+      "Clear categories take you to the right product in one tap.",
     productsEyebrow: "Kidorly picks",
     productsSubtitle: "Standout products selected to make your choice easier.",
     agesEyebrow: "Made for every stage",
@@ -197,7 +206,11 @@ function SectionHeading({
       </div>
 
       {href && action && (
-        <Button variant="outline" className="h-11 w-fit rounded-full border-slate-200 bg-white px-5 font-extrabold shadow-sm" asChild>
+        <Button
+          variant="outline"
+          className="h-11 w-fit rounded-full border-slate-200 bg-white px-5 font-extrabold shadow-sm"
+          asChild
+        >
           <Link href={href}>
             {action}
             <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
@@ -211,20 +224,42 @@ function SectionHeading({
 function TrustRibbon() {
   const t = useTranslations("hero");
   const items = [
-    { icon: Truck, label: t("trustDelivery"), tone: "text-brand-coral bg-brand-coral/10" },
-    { icon: ShieldCheck, label: t("trustQuality"), tone: "text-brand-ocean bg-brand-sky/12" },
-    { icon: Headphones, label: t("trustSupport"), tone: "text-violet-600 bg-violet-100" },
+    {
+      icon: Truck,
+      label: t("trustDelivery"),
+      tone: "text-brand-coral bg-brand-coral/10",
+    },
+    {
+      icon: ShieldCheck,
+      label: t("trustQuality"),
+      tone: "text-brand-ocean bg-brand-sky/12",
+    },
+    {
+      icon: Headphones,
+      label: t("trustSupport"),
+      tone: "text-violet-600 bg-violet-100",
+    },
   ];
 
   return (
     <section className="relative z-20 border-y border-slate-100 bg-white">
       <div className="container grid grid-cols-3 gap-1 py-3 sm:gap-4 sm:py-5">
         {items.map(({ icon: Icon, label, tone }) => (
-          <div key={label} className="flex min-w-0 items-center justify-center gap-2 text-center">
-            <span className={cn("flex h-9 w-9 shrink-0 items-center justify-center rounded-xl sm:h-11 sm:w-11 sm:rounded-2xl", tone)}>
+          <div
+            key={label}
+            className="flex min-w-0 items-center justify-center gap-2 text-center"
+          >
+            <span
+              className={cn(
+                "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl sm:h-11 sm:w-11 sm:rounded-2xl",
+                tone,
+              )}
+            >
               <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
             </span>
-            <span className="hidden truncate text-xs font-black text-slate-700 min-[390px]:block sm:text-sm">{label}</span>
+            <span className="hidden truncate text-xs font-black text-slate-700 min-[390px]:block sm:text-sm">
+              {label}
+            </span>
           </div>
         ))}
       </div>
@@ -240,7 +275,10 @@ function CategoriesSection({ categories }: { categories: HomeCategory[] }) {
   if (!categories.length) return null;
 
   return (
-    <section id="discover" className="relative overflow-hidden bg-white py-14 sm:py-20 lg:py-24">
+    <section
+      id="discover"
+      className="relative overflow-hidden bg-white py-14 sm:py-20 lg:py-24"
+    >
       <div className="home-blob home-blob-coral -start-24 top-10" />
       <div className="home-blob home-blob-sky -end-28 bottom-0" />
       <div className="container relative">
@@ -255,25 +293,38 @@ function CategoriesSection({ categories }: { categories: HomeCategory[] }) {
         <div className="category-orbit scrollbar-hide -mx-4 grid snap-x snap-mandatory auto-cols-[96px] grid-flow-col gap-3 overflow-x-auto px-4 pb-4 pt-2 sm:-mx-6 sm:auto-cols-[118px] sm:gap-5 sm:px-6 lg:mx-0 lg:grid-flow-row lg:grid-cols-7 lg:overflow-visible lg:px-0 xl:grid-cols-8">
           {categories.slice(0, 12).map((category, index) => {
             const name = getTranslated(category, "name", locale);
-            const image = validImage(category.image) || validImage(category.icon) || validImage(category.banner);
-            const childrenCount = category.children?.reduce(
-              (total, child) => total + (child._count?.products || 0),
-              0,
-            ) || 0;
+            const image =
+              validImage(category.image) ||
+              validImage(category.icon) ||
+              validImage(category.banner);
+            const childrenCount =
+              category.children?.reduce(
+                (total, child) => total + (child._count?.products || 0),
+                0,
+              ) || 0;
             const count = (category._count?.products || 0) + childrenCount;
 
             return (
               <motion.div
                 key={category.id}
-                initial={reduceMotion ? false : { opacity: 0, y: 14, scale: 0.94 }}
+                initial={
+                  reduceMotion ? false : { opacity: 0, y: 14, scale: 0.94 }
+                }
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={reduceMotion ? undefined : { y: -7, rotate: index % 2 ? 1.5 : -1.5 }}
+                whileHover={
+                  reduceMotion
+                    ? undefined
+                    : { y: -7, rotate: index % 2 ? 1.5 : -1.5 }
+                }
                 whileTap={{ scale: 0.94 }}
                 className="snap-start"
               >
-                <Link href={`/${locale}/category/${category.slug}`} className="group flex flex-col items-center text-center">
+                <Link
+                  href={`/${locale}/category/${category.slug}`}
+                  className="group flex flex-col items-center text-center"
+                >
                   <span
                     className={cn(
                       "relative flex h-[88px] w-[88px] items-center justify-center rounded-full bg-gradient-to-br p-2 ring-2 ring-offset-4 ring-offset-white transition-shadow group-hover:shadow-[0_18px_38px_rgba(15,23,42,.15)] sm:h-[108px] sm:w-[108px]",
@@ -313,7 +364,11 @@ function CategoriesSection({ categories }: { categories: HomeCategory[] }) {
   );
 }
 
-function FeaturedProductsSection({ products }: { products: ProductWithCategory[] }) {
+function FeaturedProductsSection({
+  products,
+}: {
+  products: ProductWithCategory[];
+}) {
   const t = useTranslations();
   const locale = useLocale() as Locale;
   const copy = homeCopy(locale);
@@ -331,7 +386,7 @@ function FeaturedProductsSection({ products }: { products: ProductWithCategory[]
           href={`/${locale}/shop`}
           action={copy.viewAll}
         />
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
+        <div className="-mx-2 grid grid-cols-2 gap-2 sm:mx-0 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-5">
           {products.slice(0, 8).map((product) => (
             <motion.div
               key={product.id}
@@ -355,7 +410,8 @@ function formatAgeRange(group: AgeGroupBasic, locale: Locale) {
   const { minAgeMonths, maxAgeMonths } = group;
   if (minAgeMonths == null && maxAgeMonths == null) return "";
   const unit = locale === "ar" ? "شهر" : locale === "de" ? "Monate" : "months";
-  if (minAgeMonths == null) return `${locale === "ar" ? "حتى" : "Up to"} ${maxAgeMonths} ${unit}`;
+  if (minAgeMonths == null)
+    return `${locale === "ar" ? "حتى" : "Up to"} ${maxAgeMonths} ${unit}`;
   if (maxAgeMonths == null) return `${minAgeMonths}+ ${unit}`;
   return `${minAgeMonths}–${maxAgeMonths} ${unit}`;
 }
@@ -365,11 +421,13 @@ function AgeExplorer({ ageGroups }: { ageGroups: HomeAgeGroup[] }) {
   const copy = homeCopy(locale);
   const reduceMotion = useReducedMotion();
   const [activeId, setActiveId] = useState(ageGroups[0]?.id || "");
-  const active = ageGroups.find((group) => group.id === activeId) || ageGroups[0];
+  const active =
+    ageGroups.find((group) => group.id === activeId) || ageGroups[0];
 
   if (!active) return null;
 
-  const products = active.products?.map((entry) => entry.product).slice(0, 4) || [];
+  const products =
+    active.products?.map((entry) => entry.product).slice(0, 4) || [];
   const name = getTranslated(active, "name", locale);
   const image =
     validImage(active.banner) ||
@@ -426,15 +484,26 @@ function AgeExplorer({ ageGroups }: { ageGroups: HomeAgeGroup[] }) {
             className="grid gap-5 lg:grid-cols-[.72fr_1.28fr] lg:gap-7"
           >
             <div className="group relative min-h-[300px] overflow-hidden rounded-[2rem] bg-slate-900 shadow-[0_22px_60px_rgba(15,23,42,.15)] sm:min-h-[380px]">
-              <Image src={image} alt={name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="(max-width: 1024px) 100vw, 38vw" />
+              <Image
+                src={image}
+                alt={name}
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                sizes="(max-width: 1024px) 100vw, 38vw"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/10 to-transparent" />
               <div className="absolute inset-x-5 bottom-5 text-white sm:inset-x-7 sm:bottom-7">
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/20 px-3 py-1.5 text-[10px] font-black backdrop-blur-xl">
                   <Baby className="h-3.5 w-3.5 text-brand-sun" />
                   {formatAgeRange(active, locale)}
                 </span>
-                <h3 className="mt-3 text-3xl font-black tracking-[-.04em] sm:text-4xl">{name}</h3>
-                <Link href={`/${locale}/shop?ageGroup=${active.slug}`} className="mt-4 inline-flex items-center gap-2 text-sm font-black text-brand-sun">
+                <h3 className="mt-3 text-3xl font-black tracking-[-.04em] sm:text-4xl">
+                  {name}
+                </h3>
+                <Link
+                  href={`/${locale}/shop?ageGroup=${active.slug}`}
+                  className="mt-4 inline-flex items-center gap-2 text-sm font-black text-brand-sun"
+                >
                   {copy.ageCta}
                   <ArrowRight className="h-4 w-4 rtl:rotate-180" />
                 </Link>
@@ -442,17 +511,21 @@ function AgeExplorer({ ageGroups }: { ageGroups: HomeAgeGroup[] }) {
             </div>
 
             {products.length ? (
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                {products.map((product) => (
+<div className="grid grid-cols-2 gap-2 sm:gap-4">
+                    {products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
             ) : (
               <div className="flex min-h-[260px] flex-col items-center justify-center rounded-[2rem] border border-dashed border-slate-200 bg-slate-50 p-8 text-center">
                 <BadgeCheck className="h-10 w-10 text-brand-ocean" />
-                <p className="mt-4 text-sm font-bold text-slate-500">{copy.noAgeProducts}</p>
+                <p className="mt-4 text-sm font-bold text-slate-500">
+                  {copy.noAgeProducts}
+                </p>
                 <Button asChild className="mt-5 rounded-full">
-                  <Link href={`/${locale}/shop?ageGroup=${active.slug}`}>{copy.ageCta}</Link>
+                  <Link href={`/${locale}/shop?ageGroup=${active.slug}`}>
+                    {copy.ageCta}
+                  </Link>
                 </Button>
               </div>
             )}
@@ -487,9 +560,18 @@ function PartnersSection({ brands }: { brands: PartnerBrand[] }) {
       <div className="partners-loop relative mt-2">
         <div className="pointer-events-none absolute inset-y-0 start-0 z-10 w-12 bg-gradient-to-r from-[#fbfcfe] to-transparent sm:w-32" />
         <div className="pointer-events-none absolute inset-y-0 end-0 z-10 w-12 bg-gradient-to-l from-[#fbfcfe] to-transparent sm:w-32" />
-        <div className={cn("partners-loop-track", locale === "ar" && "partners-loop-track-rtl")}>
+        <div
+          className={cn(
+            "partners-loop-track",
+            locale === "ar" && "partners-loop-track-rtl",
+          )}
+        >
           {[0, 1].map((groupIndex) => (
-            <div key={groupIndex} className="partners-loop-group" aria-hidden={groupIndex === 1}>
+            <div
+              key={groupIndex}
+              className="partners-loop-group"
+              aria-hidden={groupIndex === 1}
+            >
               {repeatedBrands.map((brand, index) => {
                 const brandName = getTranslated(brand, "name", locale);
                 const brandImage = validImage(brand.logo);
@@ -501,9 +583,17 @@ function PartnersSection({ brands }: { brands: PartnerBrand[] }) {
                     className="group flex h-24 w-32 shrink-0 items-center justify-center rounded-[1.5rem] border border-slate-100 bg-white p-4 shadow-[0_8px_28px_rgba(15,23,42,.07)] transition duration-300 hover:-translate-y-1 hover:border-brand-sky/50 sm:h-28 sm:w-40"
                   >
                     {brandImage ? (
-                      <Image src={brandImage} alt={brandName} width={150} height={80} className="max-h-14 w-full object-contain transition-transform duration-300 group-hover:scale-105 sm:max-h-16" />
+                      <Image
+                        src={brandImage}
+                        alt={brandName}
+                        width={150}
+                        height={80}
+                        className="max-h-14 w-full object-contain transition-transform duration-300 group-hover:scale-105 sm:max-h-16"
+                      />
                     ) : (
-                      <span className="text-center text-xs font-black text-brand-ocean sm:text-sm">{brandName}</span>
+                      <span className="text-center text-xs font-black text-brand-ocean sm:text-sm">
+                        {brandName}
+                      </span>
                     )}
                   </Link>
                 );
@@ -528,8 +618,12 @@ export function HomeClient({
   const locale = useLocale() as Locale;
 
   const orderedSections = useMemo(() => {
-    const stored = new Map(sectionConfig.map((item) => [item.sectionKey, item]));
-    return DEFAULT_SECTION_CONFIG.map((fallback) => stored.get(fallback.sectionKey) || fallback)
+    const stored = new Map(
+      sectionConfig.map((item) => [item.sectionKey, item]),
+    );
+    return DEFAULT_SECTION_CONFIG.map(
+      (fallback) => stored.get(fallback.sectionKey) || fallback,
+    )
       .filter((item) => item.visible)
       .sort((a, b) => a.sortOrder - b.sortOrder);
   }, [sectionConfig]);

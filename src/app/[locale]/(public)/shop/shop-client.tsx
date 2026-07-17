@@ -219,8 +219,8 @@ export function ShopClient({
       <div className="pointer-events-none absolute -top-32 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-brand-coral/10 blur-3xl" />
       <div className="pointer-events-none absolute right-0 top-80 h-72 w-72 rounded-full bg-brand-sky/10 blur-3xl" />
 
-      <div className="container relative py-6 sm:py-10 md:py-12">
-        <section className="mb-5 overflow-hidden rounded-3xl border border-gray-100 bg-white/85 shadow-[0_12px_34px_rgba(15,23,42,0.08)] backdrop-blur-sm sm:mb-8">
+<div className="relative mx-auto w-full max-w-[1600px] px-2 py-6 sm:px-6 sm:py-10 md:py-12 lg:px-8">
+          <section className="mb-5 overflow-hidden rounded-3xl border border-gray-100 bg-white/85 shadow-[0_12px_34px_rgba(15,23,42,0.08)] backdrop-blur-sm sm:mb-8">
           {activeCategoryData?.banner && (
             <div
               className="h-32 bg-cover bg-center sm:h-44 md:h-56"
@@ -350,15 +350,15 @@ export function ShopClient({
           />
         )}
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[320px_minmax(0,1fr)]">
-          <aside className="hidden lg:block">
+<div className="grid grid-cols-1 gap-4 lg:grid-cols-[270px_minmax(0,1fr)] lg:gap-6 xl:grid-cols-[300px_minmax(0,1fr)]">
+            <aside className="hidden lg:block">
             <div className="sticky top-24">{filterPanel}</div>
           </aside>
 
           <div className="min-w-0">
             {products.length > 0 ? (
-              <section className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 md:gap-5 xl:grid-cols-4 xl:gap-6">
-                {products.map((product) => (
+<section className="grid grid-cols-2 gap-2 sm:gap-4 md:grid-cols-3 md:gap-5 xl:grid-cols-3 2xl:grid-cols-4">
+                  {products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </section>
