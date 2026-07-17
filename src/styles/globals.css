@@ -323,6 +323,12 @@ html {
   scroll-snap-align: start;
 }
 
+.category-orbit {
+  overscroll-behavior-inline: contain;
+  scroll-padding-inline: 1rem;
+  touch-action: pan-x pan-y;
+}
+
 /* ── Home experience and infinite partners loop ───── */
 .home-blob {
   pointer-events: none;
@@ -403,6 +409,10 @@ html {
   animation-play-state: paused;
 }
 
+.partners-loop-track:focus-within {
+  animation-play-state: paused;
+}
+
 .partners-loop-group {
   display: flex;
   flex: none;
@@ -413,6 +423,43 @@ html {
 @keyframes partners-loop {
   from { transform: translate3d(0, 0, 0); }
   to { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes cart-spark-pop {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(.6); }
+  32% { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(var(--spark-x), var(--spark-y), 0) scale(1); }
+}
+
+.cart-spark-burst {
+  pointer-events: none;
+}
+
+.cart-spark-burst i {
+  --spark-x: 0px;
+  --spark-y: -18px;
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  height: 5px;
+  width: 5px;
+  border-radius: 9999px;
+  background: #ffe66d;
+  animation: cart-spark-pop 650ms ease-out both;
+}
+
+.cart-spark-burst i:nth-child(2) {
+  --spark-x: 15px;
+  --spark-y: -12px;
+  background: #fff;
+  animation-delay: 45ms;
+}
+
+.cart-spark-burst i:nth-child(3) {
+  --spark-x: -15px;
+  --spark-y: -11px;
+  background: #4ecdc4;
+  animation-delay: 85ms;
 }
 
 @media (prefers-reduced-motion: reduce) {

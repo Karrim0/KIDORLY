@@ -21,6 +21,7 @@ import {
   saveAgeGroup,
   saveCollection,
 } from "@/actions/catalog";
+import { ImageUploader } from "@/components/admin/image-uploader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -68,6 +69,8 @@ type AgeGroupItem = {
   nameAr: string;
   nameEn: string;
   nameDe: string;
+  image: string | null;
+  banner: string | null;
   minAgeMonths: number | null;
   maxAgeMonths: number | null;
   visible: boolean;
@@ -112,12 +115,21 @@ const emptyAgeGroup: AgeGroupForm = {
   nameAr: "",
   nameEn: "",
   nameDe: "",
+  image: "",
+  banner: "",
   minAgeMonths: "",
   maxAgeMonths: "",
   visible: true,
   featured: true,
   sortOrder: "0",
 };
+
+function validImage(value?: string | null) {
+  const image = value?.trim();
+  return image && (image.startsWith("/") || /^https?:\/\//i.test(image))
+    ? image
+    : null;
+}
 
 function adminCopy(locale: string) {
   if (locale === "ar") {
@@ -224,6 +236,8 @@ export function CatalogManager({
       item
         ? {
             ...item,
+            image: item.image || "",
+            banner: item.banner || "",
             minAgeMonths: item.minAgeMonths == null ? "" : String(item.minAgeMonths),
             maxAgeMonths: item.maxAgeMonths == null ? "" : String(item.maxAgeMonths),
             sortOrder: String(item.sortOrder),
@@ -306,8 +320,8 @@ export function CatalogManager({
           {collections.map((item) => (
             <article key={item.id} className="overflow-hidden rounded-2xl border bg-white shadow-sm">
               <div className="relative h-36 bg-gradient-to-br from-brand-coral/15 to-brand-sky/20">
-                {item.image || item.banner ? (
-                  <Image src={item.image || item.banner || ""} alt={item.nameEn} fill className="object-cover" sizes="400px" />
+                {validImage(item.image) || validImage(item.banner) ? (
+                  <Image src={validImage(item.image) || validImage(item.banner) || "/placeholder.svg"} alt={item.nameEn} fill className="object-cover" sizes="400px" />
                 ) : (
                   <div className="flex h-full items-center justify-center"><ImageIcon className="h-10 w-10 text-slate-300" /></div>
                 )}
@@ -343,7 +357,15 @@ export function CatalogManager({
       >
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
           {ageGroups.map((item) => (
-            <article key={item.id} className="rounded-2xl border bg-white p-4 shadow-sm">
+            <article key={item.id} className="overflow-hidden rounded-2xl border bg-white shadow-sm">
+              <div className="relative h-28 bg-gradient-to-br from-brand-sky/12 to-brand-coral/10">
+                {validImage(item.image) || validImage(item.banner) ? (
+                  <Image src={validImage(item.image) || validImage(item.banner) || "/placeholder.svg"} alt={item.nameEn} fill className="object-cover" sizes="260px" />
+                ) : (
+                  <div className="flex h-full items-center justify-center"><Baby className="h-9 w-9 text-brand-ocean/45" /></div>
+                )}
+              </div>
+              <div className="p-4">
               <div className="flex items-start justify-between gap-2">
                 <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-sky/12 text-brand-ocean"><Baby className="h-5 w-5" /></span>
                 {item.featured && <Sparkles className="h-4 w-4 text-brand-coral" />}
@@ -354,6 +376,7 @@ export function CatalogManager({
               <div className="mt-4 flex gap-2">
                 <Button size="sm" variant="outline" className="flex-1" onClick={() => editAge(item)}><Edit3 className="me-1 h-3.5 w-3.5" />{copy.edit}</Button>
                 <Button size="icon" variant="ghost" className="h-9 w-9 text-red-600" onClick={() => remove("age", item.id)}><Trash2 className="h-4 w-4" /></Button>
+              </div>
               </div>
             </article>
           ))}
@@ -387,8 +410,8 @@ export function CatalogManager({
             ))}
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div><Label>{copy.image}</Label><Input value={collectionForm.image || ""} onChange={(event) => setCollectionForm((current) => ({ ...current, image: event.target.value }))} /></div>
-            <div><Label>{copy.banner}</Label><Input value={collectionForm.banner || ""} onChange={(event) => setCollectionForm((current) => ({ ...current, banner: event.target.value }))} /></div>
+            <div className="rounded-2xl border bg-slate-50 p-3"><Label>{copy.image}</Label><Input className="mt-2" value={collectionForm.image || ""} onChange={(event) => setCollectionForm((current) => ({ ...current, image: event.target.value }))} /><ImageUploader className="mt-3" value={collectionForm.image ? [collectionForm.image] : []} onChange={(urls) => setCollectionForm((current) => ({ ...current, image: urls[0] || "" }))} multiple={false} folder="kidorly/catalog/collections" /></div>
+            <div className="rounded-2xl border bg-slate-50 p-3"><Label>{copy.banner}</Label><Input className="mt-2" value={collectionForm.banner || ""} onChange={(event) => setCollectionForm((current) => ({ ...current, banner: event.target.value }))} /><ImageUploader className="mt-3" value={collectionForm.banner ? [collectionForm.banner] : []} onChange={(urls) => setCollectionForm((current) => ({ ...current, banner: urls[0] || "" }))} multiple={false} folder="kidorly/catalog/collections" /></div>
           </div>
           <VisibilityControls visible={collectionForm.visible} featured={collectionForm.featured} copy={copy} setVisible={(visible) => setCollectionForm((current) => ({ ...current, visible }))} setFeatured={(featured) => setCollectionForm((current) => ({ ...current, featured }))} />
           {error && <p className="text-sm font-semibold text-red-600">{error}</p>}
@@ -412,6 +435,10 @@ export function CatalogManager({
           <div className="grid grid-cols-2 gap-4">
             <div><Label>{copy.minAge}</Label><Input type="number" min="0" value={ageForm.minAgeMonths} onChange={(event) => setAgeForm((current) => ({ ...current, minAgeMonths: event.target.value }))} /></div>
             <div><Label>{copy.maxAge}</Label><Input type="number" min="0" value={ageForm.maxAgeMonths} onChange={(event) => setAgeForm((current) => ({ ...current, maxAgeMonths: event.target.value }))} /></div>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="rounded-2xl border bg-slate-50 p-3"><Label>{copy.image}</Label><Input className="mt-2" value={ageForm.image || ""} onChange={(event) => setAgeForm((current) => ({ ...current, image: event.target.value }))} /><ImageUploader className="mt-3" value={ageForm.image ? [ageForm.image] : []} onChange={(urls) => setAgeForm((current) => ({ ...current, image: urls[0] || "" }))} multiple={false} folder="kidorly/catalog/ages" /></div>
+            <div className="rounded-2xl border bg-slate-50 p-3"><Label>{copy.banner}</Label><Input className="mt-2" value={ageForm.banner || ""} onChange={(event) => setAgeForm((current) => ({ ...current, banner: event.target.value }))} /><ImageUploader className="mt-3" value={ageForm.banner ? [ageForm.banner] : []} onChange={(urls) => setAgeForm((current) => ({ ...current, banner: urls[0] || "" }))} multiple={false} folder="kidorly/catalog/ages" /></div>
           </div>
           <VisibilityControls visible={ageForm.visible} featured={ageForm.featured} copy={copy} setVisible={(visible) => setAgeForm((current) => ({ ...current, visible }))} setFeatured={(featured) => setAgeForm((current) => ({ ...current, featured }))} />
           {error && <p className="text-sm font-semibold text-red-600">{error}</p>}

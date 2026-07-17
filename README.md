@@ -4,13 +4,24 @@ Multilingual kids e-commerce storefront and admin dashboard for the Egyptian mar
 
 ## Highlights
 
-- Mobile-first storefront with a compact navigation dock, swipeable content, responsive product cards, and reduced-motion support.
+- Immersive mobile-first storefront with a split, full-viewport hero, pointer parallax, touch navigation, responsive product grids, and reduced-motion support.
+- Fast native-scroll category circles on mobile, a GSAP collection story on desktop, an age-based product explorer, an infinite partner loop, and clear buying-journey sections.
+- Homepage order, visibility, hero desktop/mobile media, collections, and age-group media are controlled from the admin dashboard.
 - Server-verified checkout: product prices, discounts, availability, variants, and shipping are calculated on the server.
 - Protected admin routes with signed JWT sessions, rate-limited login, and bcrypt password hashes.
 - Idempotent order submission and private order-success links.
 - Localized metadata, canonical/hreflang links, JSON-LD, sitemap, robots, and social sharing image.
 - Security headers, validated media uploads, and admin-only mutation endpoints.
 - Next.js 16, TypeScript, Prisma/PostgreSQL, Tailwind CSS, next-intl, Zod, and React Hook Form.
+- Motion and GSAP power the presentation layer while native scrolling remains the default on touch devices.
+
+## Homepage management
+
+- `/admin/homepage`: reorder or hide homepage sections, edit localized hero copy, and upload separate desktop/mobile hero images.
+- `/admin/catalog`: create, edit, order, show, feature, and upload card/banner media for collections and age groups.
+- `/admin/products`: assign each product to its collections and age groups; those assignments power homepage content and shop filters.
+
+Recommended hero assets are WebP/AVIF: roughly `1600×1400` for desktop and `1080×1200` for mobile, with the main subject kept near the center. Collection banners work best at `1600×1100`; age-group media at `1200×900`.
 
 ## Setup
 
@@ -40,6 +51,8 @@ Requires Node.js 20.9 or newer and PostgreSQL.
    npx prisma migrate deploy
    npm run db:generate
    ```
+
+   The latest migration adds optional card and banner media to age groups without deleting existing data.
 
 4. Optionally seed a new database, then start development:
 

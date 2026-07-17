@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { ShoppingBag, Zap, Heart } from "lucide-react";
+import { Check, ShoppingBag, Zap, Heart } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +30,15 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
   const t = useTranslations();
   const locale = useLocale() as Locale;
   const router = useRouter();
+  const [justAdded, setJustAdded] = React.useState(false);
+  const addedTimer = React.useRef<number | null>(null);
+
+  React.useEffect(
+    () => () => {
+      if (addedTimer.current) window.clearTimeout(addedTimer.current);
+    },
+    [],
+  );
 
   const { addItem, addItemAndPersist } = useCart();
   const { has, toggle } = useWishlist();
@@ -46,7 +55,11 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
   const finalPrice =
     discount > 0 ? getDiscountedPrice(product.price, discount) : product.price;
 
-  const mainImage = product.images?.[0] || "/placeholder.svg";
+  const rawImage = product.images?.[0]?.trim();
+  const mainImage =
+    rawImage && (rawImage.startsWith("/") || /^https?:\/\//i.test(rawImage))
+      ? rawImage
+      : "/placeholder.svg";
   const isAvailable = product.availability === "AVAILABLE";
   const inWishlist = has(product.id);
 
@@ -75,6 +88,9 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
     if (!isAvailable) return;
 
     addItem(cartItem);
+    setJustAdded(true);
+    if (addedTimer.current) window.clearTimeout(addedTimer.current);
+    addedTimer.current = window.setTimeout(() => setJustAdded(false), 1300);
   }
 
   function handleBuyNow(e: React.MouseEvent) {
@@ -276,8 +292,10 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
                 size="sm"
                 variant="outline"
                 className={cn(
-                  "h-11 w-[46px] rounded-xl p-0",
-                  "border-gray-200 bg-white text-gray-700",
+                  "relative h-11 w-[46px] overflow-visible rounded-xl p-0",
+                  justAdded
+                    ? "border-emerald-500 bg-emerald-500 text-white hover:bg-emerald-500 hover:text-white"
+                    : "border-gray-200 bg-white text-gray-700",
                   "hover:border-brand-coral/40 hover:bg-brand-coral/5 hover:text-brand-coral",
                   "press-effect",
                 )}
@@ -285,7 +303,14 @@ export function ProductCard({ product, globalDiscount = 0 }: ProductCardProps) {
                 title={t("product.addToCart")}
                 aria-label={t("product.addToCart")}
               >
-                <ShoppingBag className="h-4 w-4" />
+                {justAdded ? <Check className="h-4 w-4" /> : <ShoppingBag className="h-4 w-4" />}
+                {justAdded && (
+                  <span aria-hidden className="cart-spark-burst absolute inset-0">
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                )}
               </Button>
             </div>
           ) : (

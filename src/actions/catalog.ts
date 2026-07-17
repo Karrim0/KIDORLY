@@ -34,6 +34,8 @@ const ageGroupSchema = z.object({
   nameAr: z.string().trim().min(1),
   nameEn: z.string().trim().min(1),
   nameDe: z.string().trim().min(1),
+  image: optionalText,
+  banner: optionalText,
   minAgeMonths: z.number().int().min(0).max(240).nullable(),
   maxAgeMonths: z.number().int().min(0).max(240).nullable(),
   visible: z.boolean(),

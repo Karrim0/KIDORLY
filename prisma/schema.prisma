@@ -206,6 +206,9 @@ model AgeGroup {
   nameEn String @map("name_en")
   nameDe String @map("name_de")
 
+  image  String?
+  banner String?
+
   minAgeMonths Int? @map("min_age_months")
   maxAgeMonths Int? @map("max_age_months")
 

@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import prisma from "@/lib/prisma";
 import { getTranslations } from "next-intl/server";
 import { HomeClient } from "./home-client";
+import type { HomeSectionConfig, HomeSectionKey } from "./home-client";
 import type { Locale } from "@/lib/i18n";
 import { localizedAlternates } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
@@ -33,7 +34,7 @@ export default async function HomePage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
-  const [categories, featuredProducts, brands, collections, ageGroups, heroSection] =
+  const [categories, featuredProducts, brands, collections, ageGroups, homepageSections] =
     await Promise.all([
       prisma.category.findMany({
         where: {
@@ -45,6 +46,13 @@ export default async function HomePage({
             where: {
               visible: true,
             },
+            include: {
+              _count: {
+                select: {
+                  products: true,
+                },
+              },
+            },
             orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
           },
           _count: {
@@ -53,17 +61,12 @@ export default async function HomePage({
             },
           },
         },
-        orderBy: [
-          { featured: "desc" },
-          { sortOrder: "asc" },
-          { createdAt: "desc" },
-        ],
+        orderBy: [{ sortOrder: "asc" }, { featured: "desc" }, { createdAt: "desc" }],
         take: 14,
       }),
 
       prisma.product.findMany({
         where: {
-          featured: true,
           availability: "AVAILABLE",
         },
         include: {
@@ -86,7 +89,7 @@ export default async function HomePage({
           },
         },
         take: 8,
-        orderBy: { createdAt: "desc" },
+        orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
       }),
 
       prisma.brand.findMany({
@@ -106,6 +109,13 @@ export default async function HomePage({
           visible: true,
           featured: true,
         },
+        include: {
+          _count: {
+            select: {
+              products: true,
+            },
+          },
+        },
         orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
         take: 8,
       }),
@@ -115,15 +125,72 @@ export default async function HomePage({
           visible: true,
           featured: true,
         },
+        include: {
+          _count: {
+            select: {
+              products: true,
+            },
+          },
+          products: {
+            where: {
+              product: {
+                availability: "AVAILABLE",
+              },
+            },
+            include: {
+              product: {
+                include: {
+                  category: true,
+                  brand: true,
+                  collections: {
+                    include: {
+                      collection: true,
+                    },
+                  },
+                  tags: {
+                    include: {
+                      tag: true,
+                    },
+                  },
+                  ageGroups: {
+                    include: {
+                      ageGroup: true,
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: {
+              assignedAt: "desc",
+            },
+            take: 4,
+          },
+        },
         orderBy: [{ sortOrder: "asc" }, { minAgeMonths: "asc" }],
         take: 8,
       }),
 
-      prisma.homepageSection.findUnique({
-        where: { sectionKey: "hero" },
+      prisma.homepageSection.findMany({
+        where: {
+          sectionKey: {
+            in: [
+              "hero",
+              "categories",
+              "featured_products",
+              "collections",
+              "age_groups",
+              "partners",
+              "experience",
+            ],
+          },
+        },
+        orderBy: {
+          sortOrder: "asc",
+        },
       }),
     ]);
 
+  const heroSection = homepageSections.find((section) => section.sectionKey === "hero");
   let heroContent: Record<string, string> | undefined;
   if (heroSection?.visible) {
     try {
@@ -132,6 +199,24 @@ export default async function HomePage({
       heroContent = undefined;
     }
   }
+
+  const configurableKeys = new Set<HomeSectionKey>([
+    "categories",
+    "featured_products",
+    "collections",
+    "age_groups",
+    "partners",
+    "experience",
+  ]);
+  const sectionConfig = homepageSections
+    .filter((section) => configurableKeys.has(section.sectionKey as HomeSectionKey))
+    .map(
+      (section): HomeSectionConfig => ({
+        sectionKey: section.sectionKey as HomeSectionKey,
+        sortOrder: section.sortOrder,
+        visible: section.visible,
+      }),
+    );
 
   return (
     <>
@@ -160,6 +245,7 @@ export default async function HomePage({
         collections={collections}
         ageGroups={ageGroups}
         heroContent={heroContent}
+        sectionConfig={sectionConfig}
       />
     </>
   );

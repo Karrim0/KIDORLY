@@ -10,9 +10,16 @@ interface ImageUploaderProps {
   onChange: (urls: string[]) => void;
   multiple?: boolean;
   className?: string;
+  folder?: string;
 }
 
-export function ImageUploader({ value, onChange, multiple = true, className }: ImageUploaderProps) {
+export function ImageUploader({
+  value,
+  onChange,
+  multiple = true,
+  className,
+  folder = "kidorly/products",
+}: ImageUploaderProps) {
   const [uploading, setUploading] = useState(false);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -24,7 +31,7 @@ export function ImageUploader({ value, onChange, multiple = true, className }: I
     for (const file of Array.from(files)) {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("folder", "kidorly/products");
+      formData.append("folder", folder);
 
       try {
         const res = await fetch("/api/upload", { method: "POST", body: formData });

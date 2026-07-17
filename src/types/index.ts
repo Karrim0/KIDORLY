@@ -104,6 +104,8 @@ export interface AgeGroupBasic {
   nameAr: string;
   nameEn: string;
   nameDe: string;
+  image: string | null;
+  banner: string | null;
   minAgeMonths: number | null;
   maxAgeMonths: number | null;
   visible: boolean;
@@ -244,6 +246,7 @@ export interface HeroData {
   ctaEn: string;
   ctaDe: string;
   image: string;
+  mobileImage?: string;
 }
 
 export interface AnnouncementData {
