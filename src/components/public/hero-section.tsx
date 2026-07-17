@@ -45,11 +45,6 @@ interface HeroSlide {
 
 const DEFAULT_SLIDES: HeroSlide[] = [
   {
-    desktop: "/images/hero.webp",
-    mobile: "/images/hero-mobile.webp",
-    position: "object-center",
-  },
-  {
     desktop: "/images/hero1.webp",
     mobile: "/images/hero1-mobile.webp",
     position: "object-center",
@@ -57,6 +52,11 @@ const DEFAULT_SLIDES: HeroSlide[] = [
   {
     desktop: "/images/hero2.webp",
     mobile: "/images/hero2-mobile.webp",
+    position: "object-center",
+  },
+  {
+    desktop: "/images/hero3.webp",
+    mobile: "/images/hero3-mobile.webp",
     position: "object-center",
   },
 ];
@@ -135,7 +135,7 @@ export function HeroSection({ content }: { content?: HeroContent }) {
     <section
       id="home-hero"
       aria-label={title}
-      className="relative isolate overflow-hidden bg-[#fff9f3] lg:min-h-[100svh]"
+      className="relative isolate overflow-hidden bg-[#fff9f3] pt-[74px] sm:pt-[84px] lg:min-h-[100svh] lg:pt-[82px]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => {
         setPaused(false);
@@ -151,7 +151,8 @@ export function HeroSection({ content }: { content?: HeroContent }) {
       onTouchStart={(event) => setTouchStart(event.touches[0]?.clientX ?? null)}
       onTouchEnd={(event) => {
         if (touchStart === null) return;
-        const distance = touchStart - (event.changedTouches[0]?.clientX ?? touchStart);
+        const distance =
+          touchStart - (event.changedTouches[0]?.clientX ?? touchStart);
         if (Math.abs(distance) > 52) {
           if (distance > 0) next();
           else previous();
@@ -171,10 +172,10 @@ export function HeroSection({ content }: { content?: HeroContent }) {
       />
 
       <div className="mx-auto w-full max-w-[1720px] lg:p-3">
-        <div className="grid lg:min-h-[calc(100svh-1.5rem)] lg:grid-cols-[minmax(360px,.86fr)_minmax(0,1.14fr)] lg:gap-3">
+        <div className="grid lg:min-h-[calc(100svh-106px)] lg:grid-cols-[minmax(360px,.86fr)_minmax(0,1.14fr)] lg:gap-3">
           <div
             dir={locale === "ar" ? "rtl" : "ltr"}
-            className="relative z-20 order-2 -mt-6 flex rounded-t-[2rem] bg-[#fff9f3] px-5 pb-10 pt-8 sm:px-8 sm:pb-12 lg:order-1 lg:mt-0 lg:min-h-0 lg:items-center lg:rounded-[2.35rem] lg:px-[clamp(2.5rem,5vw,6rem)] lg:pb-12 lg:pt-28"
+            className="relative z-20 order-2 -mt-6 flex rounded-t-[2rem] bg-[#fff9f3] px-5 pb-10 pt-8 sm:px-8 sm:pb-12 lg:order-1 lg:mt-0 lg:min-h-0 lg:items-center lg:rounded-[2.35rem] lg:px-[clamp(2.5rem,5vw,6rem)] lg:pb-10 lg:pt-8"
           >
             <motion.div
               initial={reduceMotion ? false : { opacity: 0, y: 22 }}
@@ -221,11 +222,13 @@ export function HeroSection({ content }: { content?: HeroContent }) {
             </motion.div>
           </div>
 
-          <div className="relative order-1 h-[42svh] min-h-[300px] max-h-[460px] overflow-hidden bg-slate-200 lg:order-2 lg:h-auto lg:max-h-none lg:min-h-[calc(100svh-1.5rem)] lg:rounded-[2.35rem]">
+          <div className="relative order-1 h-[36svh] min-h-[270px] max-h-[390px] overflow-hidden bg-slate-200 lg:order-2 lg:h-auto lg:max-h-none lg:min-h-[calc(100svh-106px)] lg:rounded-[2.35rem]">
             <AnimatePresence initial={false} mode="sync">
               <motion.div
                 key={`${current}-${slide.desktop}`}
-                initial={reduceMotion ? { opacity: 1 } : { opacity: 0, scale: 1.035 }}
+                initial={
+                  reduceMotion ? { opacity: 1 } : { opacity: 0, scale: 1.035 }
+                }
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
@@ -270,7 +273,10 @@ export function HeroSection({ content }: { content?: HeroContent }) {
                       key={current}
                       initial={{ scaleX: 0 }}
                       animate={{ scaleX: 1 }}
-                      transition={{ duration: reduceMotion ? 0 : SLIDE_DURATION / 1000, ease: "linear" }}
+                      transition={{
+                        duration: reduceMotion ? 0 : SLIDE_DURATION / 1000,
+                        ease: "linear",
+                      }}
                       className="block h-full origin-left rounded-full bg-white"
                     />
                   </div>
