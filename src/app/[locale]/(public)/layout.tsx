@@ -1,6 +1,6 @@
 import { CartProvider } from "@/hooks/use-cart";
 import { ToastProvider } from "@/hooks/use-toast";
-import { WishlistProvider } from "@/hooks/use-wishlist"; // ← جديد
+import { WishlistProvider } from "@/hooks/use-wishlist";
 import { Navbar } from "@/components/public/navbar";
 import { Footer } from "@/components/public/footer";
 import { CartDrawer } from "@/components/public/cart-drawer";

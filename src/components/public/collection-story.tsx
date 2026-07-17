@@ -16,7 +16,7 @@ import type { CollectionFull } from "@/types";
 const FALLBACK_IMAGES = [
   "/images/hero1.webp",
   "/images/hero2.webp",
-  "/images/hero3.webp",
+  "/images/hero.webp",
 ];
 
 const TONES = [

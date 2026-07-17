@@ -2,6 +2,9 @@
 
 ## What changed
 
+- The navbar and hero now share one light glass visual system. The navbar floats above the media instead of adding a dark strip across the page.
+- The desktop headline is capped to the available viewport, and the mobile hero becomes a connected media-and-content sheet with controls kept away from the subject.
+- The mobile dock stays out of the initial hero and enters after the visitor scrolls, so it cannot cover the primary call to action.
 - The hero no longer puts large copy and buttons over the product subject. Mobile uses a dedicated media panel followed by readable content, while desktop uses a balanced split layout.
 - Categories are circular, lightweight, and use native horizontal scrolling on mobile. There is no autoplay delay or JavaScript carousel dependency.
 - Products use a responsive two-column mobile grid and expand to three/four columns on larger screens.

@@ -375,7 +375,7 @@ function AgeExplorer({ ageGroups }: { ageGroups: HomeAgeGroup[] }) {
     validImage(active.banner) ||
     validImage(active.image) ||
     validImage(products[0]?.images?.[0]) ||
-    "/images/hero3.webp";
+    "/images/hero2.webp";
 
   return (
     <section className="relative overflow-hidden bg-white py-14 sm:py-20 lg:py-24">

@@ -261,14 +261,18 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed left-0 right-0 top-0 z-50",
+        "pointer-events-none fixed inset-x-0 top-0 z-50 px-2 pt-2 sm:px-3 sm:pt-3",
         "transition-all duration-500 ease-out",
-        isTransparent
-          ? "border-b border-white/10 bg-black/15 backdrop-blur-[3px]"
-          : "border-b border-border/50 bg-white/95 shadow-[0_10px_40px_rgba(15,23,42,0.08)] backdrop-blur-xl",
       )}
     >
-      <div className="container relative flex h-14 items-center justify-between gap-2 px-4 sm:h-16 lg:h-[74px] lg:gap-5 lg:px-6">
+      <div
+        className={cn(
+          "container pointer-events-auto relative flex h-[58px] max-w-[1500px] items-center justify-between gap-1.5 rounded-[1.35rem] border px-3 transition-all duration-500 sm:h-16 sm:gap-2 sm:px-4 lg:h-[70px] lg:gap-5 lg:px-6",
+          isTransparent
+            ? "border-white/70 bg-white/[.76] shadow-[0_10px_36px_rgba(15,23,42,.10)] backdrop-blur-2xl"
+            : "border-white/80 bg-white/95 shadow-[0_14px_44px_rgba(15,23,42,.12)] backdrop-blur-2xl",
+        )}
+      >
         <Link
           href={`/${locale}`}
           aria-label="Kidorly home"
@@ -281,11 +285,7 @@ export function Navbar() {
             width={170}
             height={60}
             priority
-            className={cn(
-              "h-8 w-auto object-contain transition-all duration-300 sm:h-9 lg:h-12",
-              isTransparent &&
-                "brightness-110 drop-shadow-[0_3px_14px_rgba(0,0,0,0.35)]",
-            )}
+            className="h-8 w-auto object-contain drop-shadow-[0_3px_10px_rgba(15,23,42,.10)] transition-all duration-300 sm:h-9 lg:h-11"
           />
         </Link>
 
@@ -315,8 +315,8 @@ export function Navbar() {
                 "active:scale-[0.98]",
                 isTransparent
                   ? isShopActive || catalogOpen
-                    ? "bg-white text-primary shadow-xl shadow-black/10"
-                    : "bg-white/15 text-white shadow-sm backdrop-blur-md hover:bg-white/25"
+                    ? "bg-brand-coral text-white shadow-lg shadow-brand-coral/20"
+                    : "bg-brand-coral/10 text-brand-coral hover:bg-brand-coral/15"
                   : isShopActive || catalogOpen
                     ? "bg-gradient-to-br from-primary to-[var(--brand-coral)] text-white shadow-xl shadow-primary/25"
                     : "bg-primary/10 text-primary shadow-sm hover:bg-primary/15",
@@ -372,7 +372,7 @@ export function Navbar() {
               className={cn(
                 "h-8 gap-1 rounded-xl px-2 text-xs font-bold transition-colors duration-300 sm:h-9 sm:px-3 lg:h-10",
                 isTransparent
-                  ? "text-white/95 hover:bg-white/10 hover:text-white"
+                  ? "text-slate-600 hover:bg-white/80 hover:text-slate-950"
                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-950",
               )}
             >
@@ -427,7 +427,7 @@ export function Navbar() {
             className={cn(
               "relative flex h-11 w-11 items-center justify-center rounded-xl transition-colors duration-300 lg:h-11 lg:w-11",
               isTransparent
-                ? "text-white/95 hover:bg-white/10 hover:text-white"
+                ? "text-slate-600 hover:bg-white/80 hover:text-brand-coral"
                 : "text-gray-600 hover:bg-gray-100 hover:text-gray-950",
             )}
           >
@@ -444,7 +444,7 @@ export function Navbar() {
             className={cn(
               "relative h-11 w-11 rounded-xl transition-colors duration-300",
               isTransparent
-                ? "text-white/95 hover:bg-white/10 hover:text-white"
+                ? "text-slate-600 hover:bg-white/80 hover:text-brand-coral"
                 : "text-gray-600 hover:bg-gray-100 hover:text-gray-950",
             )}
           >
@@ -463,7 +463,7 @@ export function Navbar() {
             className={cn(
               "h-11 w-11 rounded-xl transition-colors duration-300 lg:hidden",
               isTransparent
-                ? "text-white/95 hover:bg-white/10 hover:text-white"
+                ? "text-slate-600 hover:bg-white/80 hover:text-slate-950"
                 : "text-gray-600 hover:bg-gray-100 hover:text-gray-950",
             )}
           >
@@ -477,7 +477,7 @@ export function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="fixed inset-x-0 bottom-0 top-14 z-40 sm:top-16 lg:hidden">
+        <div className="fixed inset-x-0 bottom-0 top-[74px] z-40 sm:top-[84px] lg:hidden">
           <button
             type="button"
             aria-label="Close menu overlay"
@@ -641,8 +641,8 @@ function DesktopNavLink({
         "active:scale-[0.98]",
         isTransparent
           ? active
-            ? "bg-white/20 text-white shadow-sm backdrop-blur-md"
-            : "text-white/90 hover:bg-white/10 hover:text-white"
+            ? "bg-brand-coral/10 text-brand-coral"
+            : "text-slate-600 hover:bg-white/80 hover:text-slate-950"
           : active
             ? "bg-primary/10 text-primary"
             : "text-gray-600 hover:bg-gray-100/80 hover:text-gray-950",
@@ -655,7 +655,7 @@ function DesktopNavLink({
           className={cn(
             "absolute -bottom-0.5 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full",
             isTransparent
-              ? "bg-white shadow-[0_0_8px_rgba(255,255,255,0.7)]"
+              ? "bg-brand-coral"
               : "bg-primary",
           )}
         />

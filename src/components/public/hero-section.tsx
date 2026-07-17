@@ -47,17 +47,17 @@ const DEFAULT_SLIDES: HeroSlide[] = [
   {
     desktop: "/images/hero.webp",
     mobile: "/images/hero-mobile.webp",
-    position: "object-[54%_center] md:object-[57%_center]",
+    position: "object-center",
   },
   {
     desktop: "/images/hero1.webp",
     mobile: "/images/hero1-mobile.webp",
-    position: "object-[54%_center] md:object-[58%_center]",
+    position: "object-center",
   },
   {
     desktop: "/images/hero2.webp",
     mobile: "/images/hero2-mobile.webp",
-    position: "object-[52%_center] md:object-[55%_center]",
+    position: "object-center",
   },
 ];
 
@@ -93,10 +93,10 @@ export function HeroSection({ content }: { content?: HeroContent }) {
   const pointerY = useMotionValue(0);
   const smoothX = useSpring(pointerX, { stiffness: 70, damping: 24 });
   const smoothY = useSpring(pointerY, { stiffness: 70, damping: 24 });
-  const mediaX = useTransform(smoothX, [-1, 1], [-8, 8]);
-  const mediaY = useTransform(smoothY, [-1, 1], [-6, 6]);
-  const orbX = useTransform(smoothX, [-1, 1], [14, -14]);
-  const orbY = useTransform(smoothY, [-1, 1], [10, -10]);
+  const mediaX = useTransform(smoothX, [-1, 1], [-7, 7]);
+  const mediaY = useTransform(smoothY, [-1, 1], [-5, 5]);
+  const orbX = useTransform(smoothX, [-1, 1], [12, -12]);
+  const orbY = useTransform(smoothY, [-1, 1], [9, -9]);
 
   const slides = useMemo(() => {
     const desktop = validImage(content?.image);
@@ -133,8 +133,9 @@ export function HeroSection({ content }: { content?: HeroContent }) {
 
   return (
     <section
+      id="home-hero"
       aria-label={title}
-      className="relative isolate min-h-[100svh] overflow-hidden bg-[#fffaf4]"
+      className="relative isolate overflow-hidden bg-[#fff9f3] lg:min-h-[100svh]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => {
         setPaused(false);
@@ -161,130 +162,142 @@ export function HeroSection({ content }: { content?: HeroContent }) {
       <motion.div
         aria-hidden
         style={{ x: orbX, y: orbY }}
-        className="pointer-events-none absolute -start-24 bottom-[12%] h-72 w-72 rounded-full bg-brand-coral/15 blur-3xl"
+        className="pointer-events-none absolute -start-24 bottom-[8%] h-64 w-64 rounded-full bg-brand-coral/[.14] blur-3xl lg:h-80 lg:w-80"
       />
       <motion.div
         aria-hidden
         style={{ x: mediaX, y: mediaY }}
-        className="pointer-events-none absolute start-[34%] top-[7%] h-64 w-64 rounded-full bg-brand-sky/18 blur-3xl"
+        className="pointer-events-none absolute start-[30%] top-[8%] h-56 w-56 rounded-full bg-brand-sky/[.16] blur-3xl lg:h-72 lg:w-72"
       />
 
-      <div className="mx-auto grid min-h-[100svh] w-full max-w-[1680px] grid-rows-[48svh_auto] md:grid-cols-[minmax(390px,.84fr)_minmax(0,1.16fr)] md:grid-rows-1 md:gap-5 md:p-5">
-        <div
-          dir={locale === "ar" ? "rtl" : "ltr"}
-          className="relative z-10 order-2 flex items-center px-5 pb-28 pt-8 sm:px-8 md:order-1 md:px-[clamp(2.5rem,6vw,7rem)] md:pb-10 md:pt-28"
-        >
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="w-full max-w-[640px]"
+      <div className="mx-auto w-full max-w-[1720px] lg:p-3">
+        <div className="grid lg:min-h-[calc(100svh-1.5rem)] lg:grid-cols-[minmax(360px,.86fr)_minmax(0,1.14fr)] lg:gap-3">
+          <div
+            dir={locale === "ar" ? "rtl" : "ltr"}
+            className="relative z-20 order-2 -mt-6 flex rounded-t-[2rem] bg-[#fff9f3] px-5 pb-10 pt-8 sm:px-8 sm:pb-12 lg:order-1 lg:mt-0 lg:min-h-0 lg:items-center lg:rounded-[2.35rem] lg:px-[clamp(2.5rem,5vw,6rem)] lg:pb-12 lg:pt-28"
           >
-            <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-brand-coral/15 bg-white/80 px-3 py-2 text-[10px] font-black text-slate-700 shadow-sm backdrop-blur sm:text-xs">
-              <KidorlyMascot className="h-7 w-7" />
-              <span className="truncate">{t("eyebrow")}</span>
-              <Sparkles className="h-3.5 w-3.5 shrink-0 text-brand-coral" />
-            </div>
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full max-w-[620px]"
+            >
+              <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-brand-coral/15 bg-white/[.88] px-3 py-2 text-[10px] font-black text-slate-700 shadow-[0_8px_28px_rgba(15,23,42,.06)] backdrop-blur sm:text-xs">
+                <KidorlyMascot className="h-7 w-7 shrink-0" />
+                <span className="truncate">{t("eyebrow")}</span>
+                <Sparkles className="h-3.5 w-3.5 shrink-0 text-brand-coral" />
+              </div>
 
-            <h1 className="mt-4 max-w-[620px] text-[clamp(2.2rem,9.8vw,4.8rem)] font-black leading-[.98] tracking-[-.055em] text-slate-950 text-balance md:mt-7">
-              {title}
-            </h1>
+              <h1 className="mt-4 max-w-[610px] text-balance text-[clamp(2.15rem,10.5vw,3.15rem)] font-black leading-[.98] tracking-[-.055em] text-slate-950 sm:text-[3.3rem] lg:mt-6 lg:text-[clamp(3.2rem,4.45vw,4.75rem)] lg:leading-[.94]">
+                {title}
+              </h1>
 
-            <p className="mt-4 max-w-[570px] text-sm font-semibold leading-6 text-slate-600 sm:text-base sm:leading-7 md:mt-6 md:text-lg md:leading-8">
-              {subtitle}
-            </p>
+              <p className="mt-4 max-w-[560px] text-sm font-semibold leading-6 text-slate-600 sm:text-base sm:leading-7 lg:mt-5 lg:text-[1.05rem] lg:leading-8">
+                {subtitle}
+              </p>
 
-            <div className="mt-6 flex items-center gap-4 md:mt-8">
-              <motion.div whileHover={reduceMotion ? undefined : { y: -3 }} whileTap={{ scale: 0.97 }}>
-                <Link
-                  href={`/${locale}/shop`}
-                  className="hero-primary-cta group inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-brand-coral px-6 text-sm font-black text-white shadow-[0_18px_42px_rgba(255,107,107,.3)] transition-colors hover:bg-[#ff5757] sm:px-8 sm:text-base"
+              <div className="mt-6 flex flex-wrap items-center gap-3 lg:mt-7">
+                <motion.div
+                  whileHover={reduceMotion ? undefined : { y: -3 }}
+                  whileTap={{ scale: 0.97 }}
                 >
-                  {cta}
+                  <Link
+                    href={`/${locale}/shop`}
+                    className="hero-primary-cta group inline-flex min-h-[52px] items-center justify-center gap-2 rounded-2xl bg-brand-coral px-6 py-3.5 text-sm font-black text-white shadow-[0_16px_38px_rgba(255,107,107,.28)] transition-colors hover:bg-[#ff5757] sm:min-h-14 sm:px-8 sm:text-base"
+                  >
+                    {cta}
+                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" />
+                  </Link>
+                </motion.div>
+
+                <Link
+                  href={`/${locale}/offers`}
+                  className="group inline-flex min-h-12 items-center gap-1.5 rounded-2xl px-3 text-sm font-black text-slate-700 transition hover:bg-white hover:text-brand-coral sm:text-base"
+                >
+                  {t("secondaryCta")}
                   <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" />
                 </Link>
-              </motion.div>
-
-              <Link
-                href={`/${locale}/offers`}
-                className="group inline-flex min-h-12 items-center gap-1.5 text-sm font-black text-slate-700 transition hover:text-brand-coral sm:text-base"
-              >
-                {t("secondaryCta")}
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100" />
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-
-        <div className="relative order-1 overflow-hidden bg-slate-200 md:order-2 md:rounded-[2.5rem]">
-          <AnimatePresence initial={false}>
-            <motion.div
-              key={`${current}-${slide.desktop}`}
-              initial={reduceMotion ? { opacity: 1 } : { opacity: 0, scale: 1.025 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              style={reduceMotion ? undefined : { x: mediaX, y: mediaY }}
-              className="absolute -inset-3"
-            >
-              <Image
-                src={slide.mobile}
-                alt={title}
-                fill
-                priority={current === 0}
-                quality={75}
-                sizes="(max-width: 767px) 100vw"
-                className={cn("object-cover md:hidden", slide.position)}
-              />
-              <Image
-                src={slide.desktop}
-                alt=""
-                fill
-                priority={current === 0}
-                quality={75}
-                sizes="(min-width: 768px) 62vw"
-                className={cn("hidden object-cover md:block", slide.position)}
-              />
+              </div>
             </motion.div>
-          </AnimatePresence>
+          </div>
 
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/20 via-transparent to-black/5" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-slate-950/45 to-transparent" />
-
-          <div dir="ltr" className="absolute inset-x-4 bottom-4 z-20 flex items-center justify-between md:inset-x-6 md:bottom-6">
-            <div className="flex items-center gap-2 rounded-full border border-white/25 bg-black/15 p-1.5 shadow-lg backdrop-blur-xl">
-              {slides.map((_, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => setCurrent(index)}
-                  aria-label={`${t("slideLabel")} ${index + 1}`}
-                  aria-current={current === index}
-                  className={cn(
-                    "h-2 rounded-full transition-all duration-300",
-                    current === index ? "w-9 bg-white" : "w-2 bg-white/55 hover:bg-white",
-                  )}
+          <div className="relative order-1 h-[42svh] min-h-[300px] max-h-[460px] overflow-hidden bg-slate-200 lg:order-2 lg:h-auto lg:max-h-none lg:min-h-[calc(100svh-1.5rem)] lg:rounded-[2.35rem]">
+            <AnimatePresence initial={false} mode="sync">
+              <motion.div
+                key={`${current}-${slide.desktop}`}
+                initial={reduceMotion ? { opacity: 1 } : { opacity: 0, scale: 1.035 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+                style={reduceMotion ? undefined : { x: mediaX, y: mediaY }}
+                className="absolute -inset-3"
+              >
+                <Image
+                  src={slide.mobile}
+                  alt={title}
+                  fill
+                  priority={current === 0}
+                  quality={78}
+                  sizes="(max-width: 1023px) 100vw"
+                  className={cn("object-cover lg:hidden", slide.position)}
                 />
-              ))}
-            </div>
+                <Image
+                  src={slide.desktop}
+                  alt=""
+                  fill
+                  priority={current === 0}
+                  quality={78}
+                  sizes="(min-width: 1024px) 58vw"
+                  className={cn("hidden object-cover lg:block", slide.position)}
+                />
+              </motion.div>
+            </AnimatePresence>
 
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={previous}
-                aria-label={t("previousSlide")}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-black/15 text-white shadow-lg backdrop-blur-xl transition hover:bg-white hover:text-slate-950 active:scale-95"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </button>
-              <button
-                type="button"
-                onClick={next}
-                aria-label={t("nextSlide")}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-black/15 text-white shadow-lg backdrop-blur-xl transition hover:bg-white hover:text-slate-950 active:scale-95"
-              >
-                <ChevronRight className="h-5 w-5" />
-              </button>
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/35 via-transparent to-slate-950/5" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-slate-950/55 to-transparent" />
+
+            <div
+              dir="ltr"
+              className="absolute inset-x-4 bottom-9 z-20 flex items-end justify-between gap-4 sm:inset-x-6 lg:bottom-6"
+            >
+              <div className="min-w-0 rounded-2xl border border-white/20 bg-black/[.15] px-3 py-2.5 shadow-xl backdrop-blur-xl">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-[10px] font-black tabular-nums text-white">
+                    {String(current + 1).padStart(2, "0")}
+                  </span>
+                  <div className="h-1 w-20 overflow-hidden rounded-full bg-white/30 sm:w-28">
+                    <motion.span
+                      key={current}
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ duration: reduceMotion ? 0 : SLIDE_DURATION / 1000, ease: "linear" }}
+                      className="block h-full origin-left rounded-full bg-white"
+                    />
+                  </div>
+                  <span className="text-[10px] font-bold tabular-nums text-white/[.65]">
+                    {String(slides.length).padStart(2, "0")}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={previous}
+                  aria-label={t("previousSlide")}
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-black/[.15] text-white shadow-xl backdrop-blur-xl transition hover:bg-white hover:text-slate-950 active:scale-95"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={next}
+                  aria-label={t("nextSlide")}
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-white text-slate-950 shadow-xl transition hover:scale-105 active:scale-95"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
